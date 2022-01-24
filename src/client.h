@@ -11,22 +11,23 @@ class Client
 {
 public:
     Client();
+    virtual ~Client();
 
 public:
     bool Login(const ServerModels::LoginRequestModel& data);
     bool Logout();
 
 private:
-    void setData(const ServerModels::ClientDataModel& data)
+    void SetData(const ServerModels::ClientDataModel& data)
     {
         this->data = data;
     }
-    auto&       Data() { return this->data; }
-    const auto& Data() const { return this->data; }
+    auto&       GetData() { return this->data; }
+    const auto& GetData() const { return this->data; }
 
-    void        setResult(const Server::Result& result) { lastResult = result; }
-    auto&       Result() { return this->lastResult; }
-    const auto& Result() const { return this->lastResult; }
+    void        SetResult(const Server::Result& result) { lastResult = result; }
+    auto&       GetResult() { return this->lastResult; }
+    const auto& GetResult() const { return this->lastResult; }
 
 private:
     // TODO check how many bytes use idx

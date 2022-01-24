@@ -16,17 +16,17 @@ protected:
     std::size_t Receive(const asio::mutable_buffer& buffer);
 
 private:
-    void        setErrorCode(const asio::error_code& error) = delete;
-    auto&       ErrorCode() { return this->errorCode; }
-    const auto& ErrorCode() const { return this->errorCode; }
+    void        SetErrorCode(const asio::error_code& error) = delete;
+    auto&       GetErrorCode() { return this->errorCode; }
+    const auto& GetErrorCode() const { return this->errorCode; }
 
-    void        setContext(const asio::io_context& context) = delete;
-    auto&       Context() { return this->ioContext; }
-    const auto& Context() const { return this->ioContext; }
+    void        SetContext(const asio::io_context& context) = delete;
+    auto&       GetContext() { return this->ioContext; }
+    const auto& GetContext() const { return this->ioContext; }
 
-    void        setSocket(const asio::ip::tcp::socket& socket) = delete;
-    auto&       Socket() { return this->socket; }
-    const auto& Socket() const { return this->socket; }
+    void        SetSocket(const asio::ip::tcp::socket& socket) = delete;
+    auto&       GetSocket() { return this->socket; }
+    const auto& GetSocket() const { return this->socket; }
 
 private:
     asio::error_code      errorCode;
