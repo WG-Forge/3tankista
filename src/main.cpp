@@ -6,7 +6,6 @@
 
 int main()
 {
-
     Client client;
     auto   isSuccessfully = client.Login(
         ServerModels::LoginRequestModel{ "Ty", "nykto", "YA", 25, 1, false });

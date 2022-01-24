@@ -27,12 +27,12 @@ bool Client::Login(const ServerModels::LoginRequestModel& data)
 
     auto responce =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-            ->ReceiveResult(this->Result());
+            ->ReceiveResult(this->GetResult());
 
-    if (this->Result() != Server::Result::OKEY)
+    if (this->GetResult() != Server::Result::OKEY)
     {
         std::cerr << "Login request result: "
-                  << static_cast<int>(this->Result()) << '\n';
+                  << static_cast<int>(this->GetResult()) << '\n';
         return false;
     }
 
@@ -42,7 +42,7 @@ bool Client::Login(const ServerModels::LoginRequestModel& data)
         return false;
     }
 
-    this->setData(nlohmann::json::parse(responce));
+    this->SetData(nlohmann::json::parse(responce));
     return true;
 }
 
@@ -60,12 +60,12 @@ bool Client::Logout()
 
     const auto& responce =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-            ->ReceiveResult(this->Result());
+            ->ReceiveResult(this->GetResult());
 
-    if (this->Result() != Server::Result::OKEY)
+    if (this->GetResult() != Server::Result::OKEY)
     {
         std::cerr << "Logout request result: "
-                  << static_cast<int>(this->Result()) << '\n';
+                  << static_cast<int>(this->GetResult()) << '\n';
         return false;
     }
 
