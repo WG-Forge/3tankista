@@ -43,9 +43,9 @@ public:
     std::string ReceiveResult(Result& result);
 
 private:
-    void  setBuffer(const std::vector<char>& buffer) { this->buffer = buffer; }
-    auto& Buffer() { return buffer; }
-    const auto& Buffer() const { return buffer; }
+    void  SetBuffer(const std::vector<char>& buffer) { this->buffer = buffer; }
+    auto& GetBuffer() { return buffer; }
+    const auto& GetBuffer() const { return buffer; }
 
 private:
     std::vector<char> buffer;
