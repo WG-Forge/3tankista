@@ -37,12 +37,12 @@ std::string Server::ReceiveResult(Result& result)
 {
     TcpWorker::Receive(asio::mutable_buffer(
         this->GetBuffer().data(), actionSizeBytes + messageSizeBytes));
-    result        = Result(*(this->GetBuffer()).data());
-    int* dataSize = (int*)(this->GetBuffer().data() + actionSizeBytes);
-    this->GetBuffer().resize(*dataSize + actionSizeBytes + messageSizeBytes);
+    result       = Result(*(this->GetBuffer()).data());
+    int dataSize = *(int*)(this->GetBuffer().data() + actionSizeBytes);
+    this->GetBuffer().resize(dataSize + actionSizeBytes + messageSizeBytes);
     TcpWorker::Receive(asio::mutable_buffer(
         this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
-        *dataSize));
+        dataSize));
     return std::move(std::string{ this->GetBuffer().begin() + actionSizeBytes +
                                       messageSizeBytes,
                                   this->GetBuffer().end() });
