@@ -11,6 +11,7 @@ class Client
 {
 public:
     Client();
+    virtual ~Client();
 
 public:
     bool Login(const ServerModels::LoginRequestModel& data);
