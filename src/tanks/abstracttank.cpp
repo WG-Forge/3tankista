@@ -10,3 +10,10 @@ AbstractTank::AbstractTank(int vehicleId, Player *owner, const TankType& tankTyp
 AbstractTank::~AbstractTank()
 {
 }
+
+void to_json(nlohmann::json& j, const AbstractTank& tank) {}
+
+void from_json(const nlohmann::json& j, AbstractTank& tank)
+{
+    // TODO: Parse json
+}

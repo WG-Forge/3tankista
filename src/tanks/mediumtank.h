@@ -9,8 +9,9 @@ public:
     MediumTank(int vehicleId, Player *owner);
     ~MediumTank();
 
-    // TODO: Implement CanHit method
-    bool CanHit(const Vector3d& point) const override;
+    // TODO: Implement methods
+    bool CanShoot(const Vector3d& point) const override;
+    bool CanMove(const Vector3d& point) const override;
 };
 
 #endif // SERVER_MEDIUMTANK_H

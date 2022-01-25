@@ -2,22 +2,27 @@
 #define SERVER_ABSTRACTTANK_H
 
 #include <memory>
+#include "nlohmann/json.hpp"
 
 // TODO: Include next
 class Player;
 class Vector3d;
 
+enum class TankType {
+    MEDIUM_TANK
+};
+
 class AbstractTank
 {
 public:
-    enum class TankType {
-        MEDIUM_TANK
-    };
-
     AbstractTank(int vehicleId, Player *owner, const TankType& tankType);
     ~AbstractTank();
 
-    virtual bool CanHit(const Vector3d& point) const = 0;
+    virtual bool CanShoot(const Vector3d& point) const = 0;
+    virtual bool CanMove(const Vector3d& point) const = 0;
+
+    void Shoot(const Vector3d& point);
+    void Move(const Vector3d& point);
 
 protected:
     void        SetVehicleId(const int& id) { this->vehicleId = id; }
@@ -45,6 +50,10 @@ public:
     auto&       GetHealth() { return this->health; }
     const auto& GetHealth() const { return this->health; }
 
+    void        SetMaxHealth(const int& maxHealth) { this->maxHealth = health; }
+    auto&       GetMaxHealth() { return this->maxHealth; }
+    const auto& GetMaxHealth() const { return this->maxHealth; }
+
     void        SetSpeed(const int& speed) { this->speed = speed; }
     auto&       GetSpeed() { return this->speed; }
     const auto& GetSpeed() const {return this->speed; }
@@ -68,10 +77,15 @@ private:
     Vector3d                 position;
     Vector3d                 spawnPosition;
     int                      health;
+    int                      maxHealth;
     int                      speed;
     int                      damage;
     int                      destructionPoints;
     int                      capturePoints;
 };
+
+void to_json(nlohmann::json& j, const AbstractTank& tank);
+
+void from_json(const nlohmann::json& j, AbstractTank& tank);
 
 #endif // SERVER_ABSTRACTTANK_H
