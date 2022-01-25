@@ -5,44 +5,51 @@
 
 #include "base.h"
 #include "catapult.h"
+#include "hardrepair.h"
+#include "lightrepair.h"
 #include "obstacle.h"
-#include "repair.h"
 
 struct Content
 {
     Content();
 
 public:
-    void  SetBases(const std::vector<Base>& bases) { this->bases = bases; }
-    auto& GetBases() { return this->bases; }
-    const auto& GetBases() const { return this->bases; }
+    void        SetBase(const Base& base) { this->base = base; }
+    auto&       GetBase() { return this->base; }
+    const auto& GetBase() const { return this->base; }
 
-    void SetCatapults(const std::vector<Catapult>& catapults)
-    {
-        this->catapults = catapults;
-    }
-    auto&       GetCatapults() { return this->catapults; }
-    const auto& GetCatapults() const { return this->catapults; }
+    void  SetCatapult(const Catapult& catapult) { this->catapult = catapult; }
+    auto& GetCatapult() { return this->catapult; }
+    const auto& GetCatapult() const { return this->catapult; }
 
-    void SetRepairs(const std::vector<Repair>& repairs)
+    void SetLightRepair(const LightRepair& lightRepair)
     {
-        this->repairs = repairs;
+        this->lightRepair = lightRepair;
     }
-    auto&       GetRepairs() { return this->repairs; }
-    const auto& GetRepairs() const { return this->repairs; }
+    auto&       GetLightRepair() { return this->lightRepair; }
+    const auto& GetLightRepair() const { return this->lightRepair; }
 
-    void SetObstacles(const std::vector<Obstacle>& obstacles)
+    void SetHardRepair(const HardRepair& hardRepair)
     {
-        this->obstacles = obstacles;
+        this->hardRepair = hardRepair;
     }
-    auto&       GetObstacles() { return this->obstacles; }
-    const auto& GetObstacles() const { return this->obstacles; }
+    auto&       GetHardRepair() { return this->hardRepair; }
+    const auto& GetHardRepair() const { return this->hardRepair; }
+
+    void  SetObstacle(const Obstacle& obstacle) { this->obstacle = obstacle; }
+    auto& GetObstacle() { return this->obstacle; }
+    const auto& GetObstacle() const { return this->obstacle; }
 
 private:
-    std::vector<Base>     bases;
-    std::vector<Catapult> catapults;
-    std::vector<Repair>   repairs;
-    std::vector<Obstacle> obstacles;
+    Base        base;
+    Catapult    catapult;
+    LightRepair lightRepair;
+    HardRepair  hardRepair;
+    Obstacle    obstacle;
 };
+
+void to_json(nlohmann::json& j, const Content& m);
+
+void from_json(const nlohmann::json& j, Content& m);
 
 #endif // CONTENT_H

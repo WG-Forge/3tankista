@@ -7,10 +7,13 @@
 
 struct Base
 {
+public:
+    void  SetHexes(const std::vector<Vector3d>& hexes) { this->hexes = hexes; }
+    auto& GetHexes() { return this->hexes; }
+    const auto& GetHexes() const { return this->hexes; }
+
+private:
+    std::vector<Vector3d> hexes;
 };
-
-void to_json(nlohmann::json& j, const Base& m);
-
-void from_json(const nlohmann::json& j, Base& m);
 
 #endif // BASE_H

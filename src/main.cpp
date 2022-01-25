@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "client.h"
+#include "map.h"
 #include "server.h"
 #include "singleton.h"
 
@@ -21,7 +22,6 @@ int main()
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
             ->SendAction(Server::Action::MAP, nlohmann::json(""));
-
     if (!sent)
     {
         std::cerr << "Data wasn't sent" << std::endl;
@@ -40,6 +40,8 @@ int main()
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
+
+    Map map = nlohmann::json().parse(responce);
 
     isSuccessfully = client.Logout();
     if (!isSuccessfully)

@@ -1,14 +1,20 @@
 #include "repair.h"
 
 Repair::Repair()
-    : power(RepairPower::Light)
+    : power(RepairPower::Undefined)
 {
 }
 
+Repair::Repair(const RepairPower power)
+    : power(power)
+{
+}
+
+Repair::~Repair() {}
+
 void to_json(nlohmann::json& j, const Repair& m)
 {
-    //    j = m.GetPower() == Repair::RepairPower::Light ?
-    //        nlohmann::json{ "" } : nlohmann::json{ "" };
+    j = nlohmann::json{ "" };
 }
 
 void from_json(const nlohmann::json& j, Repair& m) {}

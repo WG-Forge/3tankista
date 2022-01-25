@@ -7,12 +7,15 @@ struct Repair
 {
     enum class RepairPower
     {
+        Undefined,
         Light,
         Hard
     };
 
 public:
     Repair();
+    Repair(const RepairPower power);
+    virtual ~Repair();
 
 public:
     void        SetPower(const RepairPower& power) { this->power = power; }
