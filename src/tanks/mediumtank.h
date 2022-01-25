@@ -6,7 +6,7 @@
 class MediumTank : public AbstractTank
 {
 public:
-    MediumTank(int vehicleId, Player *owner);
+    MediumTank(int vehicleId);
     ~MediumTank();
 
     // TODO: Implement methods
