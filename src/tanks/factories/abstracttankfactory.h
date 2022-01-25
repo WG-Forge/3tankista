@@ -6,7 +6,7 @@
 class AbstractTankFactory
 {
 public:
-    virtual AbstractTank *CreateMediumTank(int vehicleId) const = 0;
+    virtual AbstractTank* CreateMediumTank(int vehicleId) const = 0;
 };
 
 #endif // SERVER_ABSTRACTTANKFACTORY_H

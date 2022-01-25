@@ -6,9 +6,7 @@ AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
 {
 }
 
-AbstractTank::~AbstractTank()
-{
-}
+AbstractTank::~AbstractTank() {}
 
 void to_json(nlohmann::json& j, const AbstractTank& tank) {}
 
