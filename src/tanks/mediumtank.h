@@ -8,6 +8,9 @@ class MediumTank : public AbstractTank
 public:
     MediumTank(int vehicleId, Player *owner);
     ~MediumTank();
+
+    // TODO: Implement CanHit method
+    bool CanHit(const Vector3d& point) const override;
 };
 
 #endif // SERVER_MEDIUMTANK_H
