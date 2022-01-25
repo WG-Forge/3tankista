@@ -6,7 +6,7 @@
 
 class TankFactory : public AbstractTankFactory
 {
-    AbstractTank *CreateMediumTank(int vehicleId, Player *owner) const override { return (AbstractTank *) new MediumTank(vehicleId, owner); }
+    AbstractTank *CreateMediumTank(int vehicleId) const override { return (AbstractTank *) new MediumTank(vehicleId); }
 };
 
 #endif // SERVER_TANKFACTORY_H

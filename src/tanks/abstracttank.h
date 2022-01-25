@@ -5,7 +5,6 @@
 #include "nlohmann/json.hpp"
 
 // TODO: Include next
-class Player;
 class Vector3i;
 
 enum class TankType {
@@ -15,7 +14,7 @@ enum class TankType {
 class AbstractTank
 {
 public:
-    AbstractTank(int vehicleId, Player *owner, const TankType& tankType);
+    AbstractTank(int vehicleId, const TankType& tankType);
     ~AbstractTank();
 
     virtual bool CanShoot(const Vector3i& point) const = 0;
@@ -28,10 +27,6 @@ protected:
     void        SetVehicleId(const int& id) { this->vehicleId = id; }
     auto&       GetVehicleId() { return vehicleId; }
     const auto& GetVehicleId() const { return vehicleId; }
-
-    void        SetPPlayer(const std::shared_ptr<Player>& player) { this->player = player; }
-    auto        GetPPlayer() { return this->player; }
-    const auto& GetPPlayer() const {return this->player; }
 
     void        SetTankType(const TankType& tankType) { this->tankType = tankType; }
     auto&       GetTankType() { return tankType; }
@@ -71,17 +66,16 @@ public:
     const auto& GetCapturePoints() const { return capturePoints; }
 
 private:
-    int                      vehicleId;
-    std::shared_ptr<Player>  player;
-    TankType                 tankType;
-    Vector3i                 position;
-    Vector3i                 spawnPosition;
-    int                      health;
-    int                      maxHealth;
-    int                      speed;
-    int                      damage;
-    int                      destructionPoints;
-    int                      capturePoints;
+    int      vehicleId;
+    TankType tankType;
+    Vector3i position;
+    Vector3i spawnPosition;
+    int      health;
+    int      maxHealth;
+    int      speed;
+    int      damage;
+    int      destructionPoints;
+    int      capturePoints;
 };
 
 void to_json(nlohmann::json& j, const AbstractTank& tank);
