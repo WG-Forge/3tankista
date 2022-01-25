@@ -4,8 +4,7 @@
 #include <memory>
 #include "nlohmann/json.hpp"
 
-// TODO: Include next
-class Vector3i;
+#include "matrix.hpp"
 
 enum class TankType {
     MEDIUM
