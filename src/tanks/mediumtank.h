@@ -7,7 +7,7 @@ class MediumTank : public AbstractTank
 {
 public:
     MediumTank(int vehicleId);
-    ~MediumTank();
+    virtual ~MediumTank();
 
     // TODO: Implement methods
     bool CanShoot(const Vector3i& point) const override;

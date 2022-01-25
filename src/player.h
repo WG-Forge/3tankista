@@ -3,7 +3,9 @@
 
 #include "loginresponcemodel.h"
 
-class Tank;
+#include <memory>
+
+#include "abstracttank.h"
 
 class Player
 {
@@ -19,7 +21,7 @@ protected:
     auto&       GetData() { return this->data; }
     const auto& GetData() const { return this->data; }
 
-    void SetTanks(const std::vector<Tank>& vehicles)
+    void SetTanks(const std::vector<std::shared_ptr<AbstractTank>>& vehicles)
     {
         this->vehicles = vehicles;
     }
@@ -27,8 +29,8 @@ protected:
     const auto& GetTanks() const { return this->vehicles; }
 
 private:
-    ServerModels::ClientDataModel data;
-    std::vector<Tank>             vehicles;
+    ServerModels::ClientDataModel              data;
+    std::vector<std::shared_ptr<AbstractTank>> vehicles;
 };
 
 #endif // PLAYER_H

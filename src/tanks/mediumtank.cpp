@@ -10,3 +10,13 @@ MediumTank::MediumTank(int vehicleId)
 }
 
 MediumTank::~MediumTank() {}
+
+bool MediumTank::CanShoot(const Vector3i& point) const
+{
+    return false;
+}
+
+bool MediumTank::CanMove(const Vector3i& point) const
+{
+    return false;
+}

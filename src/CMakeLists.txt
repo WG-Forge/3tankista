@@ -17,6 +17,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/server/protocols
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/map
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/map/models
+                                                   ${CMAKE_CURRENT_SOURCE_DIR}/tanks
+                                                   ${CMAKE_CURRENT_SOURCE_DIR}/tanks/factories
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/utility)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
