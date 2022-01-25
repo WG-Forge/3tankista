@@ -10,8 +10,8 @@
 int main()
 {
     Client client;
-    auto   isSuccessfully = client.Login(ServerModels::LoginRequestModel{
-        "maxmopka", "qwerty", "kavototam", 25, 1, false });
+    auto   isSuccessfully = client.Login(
+        ServerModels::LoginRequestModel{ "kto", "ty", "ya", 25, 1, false });
     if (!isSuccessfully)
     {
         std::cerr << "Some error occurred while trying to login to the "
