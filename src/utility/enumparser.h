@@ -11,7 +11,7 @@ class EnumParser
     using enum_type = T;
 
 public:
-    EnumParser() {}
+    EnumParser();
 
     enum_type String2Enum(const std::string& value)
     {

@@ -7,6 +7,9 @@
 #include "server.h"
 #include "singleton.h"
 
+#include "abstracttank.h"
+#include "nlohmann/json.hpp"
+
 int main()
 {
     Client client;
@@ -18,7 +21,23 @@ int main()
                      "server"
                   << std::endl;
     }
-
+    auto kek       = "{\"1\": {\n"
+                     "      \"player_id\": 1,\n"
+                     "      \"vehicle_type\": \"medium_tank\",\n"
+                     "      \"health\": 2,\n"
+                     "      \"spawn_position\": {\n"
+                     "        \"x\": -7,\n"
+                     "        \"y\": -3,\n"
+                     "        \"z\": 10\n"
+                     "      },\n"
+                     "      \"position\": {\n"
+                     "        \"x\": -7,\n"
+                     "        \"y\": -3,\n"
+                     "        \"z\": 10\n"
+                     "      },\n"
+                     "      \"capture_points\": 0\n"
+                     "    }}"_json;
+    auto kek1 = kek.get<AbstractTank*>();
     isSuccessfully = client.Logout();
     if (!isSuccessfully)
     {

@@ -6,6 +6,7 @@
 
 class TankFactory : public AbstractTankFactory
 {
+public:
     AbstractTank* CreateMediumTank(int vehicleId) const override
     {
         return (AbstractTank*)new MediumTank(vehicleId);

@@ -1,15 +1,10 @@
 #ifndef SERVER_ABSTRACTTANK_H
 #define SERVER_ABSTRACTTANK_H
 
-#include "nlohmann/json.hpp"
-#include <memory>
-
 #include "matrix.hpp"
-
-enum class TankType
-{
-    MEDIUM
-};
+#include "nlohmann/json.hpp"
+#include "tanktypes.h"
+#include <memory>
 
 class AbstractTank
 {
@@ -28,6 +23,12 @@ protected:
     auto&       GetVehicleId() { return vehicleId; }
     const auto& GetVehicleId() const { return vehicleId; }
 
+public:
+    void        SetPlayerId(const int& id) { this->playerId = id; }
+    auto&       GetPlayerId() { return playerId; }
+    const auto& GetPlayerId() const { return playerId; }
+
+protected:
     void  SetTankType(const TankType& tankType) { this->tankType = tankType; }
     auto& GetTankType() { return tankType; }
     const auto& GetTankType() const { return tankType; }
@@ -48,8 +49,8 @@ public:
     auto&       GetHealth() { return this->health; }
     const auto& GetHealth() const { return this->health; }
 
-    void        SetMaxHealth(const int& maxHealth) { this->maxHealth = health; }
-    auto&       GetMaxHealth() { return this->maxHealth; }
+    void  SetMaxHealth(const int& maxHealth) { this->maxHealth = maxHealth; }
+    auto& GetMaxHealth() { return this->maxHealth; }
     const auto& GetMaxHealth() const { return this->maxHealth; }
 
     void        SetSpeed(const int& speed) { this->speed = speed; }
@@ -76,6 +77,7 @@ public:
 
 private:
     int      vehicleId;
+    int      playerId;
     TankType tankType;
     Vector3i position;
     Vector3i spawnPosition;
@@ -87,8 +89,19 @@ private:
     int      capturePoints;
 };
 
-void to_json(nlohmann::json& j, const AbstractTank& tank);
+namespace nlohmann
+{
+template <>
+struct adl_serializer<AbstractTank*>
+{
+    static AbstractTank* from_json(const json& j);
 
-void from_json(const nlohmann::json& j, AbstractTank& tank);
+    static void to_json(json& j, AbstractTank* t);
+};
+} // namespace nlohmann
+
+// void to_json(nlohmann::json& j, const AbstractTank& tank);
+
+// void from_json(const nlohmann::json& j, AbstractTank& tank);
 
 #endif // SERVER_ABSTRACTTANK_H
