@@ -1,12 +1,13 @@
 #ifndef SERVER_ABSTRACTTANK_H
 #define SERVER_ABSTRACTTANK_H
 
-#include <memory>
 #include "nlohmann/json.hpp"
+#include <memory>
 
 #include "matrix.hpp"
 
-enum class TankType {
+enum class TankType
+{
     MEDIUM
 };
 
@@ -17,7 +18,7 @@ public:
     ~AbstractTank();
 
     virtual bool CanShoot(const Vector3i& point) const = 0;
-    virtual bool CanMove(const Vector3i& point) const = 0;
+    virtual bool CanMove(const Vector3i& point) const  = 0;
 
     void Shoot(const Vector3i& point);
     void Move(const Vector3i& point);
@@ -27,16 +28,19 @@ protected:
     auto&       GetVehicleId() { return vehicleId; }
     const auto& GetVehicleId() const { return vehicleId; }
 
-    void        SetTankType(const TankType& tankType) { this->tankType = tankType; }
-    auto&       GetTankType() { return tankType; }
+    void  SetTankType(const TankType& tankType) { this->tankType = tankType; }
+    auto& GetTankType() { return tankType; }
     const auto& GetTankType() const { return tankType; }
 
 public:
-    void        SetPosition(const Vector3i& position) { this->position = position; }
-    auto&       GetPosition() { return this->position; }
+    void  SetPosition(const Vector3i& position) { this->position = position; }
+    auto& GetPosition() { return this->position; }
     const auto& GetPosition() const { return this->position; }
 
-    void        SetSpawnPosition(const Vector3i& position) { this->spawnPosition = position; }
+    void SetSpawnPosition(const Vector3i& position)
+    {
+        this->spawnPosition = position;
+    }
     auto&       GetSpawnPosition() { return this->spawnPosition; }
     const auto& GetSpawnPosition() const { return this->spawnPosition; }
 
@@ -50,17 +54,23 @@ public:
 
     void        SetSpeed(const int& speed) { this->speed = speed; }
     auto&       GetSpeed() { return this->speed; }
-    const auto& GetSpeed() const {return this->speed; }
+    const auto& GetSpeed() const { return this->speed; }
 
     void        SetDamage(const int& damage) { this->damage = damage; }
     auto&       GetDamage() { return this->damage; }
     const auto& GetDamage() const { return this->damage; }
 
-    void        SetDestructionPoints(const int& destructionPoints) { this->destructionPoints = destructionPoints; }
+    void SetDestructionPoints(const int& destructionPoints)
+    {
+        this->destructionPoints = destructionPoints;
+    }
     auto&       GetDestructionPoints() { return this->destructionPoints; }
-    const auto& GetDestructionPoints() const {return this->destructionPoints; }
+    const auto& GetDestructionPoints() const { return this->destructionPoints; }
 
-    void        SetCapturePoints(const int& capturePoints) { this->capturePoints = capturePoints; }
+    void SetCapturePoints(const int& capturePoints)
+    {
+        this->capturePoints = capturePoints;
+    }
     auto&       GetCapturePoints() { return capturePoints; }
     const auto& GetCapturePoints() const { return capturePoints; }
 

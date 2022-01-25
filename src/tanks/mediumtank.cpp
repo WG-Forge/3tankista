@@ -9,6 +9,4 @@ MediumTank::MediumTank(int vehicleId)
     SetDestructionPoints(2);
 }
 
-MediumTank::~MediumTank()
-{
-}
+MediumTank::~MediumTank() {}
