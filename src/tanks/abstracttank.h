@@ -6,10 +6,10 @@
 
 // TODO: Include next
 class Player;
-class Vector3d;
+class Vector3i;
 
 enum class TankType {
-    MEDIUM_TANK
+    MEDIUM
 };
 
 class AbstractTank
@@ -18,11 +18,11 @@ public:
     AbstractTank(int vehicleId, Player *owner, const TankType& tankType);
     ~AbstractTank();
 
-    virtual bool CanShoot(const Vector3d& point) const = 0;
-    virtual bool CanMove(const Vector3d& point) const = 0;
+    virtual bool CanShoot(const Vector3i& point) const = 0;
+    virtual bool CanMove(const Vector3i& point) const = 0;
 
-    void Shoot(const Vector3d& point);
-    void Move(const Vector3d& point);
+    void Shoot(const Vector3i& point);
+    void Move(const Vector3i& point);
 
 protected:
     void        SetVehicleId(const int& id) { this->vehicleId = id; }
@@ -38,11 +38,11 @@ protected:
     const auto& GetTankType() const { return tankType; }
 
 public:
-    void        SetPosition(const Vector3d& position) { this->position = position; }
+    void        SetPosition(const Vector3i& position) { this->position = position; }
     auto&       GetPosition() { return this->position; }
     const auto& GetPosition() const { return this->position; }
 
-    void        SetSpawnPosition(const Vector3d& position) { this->spawnPosition = position; }
+    void        SetSpawnPosition(const Vector3i& position) { this->spawnPosition = position; }
     auto&       GetSpawnPosition() { return this->spawnPosition; }
     const auto& GetSpawnPosition() const { return this->spawnPosition; }
 
@@ -74,8 +74,8 @@ private:
     int                      vehicleId;
     std::shared_ptr<Player>  player;
     TankType                 tankType;
-    Vector3d                 position;
-    Vector3d                 spawnPosition;
+    Vector3i                 position;
+    Vector3i                 spawnPosition;
     int                      health;
     int                      maxHealth;
     int                      speed;

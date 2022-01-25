@@ -1,7 +1,7 @@
 #include "mediumtank.h"
 
 MediumTank::MediumTank(int vehicleId, Player* owner)
-    : AbstractTank(vehicleId, owner, TankType::MEDIUM_TANK)
+    : AbstractTank(vehicleId, owner, TankType::MEDIUM)
 {
     SetMaxHealth(2);
     SetSpeed(2);
