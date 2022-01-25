@@ -21,7 +21,7 @@ struct SpawnPoints
 {
 public:
     using TanksTypeAndSpawnPos =
-        std::vector<std::pair<TankType, std::vector<Vector3d>>>;
+        std::vector<std::pair<TankType, std::vector<Vector3i>>>;
 
 public:
     SpawnPoints();

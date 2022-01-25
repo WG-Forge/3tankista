@@ -8,12 +8,12 @@
 struct Base
 {
 public:
-    void  SetHexes(const std::vector<Vector3d>& hexes) { this->hexes = hexes; }
+    void  SetHexes(const std::vector<Vector3i>& hexes) { this->hexes = hexes; }
     auto& GetHexes() { return this->hexes; }
     const auto& GetHexes() const { return this->hexes; }
 
 private:
-    std::vector<Vector3d> hexes;
+    std::vector<Vector3i> hexes;
 };
 
 #endif // BASE_H

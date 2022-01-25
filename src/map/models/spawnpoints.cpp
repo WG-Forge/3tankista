@@ -26,10 +26,10 @@ void from_json(const nlohmann::json& j, SpawnPoints& m)
     {
         for (const auto& [key, value] : j.items())
         {
-            std::vector<Vector3d> spawnPoints;
-            j.at(key).get_to<std::vector<Vector3d>>(spawnPoints);
+            std::vector<Vector3i> spawnPoints;
+            j.at(key).get_to<std::vector<Vector3i>>(spawnPoints);
             m.GetTanksSpawnPoints().emplace_back(
-                std::make_pair<TankType, std::vector<Vector3d>>(
+                std::make_pair<TankType, std::vector<Vector3i>>(
                     SINGLETON(EnumParser<TankType>)->String2Enum(key),
                     std::move(spawnPoints)));
         }

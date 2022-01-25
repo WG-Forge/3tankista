@@ -22,7 +22,7 @@ void from_json(const nlohmann::json& j, Content& m)
         {
             if (key == "base")
             {
-                j.at(key).get_to<std::vector<Vector3d>>(m.GetBase().GetHexes());
+                j.at(key).get_to<std::vector<Vector3i>>(m.GetBase().GetHexes());
             }
             else if (key == "catapult")
             {

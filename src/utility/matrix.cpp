@@ -222,9 +222,9 @@ double RowVector4d::dot(const RowVector4d& other) const
             this->z() * other.z() + this->w() * other.w());
 }
 
-void to_json(nlohmann::json& j, const Vector3d& m) {}
+void to_json(nlohmann::json& j, const Vector3i& m) {}
 
-void from_json(const nlohmann::json& j, Vector3d& m)
+void from_json(const nlohmann::json& j, Vector3i& m)
 {
     j.at("x").get_to(m.x());
     j.at("y").get_to(m.y());
