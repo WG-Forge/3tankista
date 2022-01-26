@@ -3,13 +3,23 @@
 #define GAMESTATE_H
 
 #include "../player.h"
+#include "enumparser.h"
 #include "loginresponcemodel.h"
+#include "matrix.hpp"
+#include "mediumtank.h"
 #include "nlohmann/json.hpp"
+#include "winpoints.h"
 #include <sstream>
 #include <unordered_map>
 #include <vector>
-#include "winpoints.h"
-
+enum class TypeOfTank
+{
+    LIGHT,
+    MEDIUM,
+    HEAVY,
+    AT_SPG,
+    SPG
+};
 class GameState
 {
 public:
@@ -57,32 +67,37 @@ public:
     }
     auto&       GetAttackMatrix() { return this->attack_matrix; }
     const auto& GetAttackMatrix() const { return this->attack_matrix; }
-    
-    void SetWinPoints(const std::unordered_map<int,WinPoints>& wp)
+
+    void SetWinPoints(const std::unordered_map<int, WinPoints>& wp)
     {
         this->win_points = wp;
     }
     auto&       GetWinPoints() { return this->win_points; }
     const auto& GetWinPoints() const { return this->win_points; }
 
+    void SetVehicles(const std::unordered_map<int,std::vector<AbstractTank*>>& vh)
+    {
+        this->vehicles = vh;
+    }
+    auto&       GetVehicles() { return this->vehicles; }
+    const auto& GetVehicles() const { return this->vehicles; }
+
 private:
-    int                                       num_players;
-    int                                       num_turns;
-    int                                       current_turn;
-    std::vector<Player>                       players;
-    std::vector<int>                          observers;
-    int                                       current_player_idx;
-    bool                                      finished;
-    std::vector<AbstractTank>                 vehicles;
-    std::unordered_map<int, std::vector<int>> attack_matrix;
-    int                                       winner;
-    std::unordered_map<int, WinPoints>        win_points;
+    int                                                 num_players;
+    int                                                 num_turns;
+    int                                                 current_turn;
+    std::vector<Player>                                 players;
+    std::vector<int>                                    observers;
+    int                                                 current_player_idx;
+    bool                                                finished;
+    std::unordered_map<int, std::vector<AbstractTank*>> vehicles;
+    std::unordered_map<int, std::vector<int>>           attack_matrix;
+    int                                                 winner;
+    std::unordered_map<int, WinPoints>                  win_points;
 };
 
 void to_json(nlohmann::json& j, const GameState& gs);
 
 void from_json(const nlohmann::json& j, GameState& gs);
-
-
 
 #endif // GAMESTATE_H
