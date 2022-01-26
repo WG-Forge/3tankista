@@ -1,11 +1,5 @@
-#include <chrono>
 #include <iostream>
-#include <thread>
-
 #include "client.h"
-#include "map.h"
-#include "server.h"
-#include "singleton.h"
 
 int main()
 {
@@ -18,7 +12,6 @@ int main()
                      "server"
                   << std::endl;
     }
-
     isSuccessfully = client.Logout();
     if (!isSuccessfully)
     {
