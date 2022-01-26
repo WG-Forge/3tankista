@@ -27,5 +27,4 @@ void to_json(nlohmann::json& j, const WinPoints& wp);
 
 void from_json(const nlohmann::json& j, WinPoints& wp);
 
-int ConvertToInt(const char* s);
 #endif // WINPOINTS_H

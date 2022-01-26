@@ -1,16 +1,7 @@
 #include "gamestate.h"
-
 #include "singleton.h"
+#include "converttoint.h"
 
-/*template <>
-EnumParser<TypeOfTank>::EnumParser()
-{
-    enumMap["light_tank"]  = TypeOfTank::LIGHT;
-    enumMap["medium_tank"] = TypeOfTank::MEDIUM;
-    enumMap["heavy_tank"]  = TypeOfTank::HEAVY;
-    enumMap["at_spg_tank"] = TypeOfTank::AT_SPG;
-    enumMap["spg_tank"]    = TypeOfTank::SPG;
-}*/
 GameState::GameState()
     : num_players()
     , num_turns()
@@ -64,21 +55,22 @@ void from_json(const nlohmann::json& j, GameState& gs)
         }
         gs.SetWinPoints(wp);
         std::unordered_map<int, std::vector<AbstractTank*>> vehs;
-        for (const auto& [key, value] : j["vehicles"].items())
+        for (auto it = j["vehicles"].begin(); it != j["vehicles"].end(); ++it)
         {
             std::vector<AbstractTank*> atanks;
             int                        player_id;
-            value.at("player_id").get_to<int>(player_id);
+            it.value().at("player_id").get_to<int>(player_id);
             if (vehs.find(player_id) != vehs.end())
             {
                 atanks = vehs[player_id];
             }
-            if (value.at("vehicle_type") == "medium_tank")
-            {
-                atanks.emplace_back(new MediumTank(ConvertToInt(key.c_str())));
-                from_json(value,
-                          *dynamic_cast<MediumTank*>(atanks[atanks.size() - 1]));
-            }
+            atanks.push_back(it->get<AbstractTank*>());
+//            if (value.at("vehicle_type") == "medium_tank")
+//            {
+//                atanks.emplace_back(new MediumTank(ConvertToInt(key.c_str())));
+//                from_json(value,
+//                          *dynamic_cast<MediumTank*>(atanks[atanks.size() - 1]));
+//            }
 
             vehs.erase(player_id);
             vehs.insert(std::make_pair(player_id, atanks));

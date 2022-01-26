@@ -12,14 +12,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <vector>
-enum class TypeOfTank
-{
-    LIGHT,
-    MEDIUM,
-    HEAVY,
-    AT_SPG,
-    SPG
-};
+
 class GameState
 {
 public:

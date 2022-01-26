@@ -2,6 +2,7 @@
 #include "enumparser.h"
 #include "singleton.h"
 #include "tankfactory.h"
+#include "converttoint.h"
 
 AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
     : vehicleId(vehicleId)
@@ -9,7 +10,7 @@ AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
 {
 }
 
-AbstractTank::~AbstractTank() {
+AbstractTank::~AbstractTank() {}
 
 AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(const json& j)
 {
@@ -21,8 +22,9 @@ AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(const json& j)
     {
         case TankType::MEDIUM:
         {
+            // TODO: Vlad pls fix... Use AbstractTankFactory instead TankFactory
             tank = SINGLETON(TankFactory)
-                       ->CreateMediumTank(std::stoi(j.begin().key()));
+                       ->CreateMediumTank(ConvertToInt(j.begin().key().c_str()));
             break;
         }
     }
