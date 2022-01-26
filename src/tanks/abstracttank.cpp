@@ -1,5 +1,4 @@
 #include "abstracttank.h"
-#include "winpoints.h"
 AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
     : vehicleId(vehicleId)
     , tankType(tankType)
