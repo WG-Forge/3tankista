@@ -5,17 +5,8 @@
 
 #include "nlohmann/json.hpp"
 
-#include "enumparser.h"
 #include "matrix.hpp"
-
-enum class TankType
-{
-    LIGHT,
-    MEDIUM,
-    HEAVY,
-    AT_SPG,
-    SPG
-};
+#include "tanktypes.h"
 
 struct SpawnPoints
 {

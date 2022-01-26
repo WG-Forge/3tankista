@@ -3,6 +3,7 @@
 MediumTank::MediumTank(int vehicleId)
     : AbstractTank(vehicleId, TankType::MEDIUM)
 {
+    SetHealth(2);
     SetMaxHealth(2);
     SetSpeed(2);
     SetDamage(1);
