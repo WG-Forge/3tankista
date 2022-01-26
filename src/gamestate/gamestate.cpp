@@ -76,25 +76,10 @@ void from_json(const nlohmann::json& j, GameState& gs)
             if (value.at("vehicle_type") == "medium_tank")
             {
                 atanks.emplace_back(new MediumTank(ConvertToInt(key.c_str())));
+                from_json(value,
+                          *dynamic_cast<MediumTank*>(atanks[atanks.size() - 1]));
             }
-            value.at("capture_points")
-                .get_to<int>(atanks[atanks.size() - 1]->GetCapturePoints());
-            value.at("health").get_to<int>(
-                atanks[atanks.size() - 1]->GetHealth());
-            std::vector<int> temp;
-            for (const auto& [coord, c_value] : value["position"].items())
-            {
-                temp.emplace_back(c_value);
-            }
-            Vector3i pos = { temp[0], temp[1], temp[2] };
-            temp.clear();
-            for (const auto& [coord, c_value] : value["spawn_position"].items())
-            {
-                temp.emplace_back(c_value);
-            }
-            Vector3i spos = { temp[0], temp[1], temp[2] };
-            atanks[atanks.size() - 1]->SetPosition(pos);
-            atanks[atanks.size() - 1]->SetSpawnPosition(spos);
+
             vehs.erase(player_id);
             vehs.insert(std::make_pair(player_id, atanks));
         }
