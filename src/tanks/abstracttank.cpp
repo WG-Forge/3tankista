@@ -9,7 +9,7 @@ AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
 {
 }
 
-AbstractTank::~AbstractTank() {}
+AbstractTank::~AbstractTank() {
 
 AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(const json& j)
 {
