@@ -2,12 +2,12 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
-#include "../player.h"
 #include "enumparser.h"
 #include "loginresponcemodel.h"
 #include "matrix.hpp"
 #include "mediumtank.h"
 #include "nlohmann/json.hpp"
+#include "player.h"
 #include "winpoints.h"
 #include <sstream>
 #include <unordered_map>
@@ -68,7 +68,8 @@ public:
     auto&       GetWinPoints() { return this->win_points; }
     const auto& GetWinPoints() const { return this->win_points; }
 
-    void SetVehicles(const std::unordered_map<int,std::vector<AbstractTank*>>& vh)
+    void SetVehicles(
+        const std::unordered_map<int, std::vector<AbstractTank*>>& vh)
     {
         this->vehicles = vh;
     }

@@ -1,8 +1,9 @@
 #ifndef SERVER_ABSTRACTTANK_H
 #define SERVER_ABSTRACTTANK_H
 
-#include "matrix.hpp"
 #include "nlohmann/json.hpp"
+
+#include "matrix.hpp"
 #include "tanktypes.h"
 #include <memory>
 

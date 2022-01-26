@@ -1,6 +1,5 @@
 #include "gamestate.h"
 #include "singleton.h"
-#include "converttoint.h"
 
 GameState::GameState()
     : num_players()
@@ -43,7 +42,7 @@ void from_json(const nlohmann::json& j, GameState& gs)
         for (const auto& [key, value] : j["attack_matrix"].items())
         {
             std::vector<int> ids(value);
-            am.insert(std::make_pair(ConvertToInt(key.c_str()), ids));
+            am.insert(std::make_pair(std::stoi(key), ids));
         }
         gs.SetAttackMatrix(am);
         std::unordered_map<int, WinPoints> wp;
@@ -51,7 +50,7 @@ void from_json(const nlohmann::json& j, GameState& gs)
         {
             WinPoints tempwp;
             from_json(value, tempwp);
-            wp.insert(std::make_pair(ConvertToInt(key.c_str()), tempwp));
+            wp.insert(std::make_pair(std::stoi(key), tempwp));
         }
         gs.SetWinPoints(wp);
         std::unordered_map<int, std::vector<AbstractTank*>> vehs;
@@ -64,13 +63,10 @@ void from_json(const nlohmann::json& j, GameState& gs)
             {
                 atanks = vehs[player_id];
             }
-            atanks.push_back(it->get<AbstractTank*>());
-//            if (value.at("vehicle_type") == "medium_tank")
-//            {
-//                atanks.emplace_back(new MediumTank(ConvertToInt(key.c_str())));
-//                from_json(value,
-//                          *dynamic_cast<MediumTank*>(atanks[atanks.size() - 1]));
-//            }
+
+            nlohmann::json j;
+            j[it.key()] = it.value();
+            atanks.push_back(j.get<AbstractTank*>());
 
             vehs.erase(player_id);
             vehs.insert(std::make_pair(player_id, atanks));
@@ -86,6 +82,14 @@ void from_json(const nlohmann::json& j, GameState& gs)
         std::cout << e.what() << std::endl << std::flush;
     }
     catch (nlohmann::json::parse_error& e)
+    {
+        std::cout << e.what() << std::endl << std::flush;
+    }
+    catch (std::out_of_range& e)
+    {
+        std::cout << e.what() << std::endl << std::flush;
+    }
+    catch (std::invalid_argument& e)
     {
         std::cout << e.what() << std::endl << std::flush;
     }
