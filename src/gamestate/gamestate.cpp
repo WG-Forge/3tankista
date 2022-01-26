@@ -34,10 +34,22 @@ void from_json(const nlohmann::json& j, GameState& gs)
     }
     j.at("players").get_to<std::vector<Player>>(gs.GetPlayers());
     j.at("observers").get_to<std::vector<int>>(gs.GetObservers());
-    std::unordered_map<int, int> am;
+    std::unordered_map<int, std::vector<int>> am;
     for (const auto& [key, value] : j["attack_matrix"].items())
     {
         std::vector<int> ids(value);
-        
+        am.insert(std::make_pair(ConvertToInt(key.c_str()), ids));
+        std::cout << "\n";
     }
+    gs.SetAttackMatrix(am);
+    std::unordered_map<int, WinPoints> wp;
+    for (const auto& [key, value] : j["win_points"].items())
+    {
+        WinPoints tempwp;
+        std::cout << key << "|" << value << "\n";
+        from_json(value, tempwp);
+        wp.insert(std::make_pair(ConvertToInt(key.c_str()), tempwp));
+        std::cout << "\n";
+    }
+    gs.SetWinPoints(wp);
 }

@@ -16,6 +16,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
         ${CMAKE_CURRENT_SOURCE_DIR}/server/models
         ${CMAKE_CURRENT_SOURCE_DIR}/server/protocols
         ${CMAKE_CURRENT_SOURCE_DIR}/gamestate
+        ${CMAKE_CURRENT_SOURCE_DIR}/winpoints
         ${CMAKE_CURRENT_SOURCE_DIR}/map
         ${CMAKE_CURRENT_SOURCE_DIR}/map/models
         ${CMAKE_CURRENT_SOURCE_DIR}/tanks
