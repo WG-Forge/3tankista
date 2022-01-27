@@ -17,7 +17,7 @@ public:
     bool Login(const ServerModels::LoginRequestModel& data);
     bool Logout();
 
-private:
+public:
     void SetData(const ServerModels::ClientDataModel& data)
     {
         this->data = data;
