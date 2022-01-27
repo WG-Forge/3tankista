@@ -7,8 +7,8 @@ struct Catapult
 {
 };
 
-void to_json(nlohmann::json& j, const Catapult& m);
+void to_json(nlohmann::json& json, const Catapult& catapult);
 
-void from_json(const nlohmann::json& j, Catapult& m);
+void from_json(const nlohmann::json& json, Catapult& catapult);
 
 #endif // CATAPULT_H

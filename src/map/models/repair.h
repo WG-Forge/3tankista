@@ -3,6 +3,8 @@
 
 #include "nlohmann/json.hpp"
 
+// Can be deleted in future
+
 struct Repair
 {
     enum class RepairPower
@@ -26,8 +28,8 @@ private:
     RepairPower power;
 };
 
-void to_json(nlohmann::json& j, const Repair& m);
+void to_json(nlohmann::json& json, const Repair& repair);
 
-void from_json(const nlohmann::json& j, Repair& m);
+void from_json(const nlohmann::json& json, Repair& repair);
 
 #endif // REPAIR_H

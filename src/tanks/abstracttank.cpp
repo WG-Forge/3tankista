@@ -21,51 +21,77 @@ AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
 
 AbstractTank::~AbstractTank() {}
 
-AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(const json& j)
+void nlohmann::adl_serializer<AbstractTank*>::to_json(nlohmann::json& json,
+                                                      AbstractTank*   tank)
 {
-    AbstractTank* tank         = nullptr;
-    const auto&   jsonTankInfo = j.begin().value();
-    TankType      tankType     = SINGLETON(EnumParser<TankType>)
-                            ->String2Enum(jsonTankInfo.at("vehicle_type"));
-    switch (tankType)
-    {
-        case TankType::LIGHT:
-        {
-            break;
-        }
-        case TankType::MEDIUM:
-        {
-            tank = SINGLETON(TankFactory)
-                       ->CreateMediumTank(std::stoi(j.begin().key()));
-            break;
-        }
-        case TankType::HEAVY:
-        {
-            break;
-        }
-        case TankType::AT_SPG:
-        {
-            break;
-        }
-        case TankType::SPG:
-        {
-            break;
-        }
-        default:
-        {
-            return tank;
-        }
-    }
-
-    jsonTankInfo.at("player_id").get_to<int>(tank->GetPlayerId());
-    jsonTankInfo.at("health").get_to<int>(tank->GetHealth());
-    jsonTankInfo.at("spawn_position")
-        .get_to<Vector3i>(tank->GetSpawnPosition());
-    jsonTankInfo.at("position").get_to<Vector3i>(tank->GetPosition());
-    jsonTankInfo.at("capture_points").get_to<int>(tank->GetCapturePoints());
-    return tank;
+    json = nlohmann::json{ "" };
 }
-void nlohmann::adl_serializer<AbstractTank*>::to_json(nlohmann::json& j,
-                                                      AbstractTank*   t)
+
+AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(
+    const json& json)
 {
+    AbstractTank* tank = nullptr;
+    try
+    {
+        const auto& jsonTankInfo = json.begin().value();
+        TankType    tankType     = SINGLETON(EnumParser<TankType>)
+                                ->String2Enum(jsonTankInfo.at("vehicle_type"));
+        switch (tankType)
+        {
+            case TankType::LIGHT:
+            {
+                break;
+            }
+            case TankType::MEDIUM:
+            {
+                tank = SINGLETON(TankFactory)
+                           ->CreateMediumTank(std::stoi(json.begin().key()));
+                break;
+            }
+            case TankType::HEAVY:
+            {
+                break;
+            }
+            case TankType::AT_SPG:
+            {
+                break;
+            }
+            case TankType::SPG:
+            {
+                break;
+            }
+            default:
+            {
+                return tank;
+            }
+        }
+
+        jsonTankInfo.at("player_id").get_to<int>(tank->GetPlayerId());
+        jsonTankInfo.at("health").get_to<int>(tank->GetHealth());
+        jsonTankInfo.at("spawn_position")
+            .get_to<Vector3i>(tank->GetSpawnPosition());
+        jsonTankInfo.at("position").get_to<Vector3i>(tank->GetPosition());
+        jsonTankInfo.at("capture_points").get_to<int>(tank->GetCapturePoints());
+    }
+    catch (nlohmann::json::type_error& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
+    catch (nlohmann::json::out_of_range& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
+    catch (nlohmann::json::parse_error& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
+    catch (std::out_of_range& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
+    catch (std::invalid_argument& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
+    return tank;
 }

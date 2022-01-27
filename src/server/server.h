@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "tcpworker.h"
+#include "tcp.h"
 
-class Server : public TcpWorker
+class Server : public Tcp
 {
 public:
     enum class Action
@@ -43,12 +43,12 @@ public:
     std::string ReceiveResult(Result& result);
 
 private:
-    void  SetBuffer(const std::vector<char>& buffer) { this->buffer = buffer; }
-    auto& GetBuffer() { return buffer; }
+    void        SetBuffer(const std::string& buffer) { this->buffer = buffer; }
+    auto&       GetBuffer() { return buffer; }
     const auto& GetBuffer() const { return buffer; }
 
 private:
-    std::vector<char> buffer;
+    std::string buffer;
 };
 
 #endif // SERVER_H

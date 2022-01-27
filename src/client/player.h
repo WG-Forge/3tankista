@@ -12,6 +12,7 @@ class Player
 public:
     Player();
     virtual ~Player();
+
 public:
     void SetData(const ServerModels::ClientDataModel& data)
     {
@@ -31,7 +32,9 @@ private:
     ServerModels::ClientDataModel              data;
     std::vector<std::shared_ptr<AbstractTank>> vehicles;
 };
-void to_json(nlohmann::json& j, const Player& pl);
 
-void from_json(const nlohmann::json& j, Player& pl);
+void to_json(nlohmann::json& json, const Player& player);
+
+void from_json(const nlohmann::json& json, Player& player);
+
 #endif // PLAYER_H

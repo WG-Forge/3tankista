@@ -1,15 +1,15 @@
-#ifndef TCPWORKER_H
-#define TCPWORKER_H
+#ifndef TCP_H
+#define TCP_H
 
 #include "string"
 
 #include "asio.hpp"
 
-class TcpWorker
+class Tcp
 {
 public:
-    TcpWorker(const std::string& host, const std::string& port);
-    virtual ~TcpWorker();
+    Tcp(const std::string& host, const std::string& port);
+    virtual ~Tcp();
 
 protected:
     std::size_t Send(const asio::const_buffer& buffer);
@@ -34,4 +34,4 @@ private:
     asio::ip::tcp::socket socket;
 };
 
-#endif // TCPWORKER_H
+#endif // TCP_H

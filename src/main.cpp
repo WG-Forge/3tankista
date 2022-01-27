@@ -4,6 +4,7 @@
 
 #include "client.h"
 #include "gamestate.h"
+#include "map.h"
 #include "server.h"
 
 #include "singleton.h"
@@ -11,8 +12,8 @@
 int main()
 {
     Client client;
-    auto   isSuccessfully = client.Login(
-        ServerModels::LoginRequestModel{ "kd", "ty", "dtasy", 25, 1, false });
+    auto   isSuccessfully = client.Login(ServerModels::LoginRequestModel{
+        "ktoto", "shtoto", "gdeto", 40, 1, false });
     if (!isSuccessfully)
     {
         std::cerr << "Some error occurred while trying to login to the "
@@ -20,9 +21,8 @@ int main()
                   << std::endl;
     }
 
-    const auto& sent =
-        Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-            ->SendAction(Server::Action::GAME_STATE, nlohmann::json(""));
+    auto sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                    ->SendAction(Server::Action::MAP, nlohmann::json(""));
     if (!sent)
     {
         std::cerr << "Data wasn't sent" << std::endl;
@@ -33,6 +33,28 @@ int main()
     auto           responce =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
             ->ReceiveResult(result);
+    if (result != Server::Result::OKEY)
+    {
+        std::cerr << "Map request result: " << static_cast<int>(result) << '\n';
+    }
+    if (responce.empty())
+    {
+        std::cerr << "No response was received from the server" << std::endl;
+    }
+
+    Map map = nlohmann::json().parse(responce);
+
+    sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+               ->SendAction(Server::Action::GAME_STATE, nlohmann::json(""));
+    if (!sent)
+    {
+        std::cerr << "Data wasn't sent" << std::endl;
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    result   = Server::Result::OKEY;
+    responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                   ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
         std::cerr << "Map request result: " << static_cast<int>(result) << '\n';

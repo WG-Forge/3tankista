@@ -2,95 +2,100 @@
 #include "singleton.h"
 
 GameState::GameState()
-    : num_players()
-    , num_turns()
-    , current_turn()
+    : numberPlayers()
+    , numberTurns()
+    , currentTurn()
     , players()
     , observers()
-    , current_player_idx()
+    , currentPlayerIndex()
     , finished()
     , vehicles()
-    , attack_matrix()
+    , attackMatrix()
     , winner()
-    , win_points()
+    , winPoints()
 {
 }
 
-void to_json(nlohmann::json& j, const GameState& gs) {}
+void to_json(nlohmann::json& json, const GameState& gameState)
+{
+    json = nlohmann::json{ "" };
+}
 
-void from_json(const nlohmann::json& j, GameState& gs)
+void from_json(const nlohmann::json& json, GameState& gameState)
 {
     try
     {
-        j.at("num_players").get_to<int>(gs.GetNumPlayers());
-        j.at("num_turns").get_to<int>(gs.GetNumTurns());
-        j.at("current_turn").get_to<int>(gs.GetCurrentTurn());
-        j.at("num_players").get_to<int>(gs.GetNumPlayers());
-        j.at("current_player_idx").get_to<int>(gs.GetCurrentPlayerIdx());
-        j.at("finished").get_to<bool>(gs.GetFinished());
-        if (j.at("winner").empty())
+        json.at("num_players").get_to<int>(gameState.GetNumPlayers());
+        json.at("num_turns").get_to<int>(gameState.GetNumTurns());
+        json.at("current_turn").get_to<int>(gameState.GetCurrentTurn());
+        json.at("num_players").get_to<int>(gameState.GetNumPlayers());
+        json.at("current_player_idx")
+            .get_to<int>(gameState.GetCurrentPlayerIdx());
+        json.at("finished").get_to<bool>(gameState.GetFinished());
+        if (json.at("winner").empty())
         {
-            gs.SetWinner(0);
+            gameState.SetWinner(0);
         }
         else
         {
-            j.at("winner").get_to<int>(gs.GetWinner());
+            json.at("winner").get_to<int>(gameState.GetWinner());
         }
-        j.at("players").get_to<std::vector<Player>>(gs.GetPlayers());
-        j.at("observers").get_to<std::vector<int>>(gs.GetObservers());
-        std::unordered_map<int, std::vector<int>> am;
-        for (const auto& [key, value] : j["attack_matrix"].items())
+        json.at("players").get_to<std::vector<Player>>(gameState.GetPlayers());
+        json.at("observers").get_to<std::vector<int>>(gameState.GetObservers());
+        std::unordered_map<int, std::vector<int>> attackMatrix;
+        for (const auto& [key, value] : json["attack_matrix"].items())
         {
             std::vector<int> ids(value);
-            am.insert(std::make_pair(std::stoi(key), ids));
+            attackMatrix.insert(std::make_pair(std::stoi(key), ids));
         }
-        gs.SetAttackMatrix(am);
-        std::unordered_map<int, WinPoints> wp;
-        for (const auto& [key, value] : j["win_points"].items())
+        gameState.SetAttackMatrix(attackMatrix);
+        std::unordered_map<int, WinPoints> winPoints;
+        for (const auto& [key, value] : json["win_points"].items())
         {
             WinPoints tempwp;
             from_json(value, tempwp);
-            wp.insert(std::make_pair(std::stoi(key), tempwp));
+            winPoints.insert(std::make_pair(std::stoi(key), tempwp));
         }
-        gs.SetWinPoints(wp);
-        std::unordered_map<int, std::vector<AbstractTank*>> vehs;
-        for (auto it = j["vehicles"].begin(); it != j["vehicles"].end(); ++it)
+        gameState.SetWinPoints(winPoints);
+        GameState::MapPlayerIDAndTank vehicles;
+        for (auto it = json["vehicles"].begin(); it != json["vehicles"].end();
+             ++it)
         {
-            std::vector<AbstractTank*> atanks;
-            int                        player_id;
+            std::vector<std::shared_ptr<AbstractTank>> tanks;
+            int                                        player_id;
             it.value().at("player_id").get_to<int>(player_id);
-            if (vehs.find(player_id) != vehs.end())
+            if (vehicles.find(player_id) != vehicles.end())
             {
-                atanks = vehs[player_id];
+                tanks = vehicles[player_id];
             }
 
-            nlohmann::json j;
-            j[it.key()] = it.value();
-            atanks.push_back(j.get<AbstractTank*>());
+            nlohmann::json vehicleJson;
+            vehicleJson[it.key()] = it.value();
+            tanks.emplace_back(vehicleJson.get<AbstractTank*>());
 
-            vehs.erase(player_id);
-            vehs.insert(std::make_pair(player_id, atanks));
+            vehicles.erase(player_id);
+            vehicles.insert(std::make_pair(player_id, tanks));
         }
-        gs.SetVehicles(vehs);
+        gameState.SetVehicles(vehicles);
     }
-    catch (nlohmann::json::type_error& e)
+    catch (nlohmann::json::type_error& exception)
     {
-        std::cout << e.what() << std::endl << std::flush;
+        std::cout << exception.what() << std::endl << std::flush;
     }
-    catch (nlohmann::json::out_of_range& e)
+    catch (nlohmann::json::out_of_range& exception)
     {
-        std::cout << e.what() << std::endl << std::flush;
+        std::cout << exception.what() << std::endl << std::flush;
     }
-    catch (nlohmann::json::parse_error& e)
+    catch (nlohmann::json::parse_error& exception)
     {
-        std::cout << e.what() << std::endl << std::flush;
+        std::cout << exception.what() << std::endl << std::flush;
     }
-    catch (std::out_of_range& e)
+    catch (std::out_of_range& exception)
     {
-        std::cout << e.what() << std::endl << std::flush;
+        std::cout << exception.what() << std::endl << std::flush;
     }
-    catch (std::invalid_argument& e)
+    catch (std::invalid_argument& exception)
     {
-        std::cout << e.what() << std::endl << std::flush;
+        std::cout << exception.what() << std::endl << std::flush;
     }
 }

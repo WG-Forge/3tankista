@@ -48,8 +48,8 @@ private:
     Obstacle    obstacle;
 };
 
-void to_json(nlohmann::json& j, const Content& m);
+void to_json(nlohmann::json& json, const Content& content);
 
-void from_json(const nlohmann::json& j, Content& m);
+void from_json(const nlohmann::json& json, Content& content);
 
 #endif // CONTENT_H

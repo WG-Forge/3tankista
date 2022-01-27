@@ -7,12 +7,12 @@ HardRepair::HardRepair()
 
 HardRepair::~HardRepair() {}
 
-void to_json(nlohmann::json& j, const HardRepair& m)
+void to_json(nlohmann::json& json, const HardRepair& hardRepair)
 {
-    j = nlohmann::json{ "" };
+    json = nlohmann::json{ "" };
 }
 
-void from_json(const nlohmann::json& j, HardRepair& m)
+void from_json(const nlohmann::json& json, HardRepair& hardRepair)
 {
-    m.SetPower(Repair::RepairPower::Hard);
+    hardRepair.SetPower(Repair::RepairPower::Hard);
 }

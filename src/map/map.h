@@ -43,8 +43,8 @@ private:
     Content                  content;
 };
 
-void to_json(nlohmann::json& j, const Map& m);
+void to_json(nlohmann::json& json, const Map& map);
 
-void from_json(const nlohmann::json& j, Map& m);
+void from_json(const nlohmann::json& json, Map& map);
 
 #endif // MAP_H

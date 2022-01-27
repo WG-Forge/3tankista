@@ -9,8 +9,8 @@ struct LightRepair : public Repair
     virtual ~LightRepair();
 };
 
-void to_json(nlohmann::json& j, const LightRepair& m);
+void to_json(nlohmann::json& json, const LightRepair& lightRepair);
 
-void from_json(const nlohmann::json& j, LightRepair& m);
+void from_json(const nlohmann::json& json, LightRepair& lightRepair);
 
 #endif // LIGHTREPAIR_H

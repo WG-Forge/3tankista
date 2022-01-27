@@ -12,10 +12,10 @@ public:
     WinPoints();
 
 public:
-    void        SetCapture(const int& cup) { this->capture = cup; }
+    void        SetCapture(const int& cupture) { this->capture = cupture; }
     auto&       GetCapture() { return this->capture; }
     const auto& GetCapture() const { return this->capture; }
-    void        SetKill(const int& kp) { this->kill = kp; }
+    void        SetKill(const int& kill) { this->kill = kill; }
     auto&       GetKill() { return this->kill; }
     const auto& GetKill() const { return this->kill; }
 
@@ -23,8 +23,8 @@ private:
     int capture;
     int kill;
 };
-void to_json(nlohmann::json& j, const WinPoints& wp);
+void to_json(nlohmann::json& json, const WinPoints& winPoints);
 
-void from_json(const nlohmann::json& j, WinPoints& wp);
+void from_json(const nlohmann::json& json, WinPoints& winPoints);
 
 #endif // WINPOINTS_H

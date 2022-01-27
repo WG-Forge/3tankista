@@ -1,6 +1,6 @@
-#include "tcpworker.h"
+#include "tcp.h"
 
-TcpWorker::TcpWorker(const std::string& host, const std::string& port)
+Tcp::Tcp(const std::string& host, const std::string& port)
     : errorCode()
     , ioContext()
     , socket(ioContext)
@@ -11,14 +11,14 @@ TcpWorker::TcpWorker(const std::string& host, const std::string& port)
     asio::connect(this->GetSocket(), endPoints, this->GetErrorCode());
 }
 
-TcpWorker::~TcpWorker() {}
+Tcp::~Tcp() {}
 
-std::size_t TcpWorker::Send(const asio::const_buffer& buffer)
+std::size_t Tcp::Send(const asio::const_buffer& buffer)
 {
     return this->GetSocket().send(buffer, 0, this->GetErrorCode());
 }
 
-std::size_t TcpWorker::Receive(const asio::mutable_buffer& buffer)
+std::size_t Tcp::Receive(const asio::mutable_buffer& buffer)
 {
     return this->GetSocket().receive(buffer, 0, this->GetErrorCode());
 }

@@ -9,8 +9,8 @@ struct HardRepair : public Repair
     virtual ~HardRepair();
 };
 
-void to_json(nlohmann::json& j, const HardRepair& m);
+void to_json(nlohmann::json& json, const HardRepair& hardRepair);
 
-void from_json(const nlohmann::json& j, HardRepair& m);
+void from_json(const nlohmann::json& json, HardRepair& hardRepair);
 
 #endif // HARDREPAIR_H

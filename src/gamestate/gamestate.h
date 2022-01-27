@@ -16,82 +16,101 @@
 class GameState
 {
 public:
+    using MapPlayerIDAndTank =
+        std::unordered_map<int, std::vector<std::shared_ptr<AbstractTank>>>;
+
+public:
     GameState();
 
 public:
-    void        SetNumPlayers(const int& num_pl) { this->num_players = num_pl; }
-    auto&       GetNumPlayers() { return this->num_players; }
-    const auto& GetNumPlayers() const { return this->num_players; }
-
-    void        SetNumTurns(const int& num_t) { this->num_turns = num_t; }
-    auto&       GetNumTurns() { return this->num_turns; }
-    const auto& GetNumTurns() const { return this->num_turns; }
-
-    void        SetCurrentTurn(const int& cur_t) { this->current_turn = cur_t; }
-    auto&       GetCurrentTurn() { return this->current_turn; }
-    const auto& GetCurrentTurn() const { return this->current_turn; }
-
-    void SetCurrentPlayerIdx(const int& cur_pl_idx)
+    void SetNumPlayers(const int& numberPlayers)
     {
-        this->current_player_idx = cur_pl_idx;
+        this->numberPlayers = numberPlayers;
     }
-    auto&       GetCurrentPlayerIdx() { return this->current_player_idx; }
-    const auto& GetCurrentPlayerIdx() const { return this->current_player_idx; }
+    auto&       GetNumPlayers() { return this->numberPlayers; }
+    const auto& GetNumPlayers() const { return this->numberPlayers; }
 
-    void        SetFinished(const bool& fin) { this->finished = fin; }
+    void SetNumTurns(const int& numberTurns)
+    {
+        this->numberTurns = numberTurns;
+    }
+    auto&       GetNumTurns() { return this->numberTurns; }
+    const auto& GetNumTurns() const { return this->numberTurns; }
+
+    void SetCurrentTurn(const int& currentTurn)
+    {
+        this->currentTurn = currentTurn;
+    }
+    auto&       GetCurrentTurn() { return this->currentTurn; }
+    const auto& GetCurrentTurn() const { return this->currentTurn; }
+
+    void SetCurrentPlayerIdx(const int& currentPlayerIndex)
+    {
+        this->currentPlayerIndex = currentPlayerIndex;
+    }
+    auto&       GetCurrentPlayerIdx() { return this->currentPlayerIndex; }
+    const auto& GetCurrentPlayerIdx() const { return this->currentPlayerIndex; }
+
+    void        SetFinished(const bool& finished) { this->finished = finished; }
     auto&       GetFinished() { return this->finished; }
     const auto& GetFinished() const { return this->finished; }
 
-    void        SetWinner(const int& win) { this->winner = win; }
-    auto&       GetWinner() { return this->num_players; }
-    const auto& GetWinner() const { return this->num_players; }
+    void        SetWinner(const int& winner) { this->winner = winner; }
+    auto&       GetWinner() { return this->numberPlayers; }
+    const auto& GetWinner() const { return this->numberPlayers; }
 
-    void  SetPlayers(const std::vector<Player>& pl) { this->players = pl; }
-    auto& GetPlayers() { return this->players; }
+    void SetPlayers(const std::vector<Player>& players)
+    {
+        this->players = players;
+    }
+    auto&       GetPlayers() { return this->players; }
     const auto& GetPlayers() const { return this->players; }
 
-    void  SetObservers(const std::vector<int>& ob) { this->observers = ob; }
-    auto& GetObservers() { return this->observers; }
+    void SetObservers(const std::vector<int>& observers)
+    {
+        this->observers = observers;
+    }
+    auto&       GetObservers() { return this->observers; }
     const auto& GetObservers() const { return this->observers; }
 
-    void SetAttackMatrix(const std::unordered_map<int, std::vector<int>>& am)
+    void SetAttackMatrix(
+        const std::unordered_map<int, std::vector<int>>& attackMatrix)
     {
-        this->attack_matrix = am;
+        this->attackMatrix = attackMatrix;
     }
-    auto&       GetAttackMatrix() { return this->attack_matrix; }
-    const auto& GetAttackMatrix() const { return this->attack_matrix; }
+    auto&       GetAttackMatrix() { return this->attackMatrix; }
+    const auto& GetAttackMatrix() const { return this->attackMatrix; }
 
-    void SetWinPoints(const std::unordered_map<int, WinPoints>& wp)
+    void SetWinPoints(const std::unordered_map<int, WinPoints>& winPoints)
     {
-        this->win_points = wp;
+        this->winPoints = winPoints;
     }
-    auto&       GetWinPoints() { return this->win_points; }
-    const auto& GetWinPoints() const { return this->win_points; }
+    auto&       GetWinPoints() { return this->winPoints; }
+    const auto& GetWinPoints() const { return this->winPoints; }
 
-    void SetVehicles(
-        const std::unordered_map<int, std::vector<AbstractTank*>>& vh)
+    void SetVehicles(const MapPlayerIDAndTank& vehicles)
     {
-        this->vehicles = vh;
+        this->vehicles = vehicles;
     }
     auto&       GetVehicles() { return this->vehicles; }
     const auto& GetVehicles() const { return this->vehicles; }
 
 private:
-    int                                                 num_players;
-    int                                                 num_turns;
-    int                                                 current_turn;
-    std::vector<Player>                                 players;
-    std::vector<int>                                    observers;
-    int                                                 current_player_idx;
-    bool                                                finished;
-    std::unordered_map<int, std::vector<AbstractTank*>> vehicles;
-    std::unordered_map<int, std::vector<int>>           attack_matrix;
-    int                                                 winner;
-    std::unordered_map<int, WinPoints>                  win_points;
+    int                                       numberPlayers;
+    int                                       numberTurns;
+    int                                       currentTurn;
+    std::vector<Player>                       players;
+    std::vector<int>                          observers;
+    int                                       currentPlayerIndex;
+    bool                                      finished;
+    MapPlayerIDAndTank                        vehicles;
+    std::unordered_map<int, std::vector<int>> attackMatrix;
+    int                                       winner;
+    std::unordered_map<int, WinPoints>        winPoints;
 };
 
-void to_json(nlohmann::json& j, const GameState& gs);
+void to_json(nlohmann::json& json, const GameState& gameState);
 
-void from_json(const nlohmann::json& j, GameState& gs);
+void from_json(const nlohmann::json& json, GameState& gameState);
 
 #endif // GAMESTATE_H

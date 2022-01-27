@@ -10,10 +10,13 @@ WinPoints::WinPoints()
 {
 }
 
-void to_json(nlohmann::json& j, const WinPoints& wp) {}
-
-void from_json(const nlohmann::json& j, WinPoints& wp)
+void to_json(nlohmann::json& json, const WinPoints& winPoints)
 {
-    j.at("capture").get_to<int>(wp.GetCapture());
-    j.at("kill").get_to<int>(wp.GetKill());
+    json = nlohmann::json{ "" };
+}
+
+void from_json(const nlohmann::json& json, WinPoints& winPoints)
+{
+    json.at("capture").get_to<int>(winPoints.GetCapture());
+    json.at("kill").get_to<int>(winPoints.GetKill());
 }

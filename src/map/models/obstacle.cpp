@@ -1,8 +1,8 @@
 #include "obstacle.h"
 
-void to_json(nlohmann::json& j, const Obstacle& m)
+void to_json(nlohmann::json& json, const Obstacle& obstacle)
 {
-    j = nlohmann::json{ "" };
+    json = nlohmann::json{ "" };
 }
 
-void from_json(const nlohmann::json& j, Obstacle& m) {}
+void from_json(const nlohmann::json& json, Obstacle& obstacle) {}

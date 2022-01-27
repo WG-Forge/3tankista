@@ -95,14 +95,10 @@ namespace nlohmann
 template <>
 struct adl_serializer<AbstractTank*>
 {
-    static AbstractTank* from_json(const json& j);
+    static void to_json(json& json, AbstractTank* tank);
 
-    static void to_json(json& j, AbstractTank* t);
+    static AbstractTank* from_json(const json& json);
 };
 } // namespace nlohmann
-
-// void to_json(nlohmann::json& j, const AbstractTank& tank);
-
-// void from_json(const nlohmann::json& j, AbstractTank& tank);
 
 #endif // SERVER_ABSTRACTTANK_H

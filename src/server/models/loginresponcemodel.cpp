@@ -1,17 +1,19 @@
 #include "loginresponcemodel.h"
 
-void ServerModels::to_json(nlohmann::json& j, const LoginResponceModel& m)
+void ServerModels::to_json(nlohmann::json&           json,
+                           const LoginResponceModel& loginResponceModel)
 {
-    j = nlohmann::json{ { "idx", m.idx },
-                        { "name", m.name },
-                        { "password", m.password },
-                        { "is_observer", m.isObserver } };
+    json = nlohmann::json{ { "idx", loginResponceModel.index },
+                           { "name", loginResponceModel.name },
+                           { "password", loginResponceModel.password },
+                           { "is_observer", loginResponceModel.isObserver } };
 }
 
-void ServerModels::from_json(const nlohmann::json& j, LoginResponceModel& m)
+void ServerModels::from_json(const nlohmann::json& json,
+                             LoginResponceModel&   loginResponceModel)
 {
-    j.at("idx").get_to(m.idx);
-    j.at("name").get_to(m.name);
-    j.at("password").get_to(m.password);
-    j.at("is_observer").get_to(m.isObserver);
+    json.at("idx").get_to(loginResponceModel.index);
+    json.at("name").get_to(loginResponceModel.name);
+    json.at("password").get_to(loginResponceModel.password);
+    json.at("is_observer").get_to(loginResponceModel.isObserver);
 }

@@ -9,49 +9,16 @@ Content::Content()
 {
 }
 
-void to_json(nlohmann::json& j, const Content& m)
+void to_json(nlohmann::json& json, const Content& content)
 {
-    j = nlohmann::json{ "" };
+    json = nlohmann::json{ "" };
 }
 
-void from_json(const nlohmann::json& j, Content& m)
+void from_json(const nlohmann::json& json, Content& content)
 {
-    try
-    {
-        for (const auto& [key, value] : j.items())
-        {
-            if (key == "base")
-            {
-                j.at(key).get_to<std::vector<Vector3i>>(m.GetBase().GetHexes());
-            }
-            else if (key == "catapult")
-            {
-                // j.at("catapult").get_to<std::vector<...>>(m.GetCatapult().);
-            }
-            else if (key == "hard_repair")
-            {
-                // j.at("hard_repair").get_to<std::vector<...>>(m.GetHardRepair().);
-            }
-            else if (key == "light_repair")
-            {
-                // j.at("light_repair").get_to<std::vector<...>>(m.GetLightRepair().);
-            }
-            else if (key == "obstacle")
-            {
-                // j.at("obstacle").get_to<std::vector<...>>(m.GetObstacle().);
-            }
-        }
-    }
-    catch (nlohmann::json::type_error& e)
-    {
-        std::cout << e.what() << std::endl << std::flush;
-    }
-    catch (nlohmann::json::out_of_range& e)
-    {
-        std::cout << e.what() << std::endl << std::flush;
-    }
-    catch (nlohmann::json::parse_error& e)
-    {
-        std::cout << e.what() << std::endl << std::flush;
-    }
+    json.at("base").get_to<std::vector<Vector3i>>(content.GetBase().GetHexes());
+    // json.at("catapult").get_to<std::vector<...>>(content.GetCatapult().);
+    // json.at("hard_repair").get_to<std::vector<...>>(content.GetHardRepair().);
+    // json.at("light_repair").get_to<std::vector<...>>(content.GetLightRepair().);
+    // json.at("obstacle").get_to<std::vector<...>>(content.GetObstacle().);
 }

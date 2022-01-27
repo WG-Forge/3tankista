@@ -7,12 +7,12 @@ LightRepair::LightRepair()
 
 LightRepair::~LightRepair() {}
 
-void to_json(nlohmann::json& j, const LightRepair& m)
+void to_json(nlohmann::json& json, const LightRepair& lightRepair)
 {
-    j = nlohmann::json{ "" };
+    json = nlohmann::json{ "" };
 }
 
-void from_json(const nlohmann::json& j, LightRepair& m)
+void from_json(const nlohmann::json& json, LightRepair& lightRepair)
 {
-    m.SetPower(Repair::RepairPower::Light);
+    lightRepair.SetPower(Repair::RepairPower::Light);
 }

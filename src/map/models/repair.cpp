@@ -12,9 +12,9 @@ Repair::Repair(const RepairPower power)
 
 Repair::~Repair() {}
 
-void to_json(nlohmann::json& j, const Repair& m)
+void to_json(nlohmann::json& json, const Repair& repair)
 {
-    j = nlohmann::json{ "" };
+    json = nlohmann::json{ "" };
 }
 
-void from_json(const nlohmann::json& j, Repair& m) {}
+void from_json(const nlohmann::json& json, Repair& repair) {}

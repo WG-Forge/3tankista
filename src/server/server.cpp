@@ -5,7 +5,7 @@
 #include "nlohmann/json.hpp"
 
 Server::Server(const std::string& host, const std::string& port)
-    : TcpWorker(host, port)
+    : Tcp(host, port)
 {
 }
 
@@ -26,7 +26,7 @@ bool Server::SendAction(const Action action, const std::string& data)
                 data.data(),
                 dataSize);
 
-    const auto& sent = TcpWorker::Send(
+    const auto& sent = Tcp::Send(
         asio::const_buffer(this->GetBuffer().data(),
                            actionSizeBytes + messageSizeBytes + dataSize));
     return sent == (actionSizeBytes + messageSizeBytes + dataSize) ? true
@@ -35,14 +35,14 @@ bool Server::SendAction(const Action action, const std::string& data)
 
 std::string Server::ReceiveResult(Result& result)
 {
-    TcpWorker::Receive(asio::mutable_buffer(
-        this->GetBuffer().data(), actionSizeBytes + messageSizeBytes));
+    Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data(),
+                                      actionSizeBytes + messageSizeBytes));
     result       = Result(*(this->GetBuffer()).data());
     int dataSize = *(int*)(this->GetBuffer().data() + actionSizeBytes);
     this->GetBuffer().resize(dataSize + actionSizeBytes + messageSizeBytes);
-    TcpWorker::Receive(asio::mutable_buffer(
-        this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
-        dataSize));
+    Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data() +
+                                          actionSizeBytes + messageSizeBytes,
+                                      dataSize));
     return std::move(std::string{ this->GetBuffer().begin() + actionSizeBytes +
                                       messageSizeBytes,
                                   this->GetBuffer().end() });

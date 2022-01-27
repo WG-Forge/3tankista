@@ -1,21 +1,23 @@
 #include "loginrequestmodel.h"
 
-void ServerModels::to_json(nlohmann::json& j, const LoginRequestModel& m)
+void ServerModels::to_json(nlohmann::json&          json,
+                           const LoginRequestModel& loginRequestModel)
 {
-    j = nlohmann::json{ { "name", m.name },
-                        { "password", m.password },
-                        { "game", m.game },
-                        { "num_turns", m.numTurns },
-                        { "num_players", m.numPlayers },
-                        { "is_observer", m.isObserver } };
+    json = nlohmann::json{ { "name", loginRequestModel.name },
+                           { "password", loginRequestModel.password },
+                           { "game", loginRequestModel.game },
+                           { "num_turns", loginRequestModel.numberTurns },
+                           { "num_players", loginRequestModel.numberPlayers },
+                           { "is_observer", loginRequestModel.isObserver } };
 }
 
-void ServerModels::from_json(const nlohmann::json& j, LoginRequestModel& m)
+void ServerModels::from_json(const nlohmann::json& json,
+                             LoginRequestModel&    loginRequestModel)
 {
-    j.at("name").get_to(m.name);
-    j.at("password").get_to(m.password);
-    j.at("game").get_to(m.game);
-    j.at("num_turns").get_to(m.numTurns);
-    j.at("num_players").get_to(m.numPlayers);
-    j.at("is_observer").get_to(m.isObserver);
+    json.at("name").get_to(loginRequestModel.name);
+    json.at("password").get_to(loginRequestModel.password);
+    json.at("game").get_to(loginRequestModel.game);
+    json.at("num_turns").get_to(loginRequestModel.numberTurns);
+    json.at("num_players").get_to(loginRequestModel.numberPlayers);
+    json.at("is_observer").get_to(loginRequestModel.isObserver);
 }

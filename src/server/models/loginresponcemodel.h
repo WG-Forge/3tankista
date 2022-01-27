@@ -8,15 +8,17 @@ namespace ServerModels
 
 struct LoginResponceModel
 {
-    uint64_t    idx;
+    uint64_t    index;
     std::string name;
     std::string password;
     bool        isObserver;
 };
 
-void to_json(nlohmann::json& j, const LoginResponceModel& m);
+void to_json(nlohmann::json&           json,
+             const LoginResponceModel& loginResponceModel);
 
-void from_json(const nlohmann::json& j, LoginResponceModel& m);
+void from_json(const nlohmann::json& json,
+               LoginResponceModel&   loginResponceModel);
 
 using ClientDataModel = LoginResponceModel;
 

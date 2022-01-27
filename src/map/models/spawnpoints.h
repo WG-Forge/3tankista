@@ -29,8 +29,8 @@ private:
     TanksTypeAndSpawnPos tanksSpawnPoints;
 };
 
-void to_json(nlohmann::json& j, const SpawnPoints& m);
+void to_json(nlohmann::json& json, const SpawnPoints& spawnPoints);
 
-void from_json(const nlohmann::json& j, SpawnPoints& m);
+void from_json(const nlohmann::json& json, SpawnPoints& spawnPoints);
 
 #endif // SPAWNPOINTS_H
