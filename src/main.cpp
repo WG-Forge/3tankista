@@ -1,9 +1,11 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <utility>
 
 #include "client.h"
 #include "gameactions.h"
+#include "gamearea.h"
 #include "gamestate.h"
 #include "globalgameactions.h"
 #include "map.h"
@@ -49,6 +51,14 @@ int main()
     {
         Map map = nlohmann::json().parse(responce);
     }
+    GameArea gameArea(map);
+    auto     distance =
+        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -7, -2, 9 });
+    distance =
+        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -6, -3, 9 });
+    distance =
+        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -6, -2, 8 });
+
     // GET GAME STATE
     sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
                ->SendAction(Server::Action::GAME_STATE, nlohmann::json(""));
