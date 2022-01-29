@@ -98,8 +98,7 @@ public:
                 }
                 auto path = pathFinder.GetShortestPath(nearestBasePos);
                 gameArea->SetCell(tank->GetPosition(), CellState::EMPTY);
-                gameArea->SetCell(path[tank->GetSpeed() - 1],
-                                  CellState::FRIEND);
+                gameArea->SetCell(path[0], CellState::FRIEND);
                 SendMoveAction(tank->GetVehicleId(),
                                path[tank->GetSpeed() - 1]);
             }

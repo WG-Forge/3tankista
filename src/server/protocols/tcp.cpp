@@ -20,5 +20,13 @@ std::size_t Tcp::Send(const asio::const_buffer& buffer)
 
 std::size_t Tcp::Receive(const asio::mutable_buffer& buffer)
 {
-    return this->GetSocket().receive(buffer, 0, this->GetErrorCode());
+    std::size_t sz = buffer.size();
+    while (sz > 0)
+    {
+        sz -= this->GetSocket().receive(
+            asio::mutable_buffer((char*)buffer.data() + buffer.size() - sz, sz),
+            0,
+            this->GetErrorCode());
+    }
+    return buffer.size();
 }

@@ -26,8 +26,8 @@ bool SendTurnAction()
             ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Turn request result: " << static_cast<int>(result)
-                  << '\n';
+        std::cerr << "Turn request result: " << static_cast<int>(result) << " "
+                  << responce << std::endl;
         isSuccessfully = false;
     }
 
@@ -53,8 +53,8 @@ bool SendChatAction(const std::string& message)
             ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Move request result: " << static_cast<int>(result)
-                  << '\n';
+        std::cerr << "Move request result: " << static_cast<int>(result) << " "
+                  << responce << std::endl;
         isSuccessfully = false;
     }
 
@@ -80,8 +80,8 @@ bool SendMoveAction(const int vehicleId, const Vector3i& target)
             ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Move request result: " << static_cast<int>(result)
-                  << '\n';
+        std::cerr << "Move request result: " << static_cast<int>(result) << " "
+                  << responce << std::endl;
         isSuccessfully = false;
     }
 
@@ -107,8 +107,8 @@ bool SendShootAction(const int vehicleId, const Vector3i& target)
             ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Shoot request result: " << static_cast<int>(result)
-                  << '\n';
+        std::cerr << "Shoot request result: " << static_cast<int>(result) << " "
+                  << responce << std::endl;
         isSuccessfully = false;
     }
 
