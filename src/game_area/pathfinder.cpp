@@ -1,12 +1,23 @@
 #include "pathfinder.h"
 #include "queue"
 
+PathFinder::PathFinder()
+    : area()
+    , startPoint()
+    , used()
+    , lastDirections()
+    , distance()
+    , hexDirections()
+{
+}
+
 PathFinder::PathFinder(const std::shared_ptr<GameArea>& area)
     : area(area)
     , startPoint()
     , used()
     , lastDirections()
     , distance()
+    , hexDirections()
 {
 }
 
@@ -27,9 +38,9 @@ void PathFinder::Bfs(const Vector2i& from)
     {
         auto now = q.front();
         q.pop();
-        for (int i = 0; i < HEX_DIRECTIONS.Size(); i++)
+        for (int i = 0; i < hexDirections.Size(); i++)
         {
-            auto destination = now + HEX_DIRECTIONS[i];
+            auto destination = now + hexDirections[i];
             if (!area->IsValid(destination) ||
                 area->GetCell(destination) != CellState::EMPTY)
                 continue;
@@ -59,7 +70,7 @@ std::vector<Vector3i> PathFinder::GetShortestPath(const Vector3i& point)
     {
         result.push_back(
             GameArea::Hex2Cube(GameArea::Shift(now, area->GetSize())));
-        now -= HEX_DIRECTIONS[lastDirections[now.x()][now.y()]];
+        now -= hexDirections[lastDirections[now.x()][now.y()]];
     }
     std::reverse(result.begin(), result.end());
     return result;

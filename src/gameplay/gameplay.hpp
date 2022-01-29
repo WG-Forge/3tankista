@@ -15,7 +15,13 @@
 class GameAlgorithm
 {
 public:
-    GameAlgorithm();
+    GameAlgorithm()
+        : gameArea(nullptr)
+        , gameState(nullptr)
+        , map(nullptr)
+        , pathFinder(gameArea)
+    {
+    }
     virtual ~GameAlgorithm(){};
 
     void Play()
@@ -26,18 +32,19 @@ public:
         {
             if (now.first == gameState->GetCurrentPlayerIdx())
             {
-                currentPlayerTanks = &now.second;
+                currentPlayerTanks = now.second;
                 for (auto& vehicle : now.second)
                 {
-                    gameArea->SetCell(vehicle.GetPosition(), CellState::FRIEND);
+                    gameArea->SetCell(vehicle->GetPosition(),
+                                      CellState::FRIEND);
                 }
             }
             else
             {
-                enemies.push_back(&now.second);
+                enemies.push_back(now.second);
                 for (auto& vehicle : now.second)
                 {
-                    gameArea->SetCell(vehicle.GetPosition(), CellState::ENEMY);
+                    gameArea->SetCell(vehicle->GetPosition(), CellState::ENEMY);
                 }
             }
         }
@@ -50,8 +57,8 @@ public:
             {
                 for (auto& potentialTarget : enemyArray)
                 {
-                    if (tank->CanShoot(potentialTarget->GetPosition()) &&
-                        gameState->GetAttackMatrix())
+                    if (tank->CanShoot(potentialTarget->GetPosition()) /* check neutrality rule &&
+                        gameState->GetAttackMatrix()*/)
                     {
                         if (target == nullptr ||
                             target->GetHealth() > potentialTarget->GetHealth())
@@ -93,10 +100,37 @@ public:
                 gameArea->SetCell(tank->GetPosition(), CellState::EMPTY);
                 gameArea->SetCell(path[tank->GetSpeed() - 1],
                                   CellState::FRIEND);
-                MOVE(tank, path[tank->GetSpeed() - 1]);
+                SendMoveAction(tank->GetVehicleId(),
+                               path[tank->GetSpeed() - 1]);
             }
         }
     }
+
+public:
+    void SetGameArea(GameArea* gameArea)
+    {
+        this->gameArea = std::shared_ptr<GameArea>(gameArea);
+    }
+    auto&       GetGameArea() { return this->gameArea; }
+    const auto& GetGameArea() const { return this->gameArea; }
+
+    void SetGameState(GameState* gameState)
+    {
+        this->gameState = std::shared_ptr<GameState>(gameState);
+    }
+    auto&       GetGameState() { return this->gameState; }
+    const auto& GetGameState() const { return this->gameState; }
+
+    void        SetMap(Map* map) { this->map = std::shared_ptr<Map>(map); }
+    auto&       GetMap() { return this->map; }
+    const auto& GetMap() const { return this->map; }
+
+    void SetPathFinder(const PathFinder& pathFinder)
+    {
+        this->pathFinder = pathFinder;
+    }
+    auto&       GetPathFinder() { return this->pathFinder; }
+    const auto& GetPathFinder() const { return this->pathFinder; }
 
 private:
     std::shared_ptr<GameArea>  gameArea;

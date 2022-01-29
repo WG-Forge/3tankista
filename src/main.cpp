@@ -6,6 +6,7 @@
 #include "client.h"
 #include "gameactions.h"
 #include "gamearea.h"
+#include "gameplay/gameplay.hpp"
 #include "gamestate.h"
 #include "globalgameactions.h"
 #include "map.h"
@@ -47,73 +48,112 @@ int main()
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
-    Map      map = nlohmann::json().parse(responce);
-    GameArea gameArea(map);
-    auto     distance =
-        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -7, -2, 9 });
-    distance =
-        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -6, -3, 9 });
-    distance =
-        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -6, -2, 8 });
+    Map        map = nlohmann::json().parse(responce);
+    GameArea   gameArea(map);
+    PathFinder pathFinder(std::make_shared<GameArea>(gameArea));
 
-    // GET GAME STATE
-    sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-               ->SendAction(Server::Action::GAME_STATE, nlohmann::json(""));
-    if (!sent)
+    GameAlgorithm gameAlgorithm;
+    auto          gameFinished = false;
+    while (!gameFinished)
     {
-        std::cerr << "Data wasn't sent" << std::endl;
-    }
+        // GET GAME STATE
+        sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                   ->SendAction(Server::Action::GAME_STATE, nlohmann::json(""));
+        if (!sent)
+        {
+            std::cerr << "Data wasn't sent" << std::endl;
+        }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    result   = Server::Result::OKEY;
-    responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-                   ->ReceiveResult(result);
-    if (result != Server::Result::OKEY)
-    {
-        std::cerr << "GameState request result: " << static_cast<int>(result)
-                  << '\n';
-    }
-    if (responce.empty())
-    {
-        std::cerr << "No response was received from the server" << std::endl;
-    }
-    else
-    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        result = Server::Result::OKEY;
+        responce =
+            Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                ->ReceiveResult(result);
+        if (result != Server::Result::OKEY)
+        {
+            std::cerr << "GameState request result: "
+                      << static_cast<int>(result) << '\n';
+        }
+        if (responce.empty())
+        {
+            std::cerr << "No response was received from the server"
+                      << std::endl;
+        }
         GameState gameState = nlohmann::json().parse(responce);
+
+        gameFinished = gameState.GetFinished();
+
+        gameAlgorithm.SetGameArea(&gameArea);
+        gameAlgorithm.SetGameState(&gameState);
+        gameAlgorithm.SetMap(&map);
+        gameAlgorithm.SetPathFinder(pathFinder);
+
+        gameAlgorithm.Play();
+
+        SendTurnAction();
+
+        sent =
+            Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                ->SendAction(Server::Action::GAME_ACTIONS, nlohmann::json(""));
+        if (!sent)
+        {
+            std::cerr << "Data wasn't sent" << std::endl;
+        }
+
+        result = Server::Result::OKEY;
+        // какой-то цирк (первый responce всегда пустой)
+        responce =
+            Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                ->ReceiveResult(result);
+        if (result != Server::Result::OKEY)
+        {
+            std::cerr << "GameActions request result: "
+                      << static_cast<int>(result) << '\n';
+        }
+        if (responce.empty())
+        {
+            std::cerr << "No response was received from the server"
+                      << std::endl;
+        }
+        GameActions gameActions = nlohmann::json().parse(responce);
     }
 
-    // SEND MOVE ACTION
-    SendShootAction(1, { -6, -2, 8 });
+    //    // SEND MOVE ACTION
+    //    SendShootAction(1, { -6, -2, 8 });
 
-    SendMoveAction(2, { -6, -3, 9 });
+    //    SendMoveAction(2, { -6, -3, 9 });
 
-    //    SendChatAction("gl hf");
+    //    //    SendChatAction("gl hf");
 
-    // SEND TURN ACTION
-    SendTurnAction();
+    //    // SEND TURN ACTION
+    //    SendTurnAction();
 
-    // GET GAME ACTIONS
-    sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-               ->SendAction(Server::Action::GAME_ACTIONS, nlohmann::json(""));
-    if (!sent)
-    {
-        std::cerr << "Data wasn't sent" << std::endl;
-    }
+    //    // GET GAME ACTIONS
+    //    sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+    //               ->SendAction(Server::Action::GAME_ACTIONS,
+    //               nlohmann::json(""));
+    //    if (!sent)
+    //    {
+    //        std::cerr << "Data wasn't sent" << std::endl;
+    //    }
 
-    result = Server::Result::OKEY;
-    // какой-то цирк (первый responce всегда пустой)
-    responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-                   ->ReceiveResult(result);
-    if (result != Server::Result::OKEY)
-    {
-        std::cerr << "GameActions request result: " << static_cast<int>(result)
-                  << '\n';
-    }
-    if (responce.empty())
-    {
-        std::cerr << "No response was received from the server" << std::endl;
-    }
-    GameActions gameActions = nlohmann::json().parse(responce);
+    //    result = Server::Result::OKEY;
+    //    // какой-то цирк (первый responce всегда пустой)
+    //    responce = Singleton<Server>::instance("wgforge-srv.wargaming.net",
+    //    "443")
+    //                   ->ReceiveResult(result);
+    //    if (result != Server::Result::OKEY)
+    //    {
+    //        std::cerr << "GameActions request result: " <<
+    //        static_cast<int>(result)
+    //                  << '\n';
+    //    }
+    //    if (responce.empty())
+    //    {
+    //        std::cerr << "No response was received from the server" <<
+    //        std::endl;
+    //    }
+    //    GameActions gameActions = nlohmann::json().parse(responce);
 
     // LOGOUT
     isSuccessfully = client.Logout();
