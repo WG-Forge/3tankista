@@ -48,12 +48,15 @@ int main()
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
-    Map        map = nlohmann::json().parse(responce);
-    GameArea   gameArea(map);
-    PathFinder pathFinder(std::make_shared<GameArea>(gameArea));
-
+    Map           map = nlohmann::json().parse(responce);
+    GameArea      gameArea(map);
+    PathFinder    pathFinder(std::make_shared<GameArea>(gameArea));
     GameAlgorithm gameAlgorithm;
-    auto          gameFinished = false;
+    gameAlgorithm.SetGameArea(&gameArea);
+    gameAlgorithm.SetMap(&map);
+    gameAlgorithm.SetPathFinder(pathFinder);
+
+    auto gameFinished = false;
     while (!gameFinished)
     {
         // GET GAME STATE
@@ -79,14 +82,11 @@ int main()
             std::cerr << "No response was received from the server"
                       << std::endl;
         }
-        GameState gameState = nlohmann::json().parse(responce);
+        GameState* gameState = new GameState(nlohmann::json().parse(responce));
 
-        gameFinished = gameState.GetFinished();
+        gameFinished = gameState->GetFinished();
 
-        gameAlgorithm.SetGameArea(&gameArea);
-        gameAlgorithm.SetGameState(&gameState);
-        gameAlgorithm.SetMap(&map);
-        gameAlgorithm.SetPathFinder(pathFinder);
+        gameAlgorithm.SetGameState(gameState);
 
         gameAlgorithm.Play();
 
@@ -102,9 +102,16 @@ int main()
 
         result = Server::Result::OKEY;
         // какой-то цирк (первый responce всегда пустой)
+        //        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
         responce =
             Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
                 ->ReceiveResult(result);
+        if (responce.at(0) != *"{")
+        {
+            responce =
+                Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                    ->ReceiveResult(result);
+        }
         if (result != Server::Result::OKEY)
         {
             std::cerr << "GameActions request result: "
@@ -115,7 +122,7 @@ int main()
             std::cerr << "No response was received from the server"
                       << std::endl;
         }
-        GameActions gameActions = nlohmann::json().parse(responce);
+        //        GameActions gameActions = nlohmann::json().parse(responce);
     }
 
     //    // SEND MOVE ACTION

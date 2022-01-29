@@ -14,7 +14,7 @@ Vector2i GameArea::Cube2Hex(const Vector3i& point)
 
 Vector3i GameArea::Hex2Cube(const Vector2i& point)
 {
-    return Vector3i(point.x(), point.y(), -point.x() - point.y());
+    return Vector3i(point.x(), -point.x() - point.y(), point.y());
 }
 
 int GameArea::GetDistance(const Vector3i& first, const Vector3i& second)

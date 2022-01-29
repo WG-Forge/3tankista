@@ -69,7 +69,7 @@ std::vector<Vector3i> PathFinder::GetShortestPath(const Vector3i& point)
     while (!(now == startPoint))
     {
         result.push_back(
-            GameArea::Hex2Cube(GameArea::Shift(now, area->GetSize())));
+            GameArea::Hex2Cube(GameArea::Shift(now, -(area->GetSize()))));
         now -= hexDirections[lastDirections[now.x()][now.y()]];
     }
     std::reverse(result.begin(), result.end());
