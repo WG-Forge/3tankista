@@ -1,8 +1,10 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <utility>
 
 #include "client.h"
+#include "gamearea.h"
 #include "gamestate.h"
 #include "map.h"
 #include "server.h"
@@ -13,7 +15,7 @@ int main()
 {
     Client client;
     auto   isSuccessfully = client.Login(ServerModels::LoginRequestModel{
-        "ktoto", "shtoto", "gdeto", 40, 1, false });
+        "ktotoyax", "shtoto", "gdetoyax", 5, 1, false });
     if (!isSuccessfully)
     {
         std::cerr << "Some error occurred while trying to login to the "
@@ -42,7 +44,14 @@ int main()
         std::cerr << "No response was received from the server" << std::endl;
     }
 
-    Map map = nlohmann::json().parse(responce);
+    Map      map = nlohmann::json().parse(responce);
+    GameArea gameArea(map);
+    auto     distance =
+        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -7, -2, 9 });
+    distance =
+        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -6, -3, 9 });
+    distance =
+        GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -6, -2, 8 });
 
     sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
                ->SendAction(Server::Action::GAME_STATE, nlohmann::json(""));
