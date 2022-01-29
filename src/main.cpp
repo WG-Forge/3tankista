@@ -18,7 +18,7 @@ int main()
     // LOGIN
     Client client;
     auto   isSuccessfully = client.Login(ServerModels::LoginRequestModel{
-        "v.aleynikov", "shtoto", "password", 10, 1, false });
+        "v.aleynikovx", "shtoto", "passwordx", 5, 1, false });
     if (!isSuccessfully)
     {
         std::cerr << "Some error occurred while trying to login to the "
@@ -47,10 +47,7 @@ int main()
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
-    else
-    {
-        Map map = nlohmann::json().parse(responce);
-    }
+    Map      map = nlohmann::json().parse(responce);
     GameArea gameArea(map);
     auto     distance =
         GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -7, -2, 9 });
@@ -86,7 +83,9 @@ int main()
     }
 
     // SEND MOVE ACTION
-    SendShootAction(1, { -5, -5, 10 });
+    SendShootAction(1, { -6, -2, 8 });
+
+    SendMoveAction(2, { -6, -3, 9 });
 
     //    SendChatAction("gl hf");
 
@@ -105,8 +104,6 @@ int main()
     // какой-то цирк (первый responce всегда пустой)
     responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
                    ->ReceiveResult(result);
-    responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-                   ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
         std::cerr << "GameActions request result: " << static_cast<int>(result)
@@ -116,10 +113,8 @@ int main()
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
-    else
-    {
-        GameActions gameActions = nlohmann::json().parse(responce);
-    }
+    GameActions gameActions = nlohmann::json().parse(responce);
+
     // LOGOUT
     isSuccessfully = client.Logout();
     if (!isSuccessfully)

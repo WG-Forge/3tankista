@@ -15,11 +15,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE asio
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/server
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/server/models
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/gamearea
+                                                   ${CMAKE_CURRENT_SOURCE_DIR}/game_area
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/server/protocols
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/client
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/game_state
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/game_actions
+                                                   ${CMAKE_CURRENT_SOURCE_DIR}/gameplay
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/map
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/map/models
                                                    ${CMAKE_CURRENT_SOURCE_DIR}/tanks

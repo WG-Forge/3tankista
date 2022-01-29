@@ -19,12 +19,11 @@ public:
     void Shoot(const Vector3i& point);
     void Move(const Vector3i& point);
 
-protected:
+public:
     void        SetVehicleId(const int& id) { this->vehicleId = id; }
     auto&       GetVehicleId() { return vehicleId; }
     const auto& GetVehicleId() const { return vehicleId; }
 
-public:
     void        SetPlayerId(const int& id) { this->playerId = id; }
     auto&       GetPlayerId() { return playerId; }
     const auto& GetPlayerId() const { return playerId; }
