@@ -4,8 +4,10 @@
 #include <utility>
 
 #include "client.h"
+#include "gameactions.h"
 #include "gamearea.h"
 #include "gamestate.h"
+#include "globalgameactions.h"
 #include "map.h"
 #include "server.h"
 
@@ -13,9 +15,10 @@
 
 int main()
 {
+    // LOGIN
     Client client;
     auto   isSuccessfully = client.Login(ServerModels::LoginRequestModel{
-        "ktotoyax", "shtoto", "gdetoyax", 5, 1, false });
+        "v.aleynikov", "shtoto", "password", 10, 1, false });
     if (!isSuccessfully)
     {
         std::cerr << "Some error occurred while trying to login to the "
@@ -23,6 +26,7 @@ int main()
                   << std::endl;
     }
 
+    // GET MAP
     auto sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
                     ->SendAction(Server::Action::MAP, nlohmann::json(""));
     if (!sent)
@@ -30,7 +34,7 @@ int main()
         std::cerr << "Data wasn't sent" << std::endl;
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     Server::Result result = Server::Result::OKEY;
     auto           responce =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -43,8 +47,10 @@ int main()
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
-
-    Map      map = nlohmann::json().parse(responce);
+    else
+    {
+        Map map = nlohmann::json().parse(responce);
+    }
     GameArea gameArea(map);
     auto     distance =
         GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -7, -2, 9 });
@@ -53,6 +59,7 @@ int main()
     distance =
         GameArea::GetDistance(Vector3i{ -7, -3, 10 }, Vector3i{ -6, -2, 8 });
 
+    // GET GAME STATE
     sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
                ->SendAction(Server::Action::GAME_STATE, nlohmann::json(""));
     if (!sent)
@@ -60,21 +67,60 @@ int main()
         std::cerr << "Data wasn't sent" << std::endl;
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     result   = Server::Result::OKEY;
     responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
                    ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Map request result: " << static_cast<int>(result) << '\n';
+        std::cerr << "GameState request result: " << static_cast<int>(result)
+                  << '\n';
     }
     if (responce.empty())
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
+    else
+    {
+        GameState gameState = nlohmann::json().parse(responce);
+    }
 
-    GameState gameState = nlohmann::json().parse(responce);
+    // SEND MOVE ACTION
+    SendShootAction(1, { -5, -5, 10 });
 
+    //    SendChatAction("gl hf");
+
+    // SEND TURN ACTION
+    SendTurnAction();
+
+    // GET GAME ACTIONS
+    sent = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+               ->SendAction(Server::Action::GAME_ACTIONS, nlohmann::json(""));
+    if (!sent)
+    {
+        std::cerr << "Data wasn't sent" << std::endl;
+    }
+
+    result = Server::Result::OKEY;
+    // какой-то цирк (первый responce всегда пустой)
+    responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                   ->ReceiveResult(result);
+    responce = Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                   ->ReceiveResult(result);
+    if (result != Server::Result::OKEY)
+    {
+        std::cerr << "GameActions request result: " << static_cast<int>(result)
+                  << '\n';
+    }
+    if (responce.empty())
+    {
+        std::cerr << "No response was received from the server" << std::endl;
+    }
+    else
+    {
+        GameActions gameActions = nlohmann::json().parse(responce);
+    }
+    // LOGOUT
     isSuccessfully = client.Logout();
     if (!isSuccessfully)
     {

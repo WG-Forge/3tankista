@@ -918,9 +918,9 @@ MATRIX_MAKE_TYPEDEFS(4, 4)
 template <typename Type, int Size>
 using Vector = Matrix<Size, 1, Type>;
 
-void to_json(nlohmann::json& j, const Vector3i& m);
+void to_json(nlohmann::json& json, const Vector3i& vector3i);
 
-void from_json(const nlohmann::json& j, Vector3i& m);
+void from_json(const nlohmann::json& json, Vector3i& vector3i);
 
 #undef MATRIX_MAKE_TYPEDEFS
 
