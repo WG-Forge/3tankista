@@ -1,9 +1,6 @@
 #ifndef SERVER_GAMEALGORITHM_H
 #define SERVER_GAMEALGORITHM_H
 
-#include <memory>
-#include <vector>
-
 #include "../game_actions/globalgameactions.h"
 #include "../game_area/gamearea.h"
 #include "../game_area/pathfinder.h"
@@ -11,6 +8,9 @@
 #include "../map/map.h"
 #include "../tanks/abstracttank.h"
 #include "../utility/matrix.hpp"
+#include <algorithm>
+#include <memory>
+#include <vector>
 
 class GameAlgorithm
 {
@@ -23,6 +23,39 @@ public:
     {
     }
     virtual ~GameAlgorithm(){};
+
+    // True, if tank can attack enemy
+    bool CheckNeutrality(std::shared_ptr<AbstractTank> playerTank,
+                         std::shared_ptr<AbstractTank> enemyTank)
+    {
+        bool neutrality    = false;
+        auto attackMatrix  = gameState->GetAttackMatrix();
+        int  tankPlayerId  = playerTank->GetPlayerId();
+        int  enemyPlayerId = enemyTank->GetPlayerId();
+        int  thirdPlayerId = -1;
+        for (const auto& [key, value] : attackMatrix)
+        {
+            if (key != enemyPlayerId && key != tankPlayerId)
+            {
+                thirdPlayerId = key;
+                break;
+            }
+        }
+        if (std::find(attackMatrix[enemyPlayerId].begin(),
+                      attackMatrix[enemyPlayerId].end(),
+                      tankPlayerId) != attackMatrix[enemyPlayerId].end())
+        {
+            neutrality = true;
+        }
+        else if (std::find(attackMatrix[thirdPlayerId].begin(),
+                           attackMatrix[thirdPlayerId].end(),
+                           enemyPlayerId) == attackMatrix[thirdPlayerId].end())
+        {
+            neutrality = true;
+        }
+
+        return neutrality;
+    }
 
     void Play()
     {
