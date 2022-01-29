@@ -14,8 +14,8 @@ public:
     std::vector<Vector3i> GetShortestPath(const Vector3i& point);
 
 protected:
-    static const HexDirections hexDirections;
-    void                       Bfs(const Vector2i& from);
+    inline static const HexDirections HEX_DIRECTIONS = HexDirections();
+    void                              Bfs(const Vector2i& from);
 
 public:
     void SetStartPoint(const Vector3i& point)
