@@ -14,7 +14,7 @@ Vector2i GameArea::Cube2Hex(const Vector3i& point)
 
 Vector3i GameArea::Hex2Cube(const Vector2i& point)
 {
-    return Vector3i(point.x(), point.y(), -point.x() - point.y());
+    return Vector3i(point.x(), -point.x() - point.y(), point.y());
 }
 
 int GameArea::GetDistance(const Vector3i& first, const Vector3i& second)
@@ -68,4 +68,10 @@ CellState GameArea::GetCell(const Vector3i& position) const
 CellState GameArea::GetCell(const Vector2i& position) const
 {
     return map[position.x()][position.y()];
+}
+
+void GameArea::ClearMap()
+{
+    map.assign((size << 1) | 1,
+               std::vector<CellState>((size << 1) | 1, CellState::EMPTY));
 }

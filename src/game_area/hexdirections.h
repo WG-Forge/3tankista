@@ -8,7 +8,7 @@ class HexDirections
 public:
     HexDirections();
     virtual ~HexDirections() {}
-    const auto& Size() const { return directions.size(); }
+    const auto  Size() const { return directions.size(); }
     const auto& operator[](int index) const { return directions[index]; }
 
 protected:

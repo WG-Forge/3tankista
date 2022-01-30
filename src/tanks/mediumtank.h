@@ -9,7 +9,6 @@ public:
     MediumTank(int vehicleId);
     virtual ~MediumTank();
 
-    // TODO: Implement methods
     bool CanShoot(const Vector3i& point) const override;
     bool CanMove(const Vector3i& point) const override;
 };

@@ -75,6 +75,8 @@ public:
      */
     bool IsValid(const Vector2i& point) const;
 
+    void ClearMap();
+
 protected:
     void SetSize(const int& size) { this->size = size; }
 

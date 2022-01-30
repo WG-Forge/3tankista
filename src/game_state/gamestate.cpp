@@ -29,8 +29,15 @@ void from_json(const nlohmann::json& json, GameState& gameState)
         json.at("num_turns").get_to<int>(gameState.GetNumTurns());
         json.at("current_turn").get_to<int>(gameState.GetCurrentTurn());
         json.at("num_players").get_to<int>(gameState.GetNumPlayers());
-        json.at("current_player_idx")
-            .get_to<int>(gameState.GetCurrentPlayerIdx());
+        if (json.at("current_player_idx").empty())
+        {
+            gameState.SetCurrentPlayerIdx(0);
+        }
+        else
+        {
+            json.at("current_player_idx")
+                .get_to<int>(gameState.GetCurrentPlayerIdx());
+        }
         json.at("finished").get_to<bool>(gameState.GetFinished());
         if (json.at("winner").empty())
         {
@@ -41,7 +48,8 @@ void from_json(const nlohmann::json& json, GameState& gameState)
             json.at("winner").get_to<int>(gameState.GetWinner());
         }
         json.at("players").get_to<std::vector<Player>>(gameState.GetPlayers());
-        json.at("observers").get_to<std::vector<int>>(gameState.GetObservers());
+        json.at("observers")
+            .get_to<std::vector<Player>>(gameState.GetObservers());
         std::unordered_map<int, std::vector<int>> attackMatrix;
         for (const auto& [key, value] : json["attack_matrix"].items())
         {

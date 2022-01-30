@@ -10,32 +10,40 @@
 
 bool SendTurnAction()
 {
-    bool        isSuccessfully = true;
-    const auto& sent =
-        Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-            ->SendAction(Server::Action::TURN, nlohmann::json(""));
-    if (!sent)
+#ifdef LOG
+    std::cerr << "TURN!" << std::endl;
+#endif
+    auto result         = Server::Result::OKEY;
+    bool isSuccessfully = true;
+    do
     {
-        std::cerr << "Data wasn't sent" << std::endl;
-        isSuccessfully = false;
-    }
+        const auto& sent =
+            Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                ->SendAction(Server::Action::TURN, nlohmann::json(""));
+        if (!sent)
+        {
+            std::cerr << "Data wasn't sent" << std::endl;
+            isSuccessfully = false;
+        }
 
-    auto        result = Server::Result::OKEY;
-    const auto& responce =
-        Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-            ->ReceiveResult(result);
-    if (result != Server::Result::OKEY)
-    {
-        std::cerr << "Turn request result: " << static_cast<int>(result)
-                  << '\n';
-        isSuccessfully = false;
-    }
-
+        const auto& responce =
+            Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                ->ReceiveResult(result);
+        if (result != Server::Result::OKEY)
+        {
+            std::cerr << "Turn request result: " << static_cast<int>(result)
+                      << " " << responce << std::endl;
+            isSuccessfully = false;
+        }
+    } while (result == Server::Result::TIMEOUT);
     return isSuccessfully;
 }
 
 bool SendChatAction(const std::string& message)
 {
+#ifdef LOG
+    std::cerr << "CHAT: " << message << std::endl;
+#endif
     bool        isSuccessfully = true;
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -53,8 +61,8 @@ bool SendChatAction(const std::string& message)
             ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Move request result: " << static_cast<int>(result)
-                  << '\n';
+        std::cerr << "Move request result: " << static_cast<int>(result) << " "
+                  << responce << std::endl;
         isSuccessfully = false;
     }
 
@@ -63,6 +71,10 @@ bool SendChatAction(const std::string& message)
 
 bool SendMoveAction(const int vehicleId, const Vector3i& target)
 {
+#ifdef LOG
+    std::cerr << "MOVE: " << vehicleId << " => (" << target.x() << ","
+              << target.y() << "," << target.z() << ')' << std::endl;
+#endif
     bool        isSuccessfully = true;
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -80,8 +92,8 @@ bool SendMoveAction(const int vehicleId, const Vector3i& target)
             ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Move request result: " << static_cast<int>(result)
-                  << '\n';
+        std::cerr << "Move request result: " << static_cast<int>(result) << " "
+                  << responce << std::endl;
         isSuccessfully = false;
     }
 
@@ -90,6 +102,11 @@ bool SendMoveAction(const int vehicleId, const Vector3i& target)
 
 bool SendShootAction(const int vehicleId, const Vector3i& target)
 {
+#ifdef LOG
+    std::cerr << "SHOOT: " << vehicleId << " => (" << target.x() << ","
+              << target.y() << "," << target.z() << ')' << std::endl;
+#endif
+
     bool        isSuccessfully = true;
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -107,8 +124,8 @@ bool SendShootAction(const int vehicleId, const Vector3i& target)
             ->ReceiveResult(result);
     if (result != Server::Result::OKEY)
     {
-        std::cerr << "Shoot request result: " << static_cast<int>(result)
-                  << '\n';
+        std::cerr << "Shoot request result: " << static_cast<int>(result) << " "
+                  << responce << std::endl;
         isSuccessfully = false;
     }
 
