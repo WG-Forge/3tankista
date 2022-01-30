@@ -13,27 +13,29 @@ bool SendTurnAction()
 #ifdef LOG
     std::cerr << "TURN!" << std::endl;
 #endif
-    bool        isSuccessfully = true;
-    const auto& sent =
-        Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-            ->SendAction(Server::Action::TURN, nlohmann::json(""));
-    if (!sent)
+    auto result         = Server::Result::OKEY;
+    bool isSuccessfully = true;
+    do
     {
-        std::cerr << "Data wasn't sent" << std::endl;
-        isSuccessfully = false;
-    }
+        const auto& sent =
+            Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                ->SendAction(Server::Action::TURN, nlohmann::json(""));
+        if (!sent)
+        {
+            std::cerr << "Data wasn't sent" << std::endl;
+            isSuccessfully = false;
+        }
 
-    auto        result = Server::Result::OKEY;
-    const auto& responce =
-        Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
-            ->ReceiveResult(result);
-    if (result != Server::Result::OKEY)
-    {
-        std::cerr << "Turn request result: " << static_cast<int>(result) << " "
-                  << responce << std::endl;
-        isSuccessfully = false;
-    }
-
+        const auto& responce =
+            Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
+                ->ReceiveResult(result);
+        if (result != Server::Result::OKEY)
+        {
+            std::cerr << "Turn request result: " << static_cast<int>(result)
+                      << " " << responce << std::endl;
+            isSuccessfully = false;
+        }
+    } while (result == Server::Result::TIMEOUT);
     return isSuccessfully;
 }
 
@@ -70,7 +72,8 @@ bool SendChatAction(const std::string& message)
 bool SendMoveAction(const int vehicleId, const Vector3i& target)
 {
 #ifdef LOG
-    std::cerr << "MOVE: " << vehicleId << " => (" << target.x() << "," << target.y() << "," << target.z() << ')' << std::endl;
+    std::cerr << "MOVE: " << vehicleId << " => (" << target.x() << ","
+              << target.y() << "," << target.z() << ')' << std::endl;
 #endif
     bool        isSuccessfully = true;
     const auto& sent =
@@ -100,7 +103,8 @@ bool SendMoveAction(const int vehicleId, const Vector3i& target)
 bool SendShootAction(const int vehicleId, const Vector3i& target)
 {
 #ifdef LOG
-    std::cerr << "SHOOT: " << vehicleId << " => (" << target.x() << "," << target.y() << "," << target.z() << ')' << std::endl;
+    std::cerr << "SHOOT: " << vehicleId << " => (" << target.x() << ","
+              << target.y() << "," << target.z() << ')' << std::endl;
 #endif
 
     bool        isSuccessfully = true;
