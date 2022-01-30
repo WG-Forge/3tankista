@@ -30,7 +30,6 @@ public:
     const auto& GetResult() const { return this->lastResult; }
 
 private:
-    // TODO check how many bytes use idx
     ServerModels::ClientDataModel data;
     Server::Result                lastResult;
 };
