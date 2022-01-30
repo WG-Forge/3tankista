@@ -119,12 +119,12 @@ int main()
                       << std::endl
                       << "Capture points: "
                       << gameState->GetWinPoints()
-                             .at(client.GetData().index)
+                             .at(gameState->GetWinner())
                              .GetCapture()
                       << ";" << std::endl
                       << "Kill points: "
                       << gameState->GetWinPoints()
-                             .at(client.GetData().index)
+                             .at(gameState->GetWinner())
                              .GetKill()
                       << ";" << std::endl;
             continue;
