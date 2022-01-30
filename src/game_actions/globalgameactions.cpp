@@ -10,6 +10,9 @@
 
 bool SendTurnAction()
 {
+#ifdef LOG
+    std::cerr << "TURN!" << std::endl;
+#endif
     bool        isSuccessfully = true;
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -36,6 +39,9 @@ bool SendTurnAction()
 
 bool SendChatAction(const std::string& message)
 {
+#ifdef LOG
+    std::cerr << "CHAT: " << message << std::endl;
+#endif
     bool        isSuccessfully = true;
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -63,6 +69,9 @@ bool SendChatAction(const std::string& message)
 
 bool SendMoveAction(const int vehicleId, const Vector3i& target)
 {
+#ifdef LOG
+    std::cerr << "MOVE: " << vehicleId << " => (" << target.x() << "," << target.y() << "," << target.z() << ')' << std::endl;
+#endif
     bool        isSuccessfully = true;
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -90,6 +99,10 @@ bool SendMoveAction(const int vehicleId, const Vector3i& target)
 
 bool SendShootAction(const int vehicleId, const Vector3i& target)
 {
+#ifdef LOG
+    std::cerr << "SHOOT: " << vehicleId << " => (" << target.x() << "," << target.y() << "," << target.z() << ')' << std::endl;
+#endif
+
     bool        isSuccessfully = true;
     const auto& sent =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
