@@ -23,17 +23,17 @@ PathFinder::PathFinder(const std::shared_ptr<GameArea>& area)
 
 void PathFinder::Bfs(const Vector2i& from)
 {
-    used.assign((area->GetSize() << 1) | 1,
-                std::vector<bool>((area->GetSize() << 1) | 1, false));
-    lastDirections.assign(
+    this->used.assign((area->GetSize() << 1) | 1,
+                      std::vector<bool>((area->GetSize() << 1) | 1, false));
+    this->lastDirections.assign(
         (area->GetSize() << 1) | 1,
         std::vector<signed char>((area->GetSize() << 1) | 1, -1));
-    distance.assign((area->GetSize() << 1) | 1,
-                    std::vector<int>((area->GetSize() << 1) | 1, -1));
+    this->distance.assign((area->GetSize() << 1) | 1,
+                          std::vector<int>((area->GetSize() << 1) | 1, -1));
     std::queue<Vector2i> q;
     q.push(from);
-    used[from.x()][from.y()]     = true;
-    distance[from.x()][from.y()] = true;
+    this->used[from.x()][from.y()]     = true;
+    this->distance[from.x()][from.y()] = true;
     while (!q.empty())
     {
         auto now = q.front();
@@ -44,11 +44,11 @@ void PathFinder::Bfs(const Vector2i& from)
             if (!area->IsValid(destination) ||
                 area->GetCell(destination) != CellState::EMPTY)
                 continue;
-            if (!used[destination.x()][destination.y()])
+            if (!this->used[destination.x()][destination.y()])
             {
-                used[destination.x()][destination.y()]           = true;
-                lastDirections[destination.x()][destination.y()] = i;
-                distance[destination.x()][destination.y()] =
+                this->used[destination.x()][destination.y()]           = true;
+                this->lastDirections[destination.x()][destination.y()] = i;
+                this->distance[destination.x()][destination.y()] =
                     distance[now.x()][now.y()] + 1;
                 q.push(destination);
             }

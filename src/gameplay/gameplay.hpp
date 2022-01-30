@@ -90,7 +90,8 @@ public:
             {
                 for (auto& potentialTarget : enemyArray)
                 {
-                    if (tank->CanShoot(potentialTarget->GetPosition()) /* check neutrality rule &&
+                    if (tank->CanShoot(potentialTarget->GetPosition()) &&
+                        CheckNeutrality(tank, potentialTarget)/* check neutrality rule &&
                         gameState->GetAttackMatrix()*/)
                     {
                         if (target == nullptr ||
@@ -131,9 +132,12 @@ public:
                 }
                 auto path = pathFinder.GetShortestPath(nearestBasePos);
                 gameArea->SetCell(tank->GetPosition(), CellState::EMPTY);
-                gameArea->SetCell(path[0], CellState::FRIEND);
-                SendMoveAction(tank->GetVehicleId(),
-                               path[tank->GetSpeed() - 1]);
+                gameArea->SetCell(
+                    path[path.size() == 1 ? 0 : tank->GetSpeed() - 1],
+                    CellState::FRIEND);
+                SendMoveAction(
+                    tank->GetVehicleId(),
+                    path[path.size() == 1 ? 0 : tank->GetSpeed() - 1]);
             }
         }
     }

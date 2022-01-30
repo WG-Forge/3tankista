@@ -17,9 +17,34 @@
 int main()
 {
     // LOGIN
+
+    std::string name = "", password = "", game = "";
+    int         numberTurns = 0, numberPlayers = 0;
+    bool        observer = false;
+
+    std::cout << "Write your nickname: ";
+    std::cin >> name;
+    std::cout << "Write your password: ";
+    std::cin >> password;
+    std::cout << "Write game name: ";
+    std::cin >> game;
+    std::cout << "Write number of turns: ";
+    std::cin >> numberTurns;
+    std::cout << "Write number of players: ";
+    std::cin >> numberPlayers;
+    std::cout << "Write are you observer(y/n): ";
+    std::string isObserver = "";
+    std::cin >> isObserver;
+    observer = isObserver.at(0) == 'y' ? true : false;
+
     Client client;
-    auto   isSuccessfully = client.Login(ServerModels::LoginRequestModel{
-        "v.aleynikovx", "shtoto", "passwordx", 10, 1, false });
+    auto   isSuccessfully =
+        client.Login(ServerModels::LoginRequestModel{ name,
+                                                      password,
+                                                      game,
+                                                      (uint64_t)numberTurns,
+                                                      (uint64_t)numberPlayers,
+                                                      observer });
     if (!isSuccessfully)
     {
         std::cerr << "Some error occurred while trying to login to the "
@@ -89,16 +114,26 @@ int main()
 
         if (gameFinished)
         {
-            std::cerr << "Capture poitns: "
+            const auto& winner = std::find_if(
+                gameState->GetPlayers().begin(),
+                gameState->GetPlayers().end(),
+                [&](const Player& player) {
+                    return player.GetData().index == gameState->GetWinner()
+                               ? true
+                               : false;
+                });
+            std::cerr << "Winner: " << winner->GetData().name << ";"
+                      << std::endl
+                      << "Capture poitns: "
                       << gameState->GetWinPoints()
                              .at(client.GetData().index)
                              .GetCapture()
-                      << std::endl
+                      << ";" << std::endl
                       << "Kill points: "
                       << gameState->GetWinPoints()
                              .at(client.GetData().index)
                              .GetKill()
-                      << std::endl;
+                      << ";" << std::endl;
             continue;
         }
 
