@@ -4,15 +4,19 @@
 #include "gamearea.h"
 #include "hexdirections.h"
 
+#define NOPATH -1
+
 class PathFinder
 {
 public:
     PathFinder();
-    PathFinder(const std::shared_ptr<GameArea>& area);
+    PathFinder(std::shared_ptr<GameArea>  area);
     virtual ~PathFinder() {}
 
     int                   GetDistance(const Vector3i& point);
     std::vector<Vector3i> GetShortestPath(const Vector3i& point);
+
+    auto& GetGameArea() { return this->area; }
 
 protected:
     HexDirections hexDirections;

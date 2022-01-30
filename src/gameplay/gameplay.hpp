@@ -10,16 +10,17 @@
 #include "../utility/matrix.hpp"
 #include <algorithm>
 #include <memory>
+#include <utility>
 #include <vector>
 
 class GameAlgorithm
 {
 public:
-    GameAlgorithm()
-        : gameArea(nullptr)
+    GameAlgorithm(std::shared_ptr<GameArea> gameArea, std::shared_ptr<Map> map)
+        : gameArea(std::move(gameArea))
         , gameState(nullptr)
-        , map(nullptr)
-        , pathFinder(gameArea)
+        , map(std::move(map))
+        , pathFinder(new PathFinder(this->gameArea))
     {
     }
     virtual ~GameAlgorithm(){};
@@ -59,6 +60,7 @@ public:
 
     void Play()
     {
+        gameArea->ClearMap();
         std::vector<std::shared_ptr<AbstractTank>> currentPlayerTanks;
         std::vector<std::vector<std::shared_ptr<AbstractTank>>> enemies;
         for (auto& now : gameState->GetVehicles())
@@ -118,26 +120,49 @@ public:
                 if (isOnTheBase)
                     continue; // STAY
                 // Move to the nearest base
-                pathFinder.SetStartPoint(tank->GetPosition());
+                pathFinder->SetStartPoint(tank->GetPosition());
                 Vector3i nearestBasePos =
                     map->GetContent().GetBase().GetHexes().front();
                 for (auto& basePosition :
                      map->GetContent().GetBase().GetHexes())
                 {
-                    if (pathFinder.GetDistance(nearestBasePos) >
-                        pathFinder.GetDistance(basePosition))
+                    if (pathFinder->GetDistance(nearestBasePos) == NOPATH ||
+                        (pathFinder->GetDistance(nearestBasePos) >
+                             pathFinder->GetDistance(basePosition) &&
+                         pathFinder->GetDistance(basePosition) != NOPATH))
                     {
                         nearestBasePos = basePosition;
                     }
                 }
-                auto path = pathFinder.GetShortestPath(nearestBasePos);
+                if (pathFinder->GetDistance(nearestBasePos) == NOPATH)
+                    continue; // STAY
+                auto path = pathFinder->GetShortestPath(nearestBasePos);
+                if (path.size() == 0)
+                    continue; // STAY
+//                std::cerr
+//                    << "MOVE: " << tank->GetVehicleId() << "   ("
+//                    << tank->GetPosition().x() << "," << tank->GetPosition().y()
+//                    << "," << tank->GetPosition().z() << ") => ("
+//                    << path[std::min((int)path.size(), tank->GetSpeed()) - 1]
+//                           .x()
+//                    << ","
+//                    << path[std::min((int)path.size(), tank->GetSpeed()) - 1]
+//                           .y()
+//                    << ","
+//                    << path[std::min((int)path.size(), tank->GetSpeed()) - 1]
+//                           .z()
+//                    << ")    CELLSTATE: "
+//                    << (int)gameArea->GetCell(
+//                           path[std::min((int)path.size(), tank->GetSpeed()) -
+//                                1])
+//                    << '\n';
                 gameArea->SetCell(tank->GetPosition(), CellState::EMPTY);
                 gameArea->SetCell(
-                    path[path.size() == 1 ? 0 : tank->GetSpeed() - 1],
+                    path[std::min((int)path.size(), tank->GetSpeed()) - 1],
                     CellState::FRIEND);
                 SendMoveAction(
                     tank->GetVehicleId(),
-                    path[path.size() == 1 ? 0 : tank->GetSpeed() - 1]);
+                    path[std::min((int)path.size(), tank->GetSpeed()) - 1]);
             }
         }
     }
@@ -161,18 +186,18 @@ public:
     auto&       GetMap() { return this->map; }
     const auto& GetMap() const { return this->map; }
 
-    void SetPathFinder(const PathFinder& pathFinder)
+    void SetPathFinder(PathFinder* pathFinder)
     {
-        this->pathFinder = pathFinder;
+        this->pathFinder = std::shared_ptr<PathFinder>(pathFinder);
     }
     auto&       GetPathFinder() { return this->pathFinder; }
     const auto& GetPathFinder() const { return this->pathFinder; }
 
 private:
-    std::shared_ptr<GameArea>  gameArea;
-    std::shared_ptr<GameState> gameState;
-    std::shared_ptr<Map>       map;
-    PathFinder                 pathFinder;
+    std::shared_ptr<GameArea>   gameArea;
+    std::shared_ptr<GameState>  gameState;
+    std::shared_ptr<Map>        map;
+    std::shared_ptr<PathFinder> pathFinder;
 };
 
 #endif // SERVER_GAMEALGORITHM_H

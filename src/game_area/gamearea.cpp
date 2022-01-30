@@ -69,3 +69,9 @@ CellState GameArea::GetCell(const Vector2i& position) const
 {
     return map[position.x()][position.y()];
 }
+
+void GameArea::ClearMap()
+{
+    map.assign((size << 1) | 1,
+               std::vector<CellState>((size << 1) | 1, CellState::EMPTY));
+}

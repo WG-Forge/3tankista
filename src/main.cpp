@@ -60,7 +60,6 @@ int main()
         std::cerr << "Data wasn't sent" << std::endl;
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     Server::Result result = Server::Result::OKEY;
     auto           responce =
         Singleton<Server>::instance("wgforge-srv.wargaming.net", "443")
@@ -75,11 +74,7 @@ int main()
     }
     Map*          map      = new Map(nlohmann::json().parse(responce));
     GameArea*     gameArea = new GameArea(*map);
-    PathFinder    pathFinder(std::make_shared<GameArea>(*gameArea));
-    GameAlgorithm gameAlgorithm;
-    gameAlgorithm.SetGameArea(gameArea);
-    gameAlgorithm.SetMap(map);
-    gameAlgorithm.SetPathFinder(pathFinder);
+    GameAlgorithm gameAlgorithm((std::shared_ptr<GameArea>(gameArea)), std::shared_ptr<Map>(map));
 
     auto gameFinished = false;
     while (!gameFinished)
@@ -118,9 +113,7 @@ int main()
                 gameState->GetPlayers().begin(),
                 gameState->GetPlayers().end(),
                 [&](const Player& player) {
-                    return player.GetData().index == gameState->GetWinner()
-                               ? true
-                               : false;
+                    return player.GetData().index == gameState->GetWinner();
                 });
             std::cerr << "Winner: " << winner->GetData().name << ";"
                       << std::endl
@@ -139,7 +132,8 @@ int main()
 
         gameAlgorithm.SetGameState(gameState);
 
-        gameAlgorithm.Play();
+        if (client.GetData().index == gameState->GetCurrentPlayerIdx())
+            gameAlgorithm.Play();
 
         SendTurnAction();
 

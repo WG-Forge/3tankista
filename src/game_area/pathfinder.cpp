@@ -1,4 +1,6 @@
 #include "pathfinder.h"
+
+#include <utility>
 #include "queue"
 
 PathFinder::PathFinder()
@@ -11,8 +13,8 @@ PathFinder::PathFinder()
 {
 }
 
-PathFinder::PathFinder(const std::shared_ptr<GameArea>& area)
-    : area(area)
+PathFinder::PathFinder(std::shared_ptr<GameArea>  area)
+    : area(std::move(area))
     , startPoint()
     , used()
     , lastDirections()
@@ -29,11 +31,11 @@ void PathFinder::Bfs(const Vector2i& from)
         (area->GetSize() << 1) | 1,
         std::vector<signed char>((area->GetSize() << 1) | 1, -1));
     this->distance.assign((area->GetSize() << 1) | 1,
-                          std::vector<int>((area->GetSize() << 1) | 1, -1));
+                          std::vector<int>((area->GetSize() << 1) | 1, NOPATH));
     std::queue<Vector2i> q;
     q.push(from);
     this->used[from.x()][from.y()]     = true;
-    this->distance[from.x()][from.y()] = true;
+    this->distance[from.x()][from.y()] = 0;
     while (!q.empty())
     {
         auto now = q.front();
@@ -66,6 +68,7 @@ std::vector<Vector3i> PathFinder::GetShortestPath(const Vector3i& point)
 {
     Vector2i now = GameArea::Shift(GameArea::Cube2Hex(point), area->GetSize());
     std::vector<Vector3i> result;
+    if (distance[now.x()][now.y()] == NOPATH) return result;
     while (!(now == startPoint))
     {
         result.push_back(
