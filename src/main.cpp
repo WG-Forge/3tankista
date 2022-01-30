@@ -117,7 +117,7 @@ int main()
                 });
             std::cerr << "Winner: " << winner->GetData().name << ";"
                       << std::endl
-                      << "Capture poitns: "
+                      << "Capture points: "
                       << gameState->GetWinPoints()
                              .at(client.GetData().index)
                              .GetCapture()
