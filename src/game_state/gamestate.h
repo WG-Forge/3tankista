@@ -66,7 +66,7 @@ public:
     auto&       GetPlayers() { return this->players; }
     const auto& GetPlayers() const { return this->players; }
 
-    void SetObservers(const std::vector<int>& observers)
+    void SetObservers(const std::vector<Player>& observers)
     {
         this->observers = observers;
     }
@@ -100,7 +100,7 @@ private:
     int                                       numberTurns;
     int                                       currentTurn;
     std::vector<Player>                       players;
-    std::vector<int>                          observers;
+    std::vector<Player>                       observers;
     int                                       currentPlayerIndex;
     bool                                      finished;
     MapPlayerIDAndTank                        vehicles;
