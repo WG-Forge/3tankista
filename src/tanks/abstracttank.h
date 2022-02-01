@@ -16,8 +16,10 @@ public:
     virtual bool CanShoot(const Vector3i& point) const = 0;
     virtual bool CanMove(const Vector3i& point) const  = 0;
 
-    void Shoot(const Vector3i& point);
-    void Move(const Vector3i& point);
+    virtual void Shoot(const Vector3i& point);
+    virtual void Move(const Vector3i& point);
+
+    bool operator<(const AbstractTank& tank);
 
 public:
     void        SetVehicleId(const int& id) { this->vehicleId = id; }

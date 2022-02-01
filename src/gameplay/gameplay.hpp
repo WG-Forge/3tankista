@@ -44,17 +44,13 @@ public:
         }
         if (std::find(attackMatrix[enemyPlayerId].begin(),
                       attackMatrix[enemyPlayerId].end(),
-                      tankPlayerId) != attackMatrix[enemyPlayerId].end())
+                      tankPlayerId) != attackMatrix[enemyPlayerId].end() ||
+            std::find(attackMatrix[thirdPlayerId].begin(),
+                      attackMatrix[thirdPlayerId].end(),
+                      enemyPlayerId) == attackMatrix[thirdPlayerId].end())
         {
             neutrality = true;
         }
-        else if (std::find(attackMatrix[thirdPlayerId].begin(),
-                           attackMatrix[thirdPlayerId].end(),
-                           enemyPlayerId) == attackMatrix[thirdPlayerId].end())
-        {
-            neutrality = true;
-        }
-
         return neutrality;
     }
 
@@ -83,7 +79,11 @@ public:
                 }
             }
         }
-        //        SORT(currentPlayerTanks); // according to playing order
+        std::sort(currentPlayerTanks.begin(),
+                  currentPlayerTanks.end(),
+                  [](const std::shared_ptr<AbstractTank>& lhs,
+                     const std::shared_ptr<AbstractTank>& rhs)
+                  { return *lhs < *rhs; });
         for (auto& tank : currentPlayerTanks)
         {
             // Can attack someone?
@@ -106,7 +106,7 @@ public:
             }
             if (target != nullptr)
             {
-                SendShootAction(tank->GetVehicleId(), target->GetPosition());
+                tank->Shoot(target->GetPosition());
             }
             else
             {
@@ -139,29 +139,11 @@ public:
                 auto path = pathFinder->GetShortestPath(nearestBasePos);
                 if (path.size() == 0)
                     continue; // STAY
-//                std::cerr
-//                    << "MOVE: " << tank->GetVehicleId() << "   ("
-//                    << tank->GetPosition().x() << "," << tank->GetPosition().y()
-//                    << "," << tank->GetPosition().z() << ") => ("
-//                    << path[std::min((int)path.size(), tank->GetSpeed()) - 1]
-//                           .x()
-//                    << ","
-//                    << path[std::min((int)path.size(), tank->GetSpeed()) - 1]
-//                           .y()
-//                    << ","
-//                    << path[std::min((int)path.size(), tank->GetSpeed()) - 1]
-//                           .z()
-//                    << ")    CELLSTATE: "
-//                    << (int)gameArea->GetCell(
-//                           path[std::min((int)path.size(), tank->GetSpeed()) -
-//                                1])
-//                    << '\n';
                 gameArea->SetCell(tank->GetPosition(), CellState::EMPTY);
                 gameArea->SetCell(
                     path[std::min((int)path.size(), tank->GetSpeed()) - 1],
                     CellState::FRIEND);
-                SendMoveAction(
-                    tank->GetVehicleId(),
+                tank->Move(
                     path[std::min((int)path.size(), tank->GetSpeed()) - 1]);
             }
         }

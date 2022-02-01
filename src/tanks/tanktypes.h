@@ -3,11 +3,12 @@
 
 enum class TankType
 {
+    SPG,
     LIGHT,
-    MEDIUM,
     HEAVY,
-    AT_SPG,
-    SPG
+    MEDIUM,
+    AT_SPG
+
 };
 
 #endif // SERVER_TANKTYPES_H

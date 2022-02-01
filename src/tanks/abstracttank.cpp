@@ -1,6 +1,7 @@
 #include "abstracttank.h"
 
 #include "enumparser.h"
+#include "globalgameactions.h"
 #include "singleton.h"
 #include "tankfactory.h"
 
@@ -19,7 +20,22 @@ AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
 {
 }
 
+bool AbstractTank::operator<(const AbstractTank& tank)
+{
+    return this->GetTankType() < tank.GetTankType();
+}
+
 AbstractTank::~AbstractTank() {}
+
+void AbstractTank::Shoot(const Vector3i& point)
+{
+    SendShootAction(vehicleId, point);
+}
+
+void AbstractTank::Move(const Vector3i& point)
+{
+    SendMoveAction(vehicleId, point);
+}
 
 void nlohmann::adl_serializer<AbstractTank*>::to_json(nlohmann::json& json,
                                                       AbstractTank*   tank)
@@ -40,6 +56,8 @@ AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(
         {
             case TankType::LIGHT:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateLightTank(std::stoi(json.begin().key()));
                 break;
             }
             case TankType::MEDIUM:
@@ -50,14 +68,20 @@ AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(
             }
             case TankType::HEAVY:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateHeavyTank(std::stoi(json.begin().key()));
                 break;
             }
             case TankType::AT_SPG:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateAtSpgTank(std::stoi(json.begin().key()));
                 break;
             }
             case TankType::SPG:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateSpgTank(std::stoi(json.begin().key()));
                 break;
             }
             default:
