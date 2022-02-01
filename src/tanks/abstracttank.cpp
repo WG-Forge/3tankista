@@ -1,6 +1,7 @@
 #include "abstracttank.h"
 
 #include "enumparser.h"
+#include "globalgameactions.h"
 #include "singleton.h"
 #include "tankfactory.h"
 
@@ -25,6 +26,16 @@ bool AbstractTank::operator<(const AbstractTank& tank)
 }
 
 AbstractTank::~AbstractTank() {}
+
+void AbstractTank::Shoot(const Vector3i& point)
+{
+    SendShootAction(vehicleId, point);
+}
+
+void AbstractTank::Move(const Vector3i& point)
+{
+    SendMoveAction(vehicleId, point);
+}
 
 void nlohmann::adl_serializer<AbstractTank*>::to_json(nlohmann::json& json,
                                                       AbstractTank*   tank)
