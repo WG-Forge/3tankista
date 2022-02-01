@@ -40,6 +40,8 @@ AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(
         {
             case TankType::LIGHT:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateLightTank(std::stoi(json.begin().key()));
                 break;
             }
             case TankType::MEDIUM:
@@ -50,14 +52,20 @@ AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(
             }
             case TankType::HEAVY:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateHeavyTank(std::stoi(json.begin().key()));
                 break;
             }
             case TankType::AT_SPG:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateAtSpgTank(std::stoi(json.begin().key()));
                 break;
             }
             case TankType::SPG:
             {
+                tank = SINGLETON(TankFactory)
+                           ->CreateSpgTank(std::stoi(json.begin().key()));
                 break;
             }
             default:
