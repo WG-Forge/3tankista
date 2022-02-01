@@ -29,23 +29,8 @@ bool AtSpgTank::CanMove(const Vector3i& point) const
 
 void AtSpgTank::Shoot(const Vector3i& point)
 {
-
     int      distance = GameArea::GetDistance(point, this->GetPosition());
-    Vector3i delta    = { point.x() - this->GetPosition().x(),
-                       point.y() - this->GetPosition().y(),
-                       point.z() - this->GetPosition().z() };
-    Vector3i target;
-    /*Vector3i deltaSign = { (delta.x() > 0) - (delta.x() < 0),
-                           (delta.y() > 0) - (delta.y() < 0),
-                           (delta.z() > 0) - (delta.z() < 0) };*/
-    delta.x() > 0   ? target.x()   = delta.x() - distance + 1
-    : delta.x() < 0 ? target.x() = delta.x() + distance - 1
-                    : target.x() = this->GetPosition().x();
-    delta.y() > 0   ? target.y()   = delta.y() - distance + 1
-    : delta.y() < 0 ? target.y() = delta.y() + distance - 1
-                    : target.y() = this->GetPosition().y();
-    delta.z() > 0   ? target.z()   = delta.z() - distance + 1
-    : delta.z() < 0 ? target.z() = delta.z() + distance - 1
-                    : target.z() = this->GetPosition().z();
+    Vector3i delta    = point - this->GetPosition();
+    Vector3i target   = this->GetPosition() + delta / distance;
     SendShootAction(this->GetVehicleId(), target);
 }
