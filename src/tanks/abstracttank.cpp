@@ -19,6 +19,11 @@ AbstractTank::AbstractTank(int vehicleId, const TankType& tankType)
 {
 }
 
+bool AbstractTank::operator<(const AbstractTank& tank)
+{
+    return this->GetTankType() < tank.GetTankType();
+}
+
 AbstractTank::~AbstractTank() {}
 
 void nlohmann::adl_serializer<AbstractTank*>::to_json(nlohmann::json& json,

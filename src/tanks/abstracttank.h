@@ -19,6 +19,8 @@ public:
     void Shoot(const Vector3i& point);
     void Move(const Vector3i& point);
 
+    bool operator<(const AbstractTank& tank);
+
 public:
     void        SetVehicleId(const int& id) { this->vehicleId = id; }
     auto&       GetVehicleId() { return vehicleId; }

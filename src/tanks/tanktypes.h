@@ -3,10 +3,10 @@
 
 enum class TankType
 {
-    LIGHT,
-    MEDIUM,
-    HEAVY,
     AT_SPG,
+    LIGHT,
+    HEAVY,
+    MEDIUM,
     SPG
 };
 
