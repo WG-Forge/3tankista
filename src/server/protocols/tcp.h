@@ -1,9 +1,7 @@
-#ifndef TCP_H
-#define TCP_H
-
-#include "string"
+#pragma once
 
 #include "asio.hpp"
+#include <string>
 
 class Tcp
 {
@@ -33,5 +31,3 @@ private:
     asio::io_context      ioContext;
     asio::ip::tcp::socket socket;
 };
-
-#endif // TCP_H

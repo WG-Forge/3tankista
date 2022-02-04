@@ -1,11 +1,10 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 
 #include <string>
 
-#include "loginrequestmodel.h"
-#include "loginresponcemodel.h"
-#include "server.h"
+#include "server/models/login_request_model.h"
+#include "server/models/login_responce_model.h"
+#include "server/server.h"
 
 class Client
 {
@@ -33,5 +32,3 @@ private:
     ServerModels::ClientDataModel data;
     Server::Result                lastResult;
 };
-
-#endif // CLIENT_H

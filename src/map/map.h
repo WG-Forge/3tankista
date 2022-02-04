@@ -1,12 +1,11 @@
-#ifndef MAP_H
-#define MAP_H
+#pragma once
 
 #include <cstdint>
 #include <string>
 #include <vector>
 
-#include "content.h"
-#include "spawnpoints.h"
+#include "models/content.h"
+#include "models/spawn_points.h"
 
 // TODO: rework hard and light repair, and tank spawn point.
 //       try to do this with base classes (think about problem of type).
@@ -47,4 +46,3 @@ void to_json(nlohmann::json& json, const Map& map);
 
 void from_json(const nlohmann::json& json, Map& map);
 
-#endif // MAP_H

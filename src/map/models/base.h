@@ -1,9 +1,7 @@
-#ifndef BASE_H
-#define BASE_H
-
-#include "matrix.hpp"
+#pragma once
 
 #include "nlohmann/json.hpp"
+#include "utility/matrix.hpp"
 
 struct Base
 {
@@ -15,5 +13,3 @@ public:
 private:
     std::vector<Vector3i> hexes;
 };
-
-#endif // BASE_H

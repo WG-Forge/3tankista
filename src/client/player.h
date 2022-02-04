@@ -1,11 +1,9 @@
-#ifndef PLAYER_H
-#define PLAYER_H
-
-#include "loginresponcemodel.h"
+#pragma once
 
 #include <memory>
 
-#include "abstracttank.h"
+#include "server/models/login_responce_model.h"
+#include "tanks/abstract_tank.h"
 
 class Player
 {
@@ -36,5 +34,3 @@ private:
 void to_json(nlohmann::json& json, const Player& player);
 
 void from_json(const nlohmann::json& json, Player& player);
-
-#endif // PLAYER_H

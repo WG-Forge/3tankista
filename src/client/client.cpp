@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "server.h"
-#include "singleton.h"
+#include "server/server.h"
+#include "utility/singleton.h"
 
 #include "nlohmann/json.hpp"
 

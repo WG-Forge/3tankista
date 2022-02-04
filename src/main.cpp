@@ -3,16 +3,15 @@
 #include <thread>
 #include <utility>
 
-#include "client.h"
-#include "gameactions.h"
-#include "gamearea.h"
+#include "client/client.h"
+#include "game_actions/game_actions.h"
+#include "game_actions/global_game_actions.h"
+#include "game_area/game_area.h"
+#include "game_state/game_state.h"
 #include "gameplay/gameplay.hpp"
-#include "gamestate.h"
-#include "globalgameactions.h"
-#include "map.h"
-#include "server.h"
-
-#include "singleton.h"
+#include "map/map.h"
+#include "server/server.h"
+#include "utility/singleton.h"
 
 int main()
 {
@@ -74,7 +73,8 @@ int main()
     }
     Map*          map      = new Map(nlohmann::json().parse(responce));
     GameArea*     gameArea = new GameArea(*map);
-    GameAlgorithm gameAlgorithm((std::shared_ptr<GameArea>(gameArea)), std::shared_ptr<Map>(map));
+    GameAlgorithm gameAlgorithm((std::shared_ptr<GameArea>(gameArea)),
+                                std::shared_ptr<Map>(map));
 
     auto gameFinished = false;
     while (!gameFinished)
@@ -111,9 +111,8 @@ int main()
             const auto& winner = std::find_if(
                 gameState->GetPlayers().begin(),
                 gameState->GetPlayers().end(),
-                [&](const Player& player) {
-                    return player.GetData().index == gameState->GetWinner();
-                });
+                [&](const Player& player)
+                { return player.GetData().index == gameState->GetWinner(); });
             std::cerr << "Winner: " << winner->GetData().name << ";"
                       << std::endl
                       << "Capture points: "
@@ -135,9 +134,7 @@ int main()
             gameAlgorithm.Play();
 
         SendTurnAction();
-
     }
-
 
     // LOGOUT
     isSuccessfully = client.Logout();

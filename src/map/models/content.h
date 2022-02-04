@@ -1,13 +1,11 @@
-#ifndef CONTENT_H
-#define CONTENT_H
-
-#include <vector>
+#pragma once
 
 #include "base.h"
 #include "catapult.h"
-#include "hardrepair.h"
-#include "lightrepair.h"
+#include "hard_repair.h"
+#include "light_repair.h"
 #include "obstacle.h"
+#include <vector>
 
 struct Content
 {
@@ -51,5 +49,3 @@ private:
 void to_json(nlohmann::json& json, const Content& content);
 
 void from_json(const nlohmann::json& json, Content& content);
-
-#endif // CONTENT_H

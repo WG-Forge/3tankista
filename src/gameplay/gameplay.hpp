@@ -1,13 +1,12 @@
-#ifndef SERVER_GAMEALGORITHM_H
-#define SERVER_GAMEALGORITHM_H
+#pragma once
 
-#include "../game_actions/globalgameactions.h"
-#include "../game_area/gamearea.h"
-#include "../game_area/pathfinder.h"
-#include "../game_state/gamestate.h"
-#include "../map/map.h"
-#include "../tanks/abstracttank.h"
-#include "../utility/matrix.hpp"
+#include "game_actions/global_game_actions.h"
+#include "game_area/game_area.h"
+#include "game_area/path_finder.h"
+#include "game_state/game_state.h"
+#include "map/map.h"
+#include "tanks/abstract_tank.h"
+#include "utility/matrix.hpp"
 #include <algorithm>
 #include <memory>
 #include <utility>
@@ -181,5 +180,3 @@ private:
     std::shared_ptr<Map>        map;
     std::shared_ptr<PathFinder> pathFinder;
 };
-
-#endif // SERVER_GAMEALGORITHM_H
