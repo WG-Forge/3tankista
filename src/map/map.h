@@ -8,14 +8,13 @@
 #include "content.h"
 #include "spawnpoints.h"
 
-
 class Map
 {
 public:
-    Map();
+    Map() = default;
 
 public:
-    void        SetSize(const std::size_t& size) { this->size = size; }
+    void       SetSize(const std::size_t& size) { this->size = size; }
     auto       GetSize() { return this->size; }
     const auto GetSize() const { return this->size; }
 

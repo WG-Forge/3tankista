@@ -1,21 +1,6 @@
 #include "gamestate.h"
 #include "singleton.h"
 
-GameState::GameState()
-    : numberPlayers()
-    , numberTurns()
-    , currentTurn()
-    , players()
-    , observers()
-    , currentPlayerIndex()
-    , finished()
-    , vehicles()
-    , attackMatrix()
-    , winner()
-    , winPoints()
-{
-}
-
 void to_json(nlohmann::json& json, const GameState& gameState)
 {
     json = nlohmann::json{ "" };

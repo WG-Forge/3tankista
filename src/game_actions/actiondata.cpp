@@ -1,11 +1,5 @@
 #include "actiondata.h"
 
-ActionData::ActionData()
-    : vehicleId()
-    , target()
-{
-}
-
 ActionData::ActionData(const int vehicleId, const Vector3i& target)
     : vehicleId(vehicleId)
     , target(target)

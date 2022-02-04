@@ -25,7 +25,6 @@ bool AbstractTank::operator<(const AbstractTank& tank)
     return this->GetTankType() < tank.GetTankType();
 }
 
-AbstractTank::~AbstractTank() {}
 
 void AbstractTank::Shoot(const Vector3i& point)
 {

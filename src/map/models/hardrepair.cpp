@@ -5,8 +5,6 @@ HardRepair::HardRepair()
 {
 }
 
-HardRepair::~HardRepair() {}
-
 void to_json(nlohmann::json& json, const HardRepair& hardRepair)
 {
     json = nlohmann::json{ "" };

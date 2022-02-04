@@ -9,7 +9,7 @@ class Tcp
 {
 public:
     Tcp(const std::string& host, const std::string& port);
-    virtual ~Tcp();
+    virtual ~Tcp() = default;
 
 protected:
     std::size_t Send(const asio::const_buffer& buffer);

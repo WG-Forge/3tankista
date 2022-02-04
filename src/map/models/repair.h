@@ -17,7 +17,7 @@ struct Repair
 public:
     Repair();
     Repair(const RepairPower power);
-    virtual ~Repair();
+    virtual ~Repair() = default;
 
 public:
     void        SetPower(const RepairPower& power) { this->power = power; }

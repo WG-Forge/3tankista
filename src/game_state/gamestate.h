@@ -28,7 +28,7 @@ public:
         std::unordered_map<int, std::vector<std::shared_ptr<AbstractTank>>>;
 
 public:
-    GameState();
+    GameState() = default;
 
 public:
     void SetNumPlayers(const int& numberPlayers)

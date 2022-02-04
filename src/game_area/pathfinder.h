@@ -9,9 +9,9 @@
 class PathFinder
 {
 public:
-    PathFinder();
-    PathFinder(std::shared_ptr<GameArea>  area);
-    virtual ~PathFinder() {}
+    PathFinder() = default;
+    PathFinder(std::shared_ptr<GameArea> area);
+    virtual ~PathFinder() = default;
 
     int                   GetDistance(const Vector3i& point);
     std::vector<Vector3i> GetShortestPath(const Vector3i& point);

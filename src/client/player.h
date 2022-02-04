@@ -10,8 +10,8 @@
 class Player
 {
 public:
-    Player();
-    virtual ~Player();
+    Player()          = default;
+    virtual ~Player() = default;
 
 public:
     void SetData(const ServerModels::ClientDataModel& data)

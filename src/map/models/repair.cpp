@@ -10,8 +10,6 @@ Repair::Repair(const RepairPower power)
 {
 }
 
-Repair::~Repair() {}
-
 void to_json(nlohmann::json& json, const Repair& repair)
 {
     json = nlohmann::json{ "" };

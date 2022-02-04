@@ -8,7 +8,7 @@
 class GameActions
 {
 public:
-    GameActions();
+    GameActions() = default;
 
 public:
     void SetActions(const std::vector<GamePlayAction>& actions)

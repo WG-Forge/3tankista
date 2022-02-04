@@ -1,12 +1,5 @@
 #include "gameplayaction.h"
 
-GamePlayAction::GamePlayAction()
-    : playerId()
-    , type()
-    , data()
-{
-}
-
 void to_json(nlohmann::json& json, const GamePlayAction& gamePlayAction)
 {
     json = nlohmann::json{ "" };

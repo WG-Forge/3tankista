@@ -11,7 +11,7 @@ class AbstractTank
 {
 public:
     AbstractTank(int vehicleId, const TankType& tankType);
-    virtual ~AbstractTank();
+    virtual ~AbstractTank() = default;
 
     virtual bool CanShoot(const Vector3i& point) const = 0;
     virtual bool CanMove(const Vector3i& point) const  = 0;

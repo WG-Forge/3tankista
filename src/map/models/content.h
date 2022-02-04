@@ -11,11 +11,11 @@
 
 struct Content
 {
-    Content();
+    Content() = default;
 
 public:
-    void        SetBase(const std::vector<Vector3i>& base) { this->base = base; }
-    auto&       GetBase() { return this->base; }
+    void  SetBase(const std::vector<Vector3i>& base) { this->base = base; }
+    auto& GetBase() { return this->base; }
     const auto& GetBase() const { return this->base; }
 
     void  SetCatapult(const Catapult& catapult) { this->catapult = catapult; }

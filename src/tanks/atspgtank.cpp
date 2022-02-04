@@ -11,7 +11,6 @@ AtSpgTank::AtSpgTank(int vehicleId)
     SetDestructionPoints(2);
 }
 
-AtSpgTank::~AtSpgTank() {}
 
 bool AtSpgTank::CanShoot(const Vector3i& point) const
 {

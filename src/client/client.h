@@ -10,8 +10,8 @@
 class Client
 {
 public:
-    Client();
-    virtual ~Client();
+    Client()          = default;
+    virtual ~Client() = default;
 
 public:
     bool Login(const ServerModels::LoginRequestModel& data);

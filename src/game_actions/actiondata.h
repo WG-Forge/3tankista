@@ -6,7 +6,7 @@
 class ActionData
 {
 public:
-    ActionData();
+    ActionData() = default;
     ActionData(const int vehicleId, const Vector3i& target);
     virtual ~ActionData();
 

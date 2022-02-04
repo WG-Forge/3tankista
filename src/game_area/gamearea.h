@@ -15,7 +15,7 @@ class GameArea
 {
 public:
     GameArea(const Map& map);
-    virtual ~GameArea() {}
+    virtual ~GameArea() = default;
 
     /**
      * Convert point in cubic coordinates to hex.

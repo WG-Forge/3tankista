@@ -6,7 +6,7 @@
 struct LightRepair : public Repair
 {
     LightRepair();
-    virtual ~LightRepair();
+    ~LightRepair() override = default;
 };
 
 void to_json(nlohmann::json& json, const LightRepair& lightRepair);

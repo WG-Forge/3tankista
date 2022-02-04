@@ -7,13 +7,6 @@
 
 #include "nlohmann/json.hpp"
 
-Client::Client()
-    : lastResult()
-{
-}
-
-Client::~Client() {}
-
 bool Client::Login(const ServerModels::LoginRequestModel& data)
 {
     const auto& sent =

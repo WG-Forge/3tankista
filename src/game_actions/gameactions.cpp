@@ -1,7 +1,5 @@
 #include "gameactions.h"
 
-GameActions::GameActions() {}
-
 void to_json(nlohmann::json& json, const GameActions& gameActions)
 {
     json = nlohmann::json{ "" };

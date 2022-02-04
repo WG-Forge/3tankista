@@ -9,7 +9,7 @@
 class GamePlayAction
 {
 public:
-    GamePlayAction();
+    GamePlayAction() = default;
 
 public:
     void       SetPlayerId(const int playerId) { this->playerId = playerId; }

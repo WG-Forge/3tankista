@@ -23,7 +23,7 @@ public:
         , pathFinder(new PathFinder(this->gameArea))
     {
     }
-    virtual ~GameAlgorithm(){};
+    virtual ~GameAlgorithm() = default;
 
     // True, if tank can attack enemy
     bool CheckNeutrality(std::shared_ptr<AbstractTank> playerTank,
@@ -112,8 +112,7 @@ public:
             {
                 // Is on the base?
                 bool isOnTheBase = false;
-                for (auto& basePosition :
-                     map->GetContent().GetBase())
+                for (auto& basePosition : map->GetContent().GetBase())
                 {
                     isOnTheBase |= basePosition == tank->GetPosition();
                 }
@@ -121,10 +120,8 @@ public:
                     continue; // STAY
                 // Move to the nearest base
                 pathFinder->SetStartPoint(tank->GetPosition());
-                Vector3i nearestBasePos =
-                    map->GetContent().GetBase().front();
-                for (auto& basePosition :
-                     map->GetContent().GetBase())
+                Vector3i nearestBasePos = map->GetContent().GetBase().front();
+                for (auto& basePosition : map->GetContent().GetBase())
                 {
                     if (pathFinder->GetDistance(nearestBasePos) == NOPATH ||
                         (pathFinder->GetDistance(nearestBasePos) >

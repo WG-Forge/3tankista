@@ -15,7 +15,7 @@ public:
         std::vector<std::pair<TankType, std::vector<Vector3i>>>;
 
 public:
-    SpawnPoints();
+    SpawnPoints() = default;
 
 public:
     void SetTanksSpawnPoints(const TanksTypeAndSpawnPos& tanksSpawnPoints)

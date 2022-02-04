@@ -1,14 +1,5 @@
 #include "content.h"
 
-Content::Content()
-    : base()
-    , catapult()
-    , lightRepair()
-    , hardRepair()
-    , obstacle()
-{
-}
-
 void to_json(nlohmann::json& json, const Content& content)
 {
     json = nlohmann::json{ "" };

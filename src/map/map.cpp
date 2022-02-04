@@ -1,13 +1,5 @@
 #include "map.h"
 
-Map::Map()
-    : size()
-    , name()
-    , spawnPoints()
-    , content()
-{
-}
-
 void to_json(nlohmann::json& json, const Map& map)
 {
     json = nlohmann::json{ "" };
