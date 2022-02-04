@@ -12,8 +12,8 @@ public:
 
 public:
     void SetVehicleId(const int vehicleId) { this->vehicleId = vehicleId; }
-    int& GetVehicleId() { return this->vehicleId; }
-    const int& GetVehicleId() const { return this->vehicleId; }
+    auto GetVehicleId() { return this->vehicleId; }
+    const auto GetVehicleId() const { return this->vehicleId; }
 
     void            SetTarget(const Vector3i& target) { this->target = target; }
     Vector3i&       GetTarget() { return this->target; }

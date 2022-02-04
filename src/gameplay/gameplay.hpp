@@ -113,7 +113,7 @@ public:
                 // Is on the base?
                 bool isOnTheBase = false;
                 for (auto& basePosition :
-                     map->GetContent().GetBase().GetHexes())
+                     map->GetContent().GetBase())
                 {
                     isOnTheBase |= basePosition == tank->GetPosition();
                 }
@@ -122,9 +122,9 @@ public:
                 // Move to the nearest base
                 pathFinder->SetStartPoint(tank->GetPosition());
                 Vector3i nearestBasePos =
-                    map->GetContent().GetBase().GetHexes().front();
+                    map->GetContent().GetBase().front();
                 for (auto& basePosition :
-                     map->GetContent().GetBase().GetHexes())
+                     map->GetContent().GetBase())
                 {
                     if (pathFinder->GetDistance(nearestBasePos) == NOPATH ||
                         (pathFinder->GetDistance(nearestBasePos) >

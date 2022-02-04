@@ -13,8 +13,8 @@ public:
 
 public:
     void       SetPlayerId(const int playerId) { this->playerId = playerId; }
-    int&       GetPlayerId() { return this->playerId; }
-    const int& GetPlayerId() const { return this->playerId; }
+    auto       GetPlayerId() { return this->playerId; }
+    const auto GetPlayerId() const { return this->playerId; }
 
     void           SetType(const Server::Action type) { this->type = type; }
     Server::Action GetType() { return this->type; }

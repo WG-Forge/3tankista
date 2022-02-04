@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "base.h"
 #include "catapult.h"
 #include "hardrepair.h"
 #include "lightrepair.h"
+#include "matrix.hpp"
 #include "obstacle.h"
 
 struct Content
@@ -14,7 +14,7 @@ struct Content
     Content();
 
 public:
-    void        SetBase(const Base& base) { this->base = base; }
+    void        SetBase(const std::vector<Vector3i>& base) { this->base = base; }
     auto&       GetBase() { return this->base; }
     const auto& GetBase() const { return this->base; }
 
@@ -41,11 +41,11 @@ public:
     const auto& GetObstacle() const { return this->obstacle; }
 
 private:
-    Base        base;
-    Catapult    catapult;
-    LightRepair lightRepair;
-    HardRepair  hardRepair;
-    Obstacle    obstacle;
+    std::vector<Vector3i> base;
+    Catapult              catapult;
+    LightRepair           lightRepair;
+    HardRepair            hardRepair;
+    Obstacle              obstacle;
 };
 
 void to_json(nlohmann::json& json, const Content& content);

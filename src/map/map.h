@@ -8,8 +8,6 @@
 #include "content.h"
 #include "spawnpoints.h"
 
-// TODO: rework hard and light repair, and tank spawn point.
-//       try to do this with base classes (think about problem of type).
 
 class Map
 {
@@ -18,8 +16,8 @@ public:
 
 public:
     void        SetSize(const std::size_t& size) { this->size = size; }
-    auto&       GetSize() { return this->size; }
-    const auto& GetSize() const { return this->size; }
+    auto       GetSize() { return this->size; }
+    const auto GetSize() const { return this->size; }
 
     void        SetName(const std::string& name) { this->name = name; }
     auto&       GetName() { return this->name; }
