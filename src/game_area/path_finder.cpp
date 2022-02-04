@@ -1,7 +1,6 @@
 #include "path_finder.h"
-
-#include <utility>
 #include <queue>
+#include <utility>
 
 PathFinder::PathFinder()
     : area()
@@ -13,7 +12,7 @@ PathFinder::PathFinder()
 {
 }
 
-PathFinder::PathFinder(std::shared_ptr<GameArea>  area)
+PathFinder::PathFinder(std::shared_ptr<GameArea> area)
     : area(std::move(area))
     , startPoint()
     , used()
@@ -68,7 +67,8 @@ std::vector<Vector3i> PathFinder::GetShortestPath(const Vector3i& point)
 {
     Vector2i now = GameArea::Shift(GameArea::Cube2Hex(point), area->GetSize());
     std::vector<Vector3i> result;
-    if (distance[now.x()][now.y()] == NOPATH) return result;
+    if (distance[now.x()][now.y()] == NOPATH)
+        return result;
     while (!(now == startPoint))
     {
         result.push_back(

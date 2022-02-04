@@ -1,11 +1,8 @@
 #include "client.h"
-
-#include <iostream>
-
+#include "nlohmann/json.hpp"
 #include "server/server.h"
 #include "utility/singleton.h"
-
-#include "nlohmann/json.hpp"
+#include <iostream>
 
 Client::Client()
     : lastResult()
@@ -43,7 +40,8 @@ bool Client::Login(const ServerModels::LoginRequestModel& data)
         return false;
     }
 
-    this->SetData(nlohmann::json::parse(responce));
+    ServerModels::ClientDataModel clientDataModel = nlohmann::json::parse(responce);
+    this->SetData(clientDataModel);
     return true;
 }
 
@@ -70,5 +68,5 @@ bool Client::Logout()
         return false;
     }
 
-    return responce.empty() ? true : false;
+    return responce.empty();
 }

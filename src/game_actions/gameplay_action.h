@@ -1,9 +1,8 @@
 #pragma once
 
 #include "action_data.h"
-#include "server/server.h"
-
 #include "nlohmann/json.hpp"
+#include "server/server.h"
 
 class GamePlayAction
 {
@@ -19,9 +18,9 @@ public:
     Server::Action GetType() { return this->type; }
     const Server::Action GetType() const { return this->type; }
 
-    void              SetData(const ActionData& data) { this->data = data; }
-    ActionData&       GetData() { return this->data; }
-    const ActionData& GetData() const { return this->data; }
+    void        SetData(ActionData& data) { this->data = std::move(data); }
+    auto&       GetData() { return this->data; }
+    const auto& GetData() const { return this->data; }
 
 private:
     int            playerId;
@@ -32,4 +31,3 @@ private:
 void to_json(nlohmann::json& json, const GamePlayAction& gamePlayAction);
 
 void from_json(const nlohmann::json& json, GamePlayAction& gamePlayAction);
-

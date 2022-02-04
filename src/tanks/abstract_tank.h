@@ -34,13 +34,16 @@ protected:
     const auto& GetTankType() const { return tankType; }
 
 public:
-    void  SetPosition(const Vector3i& position) { this->position = position; }
-    auto& GetPosition() { return this->position; }
+    void SetPosition(Vector3i& position)
+    {
+        this->position = std::move(position);
+    }
+    auto&       GetPosition() { return this->position; }
     const auto& GetPosition() const { return this->position; }
 
-    void SetSpawnPosition(const Vector3i& position)
+    void SetSpawnPosition(Vector3i& position)
     {
-        this->spawnPosition = position;
+        this->spawnPosition = std::move(position);
     }
     auto&       GetSpawnPosition() { return this->spawnPosition; }
     const auto& GetSpawnPosition() const { return this->spawnPosition; }

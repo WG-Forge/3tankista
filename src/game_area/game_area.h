@@ -84,9 +84,9 @@ public:
     const auto& GetSize() const { return this->size; }
 
 protected:
-    void SetMap(const std::vector<std::vector<CellState>>& map)
+    void SetMap(std::vector<std::vector<CellState>>& map)
     {
-        this->map = map;
+        this->map = std::move(map);
     }
     auto&       GetMap() { return this->map; }
     const auto& GetMap() const { return this->map; }

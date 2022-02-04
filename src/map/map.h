@@ -20,19 +20,19 @@ public:
     auto&       GetSize() { return this->size; }
     const auto& GetSize() const { return this->size; }
 
-    void        SetName(const std::string& name) { this->name = name; }
+    void        SetName(std::string& name) { this->name = std::move(name); }
     auto&       GetName() { return this->name; }
     const auto& GetName() const { return this->name; }
 
-    void SetSpawnPoints(const std::vector<SpawnPoints>& spawnPoints)
+    void SetSpawnPoints(std::vector<SpawnPoints>& spawnPoints)
     {
-        this->spawnPoints = spawnPoints;
+        this->spawnPoints = std::move(spawnPoints);
     }
     auto&       GetSpawnPoints() { return this->spawnPoints; }
     const auto& GetSpawnPoints() const { return this->spawnPoints; }
 
-    void        SetContent(const Content& content) { this->content = content; }
-    auto&       GetContent() { return this->content; }
+    void  SetContent(Content& content) { this->content = std::move(content); }
+    auto& GetContent() { return this->content; }
     const auto& GetContent() const { return this->content; }
 
 private:
@@ -45,4 +45,3 @@ private:
 void to_json(nlohmann::json& json, const Map& map);
 
 void from_json(const nlohmann::json& json, Map& map);
-

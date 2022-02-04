@@ -41,7 +41,7 @@ public:
     std::string ReceiveResult(Result& result);
 
 private:
-    void        SetBuffer(const std::string& buffer) { this->buffer = buffer; }
+    void        SetBuffer(std::string& buffer) { this->buffer = std::move(buffer); }
     auto&       GetBuffer() { return buffer; }
     const auto& GetBuffer() const { return buffer; }
 

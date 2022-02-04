@@ -1,12 +1,9 @@
 #include "global_game_actions.h"
-
-#include <iostream>
-
-#include "nlohmann/json.hpp"
-
 #include "action_data.h"
+#include "nlohmann/json.hpp"
 #include "server/server.h"
 #include "utility/singleton.h"
+#include <iostream>
 
 bool SendTurnAction()
 {

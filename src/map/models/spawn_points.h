@@ -16,9 +16,9 @@ public:
     SpawnPoints();
 
 public:
-    void SetTanksSpawnPoints(const TanksTypeAndSpawnPos& tanksSpawnPoints)
+    void SetTanksSpawnPoints(TanksTypeAndSpawnPos& tanksSpawnPoints)
     {
-        this->tanksSpawnPoints = tanksSpawnPoints;
+        this->tanksSpawnPoints = std::move(tanksSpawnPoints);
     }
     auto&       GetTanksSpawnPoints() { return this->tanksSpawnPoints; }
     const auto& GetTanksSpawnPoints() const { return this->tanksSpawnPoints; }

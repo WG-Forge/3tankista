@@ -6,8 +6,11 @@
 struct Base
 {
 public:
-    void  SetHexes(const std::vector<Vector3i>& hexes) { this->hexes = hexes; }
-    auto& GetHexes() { return this->hexes; }
+    void SetHexes(std::vector<Vector3i>& hexes)
+    {
+        this->hexes = std::move(hexes);
+    }
+    auto&       GetHexes() { return this->hexes; }
     const auto& GetHexes() const { return this->hexes; }
 
 private:

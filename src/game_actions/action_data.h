@@ -14,7 +14,7 @@ public:
     int& GetVehicleId() { return this->vehicleId; }
     const int& GetVehicleId() const { return this->vehicleId; }
 
-    void            SetTarget(const Vector3i& target) { this->target = target; }
+    void            SetTarget(Vector3i target) { this->target = std::move(target); }
     Vector3i&       GetTarget() { return this->target; }
     const Vector3i& GetTarget() const { return this->target; }
 

@@ -57,38 +57,38 @@ public:
     auto&       GetWinner() { return this->numberPlayers; }
     const auto& GetWinner() const { return this->numberPlayers; }
 
-    void SetPlayers(const std::vector<Player>& players)
+    void SetPlayers(std::vector<Player>& players)
     {
-        this->players = players;
+        this->players = std::move(players);
     }
     auto&       GetPlayers() { return this->players; }
     const auto& GetPlayers() const { return this->players; }
 
     void SetObservers(const std::vector<Player>& observers)
     {
-        this->observers = observers;
+        this->observers = std::move(observers);
     }
     auto&       GetObservers() { return this->observers; }
     const auto& GetObservers() const { return this->observers; }
 
     void SetAttackMatrix(
-        const std::unordered_map<int, std::vector<int>>& attackMatrix)
+        std::unordered_map<int, std::vector<int>>& attackMatrix)
     {
-        this->attackMatrix = attackMatrix;
+        this->attackMatrix = std::move(attackMatrix);
     }
     auto&       GetAttackMatrix() { return this->attackMatrix; }
     const auto& GetAttackMatrix() const { return this->attackMatrix; }
 
-    void SetWinPoints(const std::unordered_map<int, WinPoints>& winPoints)
+    void SetWinPoints(std::unordered_map<int, WinPoints>& winPoints)
     {
-        this->winPoints = winPoints;
+        this->winPoints = std::move(winPoints);
     }
     auto&       GetWinPoints() { return this->winPoints; }
     const auto& GetWinPoints() const { return this->winPoints; }
 
-    void SetVehicles(const MapPlayerIDAndTank& vehicles)
+    void SetVehicles(MapPlayerIDAndTank& vehicles)
     {
-        this->vehicles = vehicles;
+        this->vehicles = std::move(vehicles);
     }
     auto&       GetVehicles() { return this->vehicles; }
     const auto& GetVehicles() const { return this->vehicles; }

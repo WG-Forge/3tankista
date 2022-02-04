@@ -11,9 +11,9 @@ public:
     const auto& operator[](int index) const { return directions[index]; }
 
 protected:
-    void SetDirections(const std::vector<Vector2i>& directions)
+    void SetDirections(std::vector<Vector2i>& directions)
     {
-        this->directions = directions;
+        this->directions = std::move(directions);
     }
     auto& GetDirections() { return this->directions; }
 

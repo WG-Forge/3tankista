@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
-
 #include "utility/matrix.hpp"
+#include <string>
 
 bool SendTurnAction();
 bool SendChatAction(const std::string& message);

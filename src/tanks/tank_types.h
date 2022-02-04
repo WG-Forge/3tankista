@@ -7,5 +7,4 @@ enum class TankType
     HEAVY,
     MEDIUM,
     AT_SPG
-
 };
