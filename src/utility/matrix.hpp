@@ -1,5 +1,4 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#pragma once
 
 #include <algorithm>
 #include <array>
@@ -923,5 +922,3 @@ void to_json(nlohmann::json& json, const Vector3i& vector3i);
 void from_json(const nlohmann::json& json, Vector3i& vector3i);
 
 #undef MATRIX_MAKE_TYPEDEFS
-
-#endif // MATRIX_H

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(server LANGUAGES CXX)
+project(client LANGUAGES CXX)
 
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h
                                ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
@@ -13,20 +13,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE asio
                                               nlohmann_json::nlohmann_json)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/server
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/server/models
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/game_area
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/server/protocols
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/client
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/game_state
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/game_actions
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/gameplay
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/map
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/map/models
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/tanks
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/tanks/factories
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/utility
-                                                   ${CMAKE_CURRENT_SOURCE_DIR}/)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 

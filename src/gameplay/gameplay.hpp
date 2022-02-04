@@ -1,13 +1,12 @@
-#ifndef SERVER_GAMEALGORITHM_H
-#define SERVER_GAMEALGORITHM_H
+#pragma once
 
-#include "../game_actions/globalgameactions.h"
-#include "../game_area/gamearea.h"
-#include "../game_area/pathfinder.h"
-#include "../game_state/gamestate.h"
-#include "../map/map.h"
-#include "../tanks/abstracttank.h"
-#include "../utility/matrix.hpp"
+#include "game_actions/global_game_actions.h"
+#include "game_area/game_area.h"
+#include "game_area/path_finder.h"
+#include "game_state/game_state.h"
+#include "map/map.h"
+#include "tanks/abstract_tank.h"
+#include "utility/matrix.hpp"
 #include <algorithm>
 #include <memory>
 #include <utility>
@@ -150,36 +149,34 @@ public:
     }
 
 public:
-    void SetGameArea(GameArea* gameArea)
+    void SetGameArea(std::shared_ptr<GameArea> gameArea)
     {
-        this->gameArea = std::shared_ptr<GameArea>(gameArea);
+        this->gameArea = std::move(gameArea);
     }
     auto&       GetGameArea() { return this->gameArea; }
     const auto& GetGameArea() const { return this->gameArea; }
 
-    void SetGameState(GameState* gameState)
+    void SetGameState(std::unique_ptr<GameState>& gameState)
     {
-        this->gameState = std::shared_ptr<GameState>(gameState);
+        this->gameState = std::move(gameState);
     }
     auto&       GetGameState() { return this->gameState; }
     const auto& GetGameState() const { return this->gameState; }
 
-    void        SetMap(Map* map) { this->map = std::shared_ptr<Map>(map); }
+    void        SetMap(std::shared_ptr<Map> map) { this->map = std::move(map); }
     auto&       GetMap() { return this->map; }
     const auto& GetMap() const { return this->map; }
 
-    void SetPathFinder(PathFinder* pathFinder)
+    void SetPathFinder(std::shared_ptr<PathFinder> pathFinder)
     {
-        this->pathFinder = std::shared_ptr<PathFinder>(pathFinder);
+        this->pathFinder = std::move(pathFinder);
     }
     auto&       GetPathFinder() { return this->pathFinder; }
     const auto& GetPathFinder() const { return this->pathFinder; }
 
 private:
     std::shared_ptr<GameArea>   gameArea;
-    std::shared_ptr<GameState>  gameState;
+    std::unique_ptr<GameState>  gameState;
     std::shared_ptr<Map>        map;
     std::shared_ptr<PathFinder> pathFinder;
 };
-
-#endif // SERVER_GAMEALGORITHM_H

@@ -1,18 +1,15 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-#include <utility>
 
-#include "client.h"
-#include "gameactions.h"
-#include "gamearea.h"
+#include "client/client.h"
+#include "game_actions/global_game_actions.h"
+#include "game_area/game_area.h"
+#include "game_state/game_state.h"
 #include "gameplay/gameplay.hpp"
-#include "gamestate.h"
-#include "globalgameactions.h"
-#include "map.h"
-#include "server.h"
-
-#include "singleton.h"
+#include "map/map.h"
+#include "server/server.h"
+#include "utility/singleton.h"
 
 int main()
 {
@@ -35,7 +32,7 @@ int main()
     std::cout << "Write are you observer(y/n): ";
     std::string isObserver = "";
     std::cin >> isObserver;
-    observer = isObserver.at(0) == 'y' ? true : false;
+    observer = isObserver.at(0) == 'y';
 
     Client client;
     auto   isSuccessfully =
@@ -72,9 +69,9 @@ int main()
     {
         std::cerr << "No response was received from the server" << std::endl;
     }
-    Map*          map      = new Map(nlohmann::json().parse(responce));
-    GameArea*     gameArea = new GameArea(*map);
-    GameAlgorithm gameAlgorithm((std::shared_ptr<GameArea>(gameArea)), std::shared_ptr<Map>(map));
+    auto          map = std::make_shared<Map>(nlohmann::json().parse(responce));
+    auto          gameArea = std::make_shared<GameArea>(*map);
+    GameAlgorithm gameAlgorithm(gameArea, map);
 
     auto gameFinished = false;
     while (!gameFinished)
@@ -102,7 +99,8 @@ int main()
                       << std::endl;
             continue;
         }
-        GameState* gameState = new GameState(nlohmann::json().parse(responce));
+        auto gameState =
+            std::make_unique<GameState>(nlohmann::json().parse(responce));
 
         gameFinished = gameState->GetFinished();
 
@@ -111,9 +109,8 @@ int main()
             const auto& winner = std::find_if(
                 gameState->GetPlayers().begin(),
                 gameState->GetPlayers().end(),
-                [&](const Player& player) {
-                    return player.GetData().index == gameState->GetWinner();
-                });
+                [&](const Player& player)
+                { return player.GetData().index == gameState->GetWinner(); });
             std::cerr << "Winner: " << winner->GetData().name << ";"
                       << std::endl
                       << "Capture points: "
@@ -129,15 +126,13 @@ int main()
             continue;
         }
 
-        gameAlgorithm.SetGameState(gameState);
-
         if (client.GetData().index == gameState->GetCurrentPlayerIdx())
+        {
+            gameAlgorithm.SetGameState(gameState);
             gameAlgorithm.Play();
-
+        }
         SendTurnAction();
-
     }
-
 
     // LOGOUT
     isSuccessfully = client.Logout();

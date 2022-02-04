@@ -1,5 +1,4 @@
-#ifndef SINGLETON_H
-#define SINGLETON_H
+#pragma once
 
 #include <memory>
 #include <mutex>
@@ -43,5 +42,3 @@ typename Singleton<T>::pointer_t Singleton<T>::m_instance;
 
 template <class T>
 typename std::mutex Singleton<T>::m_mutex;
-
-#endif // SINGLETON_H

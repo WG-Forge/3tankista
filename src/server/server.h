@@ -1,9 +1,7 @@
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
+#include "protocols/tcp.h"
 #include <vector>
-
-#include "tcp.h"
 
 class Server : public Tcp
 {
@@ -43,12 +41,10 @@ public:
     std::string ReceiveResult(Result& result);
 
 private:
-    void        SetBuffer(const std::string& buffer) { this->buffer = buffer; }
+    void        SetBuffer(std::string& buffer) { this->buffer = std::move(buffer); }
     auto&       GetBuffer() { return buffer; }
     const auto& GetBuffer() const { return buffer; }
 
 private:
     std::string buffer;
 };
-
-#endif // SERVER_H

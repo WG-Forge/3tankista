@@ -1,11 +1,9 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 
+#include "server/models/login_request_model.h"
+#include "server/models/login_responce_model.h"
+#include "server/server.h"
 #include <string>
-
-#include "loginrequestmodel.h"
-#include "loginresponcemodel.h"
-#include "server.h"
 
 class Client
 {
@@ -18,9 +16,9 @@ public:
     bool Logout();
 
 public:
-    void SetData(const ServerModels::ClientDataModel& data)
+    void SetData(ServerModels::ClientDataModel& data)
     {
-        this->data = data;
+        this->data = std::move(data);
     }
     auto&       GetData() { return this->data; }
     const auto& GetData() const { return this->data; }
@@ -33,5 +31,3 @@ private:
     ServerModels::ClientDataModel data;
     Server::Result                lastResult;
 };
-
-#endif // CLIENT_H
