@@ -6,7 +6,6 @@
 #include "tanks/medium_tank.h"
 #include "utility/enum_parser.h"
 #include "utility/matrix.hpp"
-#include "win_points.h"
 #include <sstream>
 #include <unordered_map>
 #include <vector>
@@ -16,6 +15,7 @@ struct WinPoints
     int kill;
     int capture;
 };
+
 void to_json(nlohmann::json& json, const WinPoints& winPoints);
 
 void from_json(const nlohmann::json& json, WinPoints& winPoints);
@@ -37,11 +37,8 @@ public:
     auto       GetNumPlayers() { return this->numberPlayers; }
     const auto GetNumPlayers() const { return this->numberPlayers; }
 
-    void SetNumTurns(const int numberTurns)
-    {
-        this->numberTurns = numberTurns;
-    }
-    auto       GetNumTurns() { return this->numberTurns; }
+    void SetNumTurns(const int numberTurns) { this->numberTurns = numberTurns; }
+    auto GetNumTurns() { return this->numberTurns; }
     const auto GetNumTurns() const { return this->numberTurns; }
 
     void SetCurrentTurn(const int currentTurn)

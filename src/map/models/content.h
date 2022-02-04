@@ -5,6 +5,7 @@
 #include "light_repair.h"
 #include "obstacle.h"
 #include <vector>
+#include "utility/matrix.hpp"
 
 struct Content
 {
