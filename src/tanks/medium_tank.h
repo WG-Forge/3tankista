@@ -5,8 +5,8 @@
 class MediumTank : public AbstractTank
 {
 public:
-    MediumTank(int vehicleId);
-    virtual ~MediumTank();
+    explicit MediumTank(int vehicleId);
+    ~MediumTank() override = default;
 
     bool CanShoot(const Vector3i& point) const override;
     bool CanMove(const Vector3i& point) const override;

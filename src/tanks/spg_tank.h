@@ -5,8 +5,8 @@
 class SpgTank : public AbstractTank
 {
 public:
-    SpgTank(int vehicleId);
-    virtual ~SpgTank();
+    explicit SpgTank(int vehicleId);
+    ~SpgTank() override = default;
 
     bool CanShoot(const Vector3i& point) const override;
     bool CanMove(const Vector3i& point) const override;

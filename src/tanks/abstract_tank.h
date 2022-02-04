@@ -9,7 +9,7 @@ class AbstractTank
 {
 public:
     AbstractTank(int vehicleId, const TankType& tankType);
-    virtual ~AbstractTank();
+    virtual ~AbstractTank() = default;
 
     virtual bool CanShoot(const Vector3i& point) const = 0;
     virtual bool CanMove(const Vector3i& point) const  = 0;
@@ -20,13 +20,13 @@ public:
     bool operator<(const AbstractTank& tank);
 
 public:
-    void        SetVehicleId(const int& id) { this->vehicleId = id; }
-    auto&       GetVehicleId() { return vehicleId; }
-    const auto& GetVehicleId() const { return vehicleId; }
+    void       SetVehicleId(const int& id) { this->vehicleId = id; }
+    auto       GetVehicleId() { return vehicleId; }
+    const auto GetVehicleId() const { return vehicleId; }
 
-    void        SetPlayerId(const int& id) { this->playerId = id; }
-    auto&       GetPlayerId() { return playerId; }
-    const auto& GetPlayerId() const { return playerId; }
+    void       SetPlayerId(const int& id) { this->playerId = id; }
+    auto       GetPlayerId() { return playerId; }
+    const auto GetPlayerId() const { return playerId; }
 
 protected:
     void  SetTankType(const TankType& tankType) { this->tankType = tankType; }
@@ -48,35 +48,35 @@ public:
     auto&       GetSpawnPosition() { return this->spawnPosition; }
     const auto& GetSpawnPosition() const { return this->spawnPosition; }
 
-    void        SetHealth(const int& health) { this->health = health; }
-    auto&       GetHealth() { return this->health; }
-    const auto& GetHealth() const { return this->health; }
+    void       SetHealth(const int& health) { this->health = health; }
+    auto       GetHealth() { return this->health; }
+    const auto GetHealth() const { return this->health; }
 
-    void  SetMaxHealth(const int& maxHealth) { this->maxHealth = maxHealth; }
-    auto& GetMaxHealth() { return this->maxHealth; }
-    const auto& GetMaxHealth() const { return this->maxHealth; }
+    void SetMaxHealth(const int& maxHealth) { this->maxHealth = maxHealth; }
+    auto GetMaxHealth() { return this->maxHealth; }
+    const auto GetMaxHealth() const { return this->maxHealth; }
 
-    void        SetSpeed(const int& speed) { this->speed = speed; }
-    auto&       GetSpeed() { return this->speed; }
-    const auto& GetSpeed() const { return this->speed; }
+    void       SetSpeed(const int& speed) { this->speed = speed; }
+    auto       GetSpeed() { return this->speed; }
+    const auto GetSpeed() const { return this->speed; }
 
-    void        SetDamage(const int& damage) { this->damage = damage; }
-    auto&       GetDamage() { return this->damage; }
-    const auto& GetDamage() const { return this->damage; }
+    void       SetDamage(const int& damage) { this->damage = damage; }
+    auto       GetDamage() { return this->damage; }
+    const auto GetDamage() const { return this->damage; }
 
     void SetDestructionPoints(const int& destructionPoints)
     {
         this->destructionPoints = destructionPoints;
     }
-    auto&       GetDestructionPoints() { return this->destructionPoints; }
-    const auto& GetDestructionPoints() const { return this->destructionPoints; }
+    auto       GetDestructionPoints() { return this->destructionPoints; }
+    const auto GetDestructionPoints() const { return this->destructionPoints; }
 
     void SetCapturePoints(const int& capturePoints)
     {
         this->capturePoints = capturePoints;
     }
-    auto&       GetCapturePoints() { return capturePoints; }
-    const auto& GetCapturePoints() const { return capturePoints; }
+    auto       GetCapturePoints() { return capturePoints; }
+    const auto GetCapturePoints() const { return capturePoints; }
 
 private:
     int      vehicleId;

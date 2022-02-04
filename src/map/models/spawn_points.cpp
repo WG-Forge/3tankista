@@ -2,9 +2,6 @@
 #include "utility/enum_parser.h"
 #include "utility/singleton.h"
 
-SpawnPoints::SpawnPoints()
-/*: mediumTankSpawnPoints()*/ {}
-
 void to_json(nlohmann::json& json, const SpawnPoints& spawnPoints)
 {
     json = nlohmann::json{ "" };

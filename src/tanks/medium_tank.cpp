@@ -11,8 +11,6 @@ MediumTank::MediumTank(int vehicleId)
     SetDestructionPoints(2);
 }
 
-MediumTank::~MediumTank() {}
-
 bool MediumTank::CanShoot(const Vector3i& point) const
 {
     return GameArea::GetDistance(point, this->GetPosition()) == 2;

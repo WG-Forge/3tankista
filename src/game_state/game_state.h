@@ -11,6 +11,15 @@
 #include <unordered_map>
 #include <vector>
 
+struct WinPoints
+{
+    int kill;
+    int capture;
+};
+void to_json(nlohmann::json& json, const WinPoints& winPoints);
+
+void from_json(const nlohmann::json& json, WinPoints& winPoints);
+
 class GameState
 {
 public:
@@ -18,44 +27,44 @@ public:
         std::unordered_map<int, std::vector<std::shared_ptr<AbstractTank>>>;
 
 public:
-    GameState();
+    GameState() = default;
 
 public:
-    void SetNumPlayers(const int& numberPlayers)
+    void SetNumPlayers(const int numberPlayers)
     {
         this->numberPlayers = numberPlayers;
     }
-    auto&       GetNumPlayers() { return this->numberPlayers; }
-    const auto& GetNumPlayers() const { return this->numberPlayers; }
+    auto       GetNumPlayers() { return this->numberPlayers; }
+    const auto GetNumPlayers() const { return this->numberPlayers; }
 
-    void SetNumTurns(const int& numberTurns)
+    void SetNumTurns(const int numberTurns)
     {
         this->numberTurns = numberTurns;
     }
-    auto&       GetNumTurns() { return this->numberTurns; }
-    const auto& GetNumTurns() const { return this->numberTurns; }
+    auto       GetNumTurns() { return this->numberTurns; }
+    const auto GetNumTurns() const { return this->numberTurns; }
 
-    void SetCurrentTurn(const int& currentTurn)
+    void SetCurrentTurn(const int currentTurn)
     {
         this->currentTurn = currentTurn;
     }
-    auto&       GetCurrentTurn() { return this->currentTurn; }
-    const auto& GetCurrentTurn() const { return this->currentTurn; }
+    auto       GetCurrentTurn() { return this->currentTurn; }
+    const auto GetCurrentTurn() const { return this->currentTurn; }
 
-    void SetCurrentPlayerIdx(const int& currentPlayerIndex)
+    void SetCurrentPlayerIdx(const int currentPlayerIndex)
     {
         this->currentPlayerIndex = currentPlayerIndex;
     }
-    auto&       GetCurrentPlayerIdx() { return this->currentPlayerIndex; }
-    const auto& GetCurrentPlayerIdx() const { return this->currentPlayerIndex; }
+    auto       GetCurrentPlayerIdx() { return this->currentPlayerIndex; }
+    const auto GetCurrentPlayerIdx() const { return this->currentPlayerIndex; }
 
-    void        SetFinished(const bool& finished) { this->finished = finished; }
-    auto&       GetFinished() { return this->finished; }
-    const auto& GetFinished() const { return this->finished; }
+    void       SetFinished(const bool finished) { this->finished = finished; }
+    auto       GetFinished() { return this->finished; }
+    const auto GetFinished() const { return this->finished; }
 
-    void        SetWinner(const int& winner) { this->winner = winner; }
-    auto&       GetWinner() { return this->numberPlayers; }
-    const auto& GetWinner() const { return this->numberPlayers; }
+    void       SetWinner(const int winner) { this->winner = winner; }
+    auto       GetWinner() { return this->winner; }
+    const auto GetWinner() const { return this->winner; }
 
     void SetPlayers(std::vector<Player>& players)
     {
@@ -64,7 +73,7 @@ public:
     auto&       GetPlayers() { return this->players; }
     const auto& GetPlayers() const { return this->players; }
 
-    void SetObservers(const std::vector<Player>& observers)
+    void SetObservers(std::vector<Player>& observers)
     {
         this->observers = std::move(observers);
     }

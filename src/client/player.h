@@ -7,8 +7,8 @@
 class Player
 {
 public:
-    Player();
-    virtual ~Player();
+    Player()          = default;
+    virtual ~Player() = default;
 
 public:
     void SetData(ServerModels::ClientDataModel& data)

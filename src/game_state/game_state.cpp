@@ -1,21 +1,6 @@
 #include "game_state.h"
 #include "utility/singleton.h"
 
-GameState::GameState()
-    : numberPlayers()
-    , numberTurns()
-    , currentTurn()
-    , players()
-    , observers()
-    , currentPlayerIndex()
-    , finished()
-    , vehicles()
-    , attackMatrix()
-    , winner()
-    , winPoints()
-{
-}
-
 void to_json(nlohmann::json& json, const GameState& gameState)
 {
     json = nlohmann::json{ "" };
@@ -25,27 +10,25 @@ void from_json(const nlohmann::json& json, GameState& gameState)
 {
     try
     {
-        json.at("num_players").get_to<int>(gameState.GetNumPlayers());
-        json.at("num_turns").get_to<int>(gameState.GetNumTurns());
-        json.at("current_turn").get_to<int>(gameState.GetCurrentTurn());
-        json.at("num_players").get_to<int>(gameState.GetNumPlayers());
+        gameState.SetNumPlayers(json.at("num_players"));
+        gameState.SetNumTurns(json.at("num_turns"));
+        gameState.SetCurrentTurn(json.at("current_turn"));
         if (json.at("current_player_idx").empty())
         {
             gameState.SetCurrentPlayerIdx(0);
         }
         else
         {
-            json.at("current_player_idx")
-                .get_to<int>(gameState.GetCurrentPlayerIdx());
+            gameState.SetCurrentPlayerIdx(json.at("current_player_idx"));
         }
-        json.at("finished").get_to<bool>(gameState.GetFinished());
+        gameState.SetFinished(json.at("finished"));
         if (json.at("winner").empty())
         {
             gameState.SetWinner(0);
         }
         else
         {
-            json.at("winner").get_to<int>(gameState.GetWinner());
+            gameState.SetWinner(json.at("winner"));
         }
         json.at("players").get_to<std::vector<Player>>(gameState.GetPlayers());
         json.at("observers")
@@ -60,7 +43,7 @@ void from_json(const nlohmann::json& json, GameState& gameState)
         std::unordered_map<int, WinPoints> winPoints;
         for (const auto& [key, value] : json["win_points"].items())
         {
-            WinPoints tempwp;
+            WinPoints tempwp{};
             from_json(value, tempwp);
             winPoints.insert(std::make_pair(std::stoi(key), tempwp));
         }
@@ -106,4 +89,15 @@ void from_json(const nlohmann::json& json, GameState& gameState)
     {
         std::cout << exception.what() << std::endl << std::flush;
     }
+}
+
+void to_json(nlohmann::json& json, const WinPoints& winPoints)
+{
+    json = nlohmann::json{ "" };
+}
+
+void from_json(const nlohmann::json& json, WinPoints& winPoints)
+{
+    winPoints.capture = json.at("capture");
+    winPoints.kill    = json.at("kill");
 }

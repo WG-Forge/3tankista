@@ -5,8 +5,6 @@ LightRepair::LightRepair()
 {
 }
 
-LightRepair::~LightRepair() {}
-
 void to_json(nlohmann::json& json, const LightRepair& lightRepair)
 {
     json = nlohmann::json{ "" };

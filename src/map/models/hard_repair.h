@@ -5,7 +5,7 @@
 struct HardRepair : public Repair
 {
     HardRepair();
-    virtual ~HardRepair();
+    ~HardRepair() override = default;
 };
 
 void to_json(nlohmann::json& json, const HardRepair& hardRepair);

@@ -34,7 +34,7 @@ public:
 
 public:
     Server(const std::string& host, const std::string& port);
-    virtual ~Server() = default;
+    ~Server() override = default;
 
 public:
     bool        SendAction(const Action action, const std::string& data);

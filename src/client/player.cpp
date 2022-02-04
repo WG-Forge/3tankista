@@ -1,13 +1,5 @@
 #include "player.h"
 
-Player::Player()
-    : data()
-    , vehicles()
-{
-}
-
-Player::~Player() {}
-
 void to_json(nlohmann::json& json, const Player& player)
 {
     json = nlohmann::json{ "" };

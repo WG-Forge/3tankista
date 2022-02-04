@@ -14,7 +14,7 @@ class GameArea
 {
 public:
     GameArea(const Map& map);
-    virtual ~GameArea() {}
+    virtual ~GameArea() = default;
 
     /**
      * Convert point in cubic coordinates to hex.
@@ -80,8 +80,8 @@ protected:
     void SetSize(const int& size) { this->size = size; }
 
 public:
-    auto&       GetSize() { return this->size; }
-    const auto& GetSize() const { return this->size; }
+    auto       GetSize() { return this->size; }
+    const auto GetSize() const { return this->size; }
 
 protected:
     void SetMap(std::vector<std::vector<CellState>>& map)

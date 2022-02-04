@@ -4,13 +4,6 @@
 #include "utility/singleton.h"
 #include <iostream>
 
-Client::Client()
-    : lastResult()
-{
-}
-
-Client::~Client() {}
-
 bool Client::Login(const ServerModels::LoginRequestModel& data)
 {
     const auto& sent =

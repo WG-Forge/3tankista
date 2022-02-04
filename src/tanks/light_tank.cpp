@@ -11,8 +11,6 @@ LightTank::LightTank(int vehicleId)
     SetDestructionPoints(1);
 }
 
-LightTank::~LightTank() {}
-
 bool LightTank::CanShoot(const Vector3i& point) const
 {
     return GameArea::GetDistance(point, this->GetPosition()) == 2;

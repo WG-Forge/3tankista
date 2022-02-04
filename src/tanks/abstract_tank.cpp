@@ -25,7 +25,6 @@ bool AbstractTank::operator<(const AbstractTank& tank)
     return this->GetTankType() < tank.GetTankType();
 }
 
-AbstractTank::~AbstractTank() {}
 
 void AbstractTank::Shoot(const Vector3i& point)
 {
@@ -90,12 +89,12 @@ AbstractTank* nlohmann::adl_serializer<AbstractTank*>::from_json(
             }
         }
 
-        jsonTankInfo.at("player_id").get_to<int>(tank->GetPlayerId());
-        jsonTankInfo.at("health").get_to<int>(tank->GetHealth());
+        tank->SetPlayerId(jsonTankInfo.at("player_id"));
+        tank->SetHealth(jsonTankInfo.at("health"));
         jsonTankInfo.at("spawn_position")
             .get_to<Vector3i>(tank->GetSpawnPosition());
         jsonTankInfo.at("position").get_to<Vector3i>(tank->GetPosition());
-        jsonTankInfo.at("capture_points").get_to<int>(tank->GetCapturePoints());
+        tank->SetCapturePoints(jsonTankInfo.at("capture_points"));
     }
     catch (nlohmann::json::type_error& exception)
     {

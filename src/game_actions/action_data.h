@@ -5,14 +5,14 @@
 class ActionData
 {
 public:
-    ActionData();
+    ActionData() = default;
     ActionData(const int vehicleId, const Vector3i& target);
     virtual ~ActionData();
 
 public:
     void SetVehicleId(const int vehicleId) { this->vehicleId = vehicleId; }
-    int& GetVehicleId() { return this->vehicleId; }
-    const int& GetVehicleId() const { return this->vehicleId; }
+    auto GetVehicleId() { return this->vehicleId; }
+    const auto GetVehicleId() const { return this->vehicleId; }
 
     void            SetTarget(Vector3i target) { this->target = std::move(target); }
     Vector3i&       GetTarget() { return this->target; }

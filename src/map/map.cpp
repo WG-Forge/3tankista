@@ -1,13 +1,5 @@
 #include "map.h"
 
-Map::Map()
-    : size()
-    , name()
-    , spawnPoints()
-    , content()
-{
-}
-
 void to_json(nlohmann::json& json, const Map& map)
 {
     json = nlohmann::json{ "" };
@@ -17,7 +9,8 @@ void from_json(const nlohmann::json& json, Map& map)
 {
     try
     {
-        json.at("size").get_to<std::size_t>(map.GetSize());
+
+        map.SetSize(json.at("size"));
         json.at("name").get_to<std::string>(map.GetName());
         json.at("spawn_points")
             .get_to<std::vector<SpawnPoints>>(map.GetSpawnPoints());

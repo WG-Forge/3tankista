@@ -115,13 +115,11 @@ int main()
                       << std::endl
                       << "Capture points: "
                       << gameState->GetWinPoints()
-                             .at(gameState->GetWinner())
-                             .GetCapture()
+                             .at(gameState->GetWinner()).capture
                       << ";" << std::endl
                       << "Kill points: "
                       << gameState->GetWinPoints()
-                             .at(gameState->GetWinner())
-                             .GetKill()
+                             .at(gameState->GetWinner()).kill
                       << ";" << std::endl;
             continue;
         }

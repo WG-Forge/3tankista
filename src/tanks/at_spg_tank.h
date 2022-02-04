@@ -5,8 +5,8 @@
 class AtSpgTank : public AbstractTank
 {
 public:
-    AtSpgTank(int vehicleId);
-    virtual ~AtSpgTank();
+    explicit AtSpgTank(int vehicleId);
+    ~AtSpgTank() override = default;
 
     void Shoot(const Vector3i& point) override;
 

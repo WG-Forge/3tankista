@@ -11,8 +11,6 @@ HeavyTank::HeavyTank(int vehicleId)
     SetDestructionPoints(3);
 }
 
-HeavyTank::~HeavyTank() {}
-
 bool HeavyTank::CanShoot(const Vector3i& point) const
 {
     return GameArea::GetDistance(point, this->GetPosition()) <= 2 &&

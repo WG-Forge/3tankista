@@ -1,6 +1,5 @@
 #pragma once
 
-#include "base.h"
 #include "catapult.h"
 #include "hard_repair.h"
 #include "light_repair.h"
@@ -9,11 +8,11 @@
 
 struct Content
 {
-    Content();
+    Content() = default;
 
 public:
-    void        SetBase(Base& base) { this->base = std::move(base); }
-    auto&       GetBase() { return this->base; }
+    void  SetBase(std::vector<Vector3i>& base) { this->base = std::move(base); }
+    auto& GetBase() { return this->base; }
     const auto& GetBase() const { return this->base; }
 
     void SetCatapult(Catapult& catapult)
@@ -45,11 +44,11 @@ public:
     const auto& GetObstacle() const { return this->obstacle; }
 
 private:
-    Base        base;
-    Catapult    catapult;
-    LightRepair lightRepair;
-    HardRepair  hardRepair;
-    Obstacle    obstacle;
+    std::vector<Vector3i> base;
+    Catapult              catapult;
+    LightRepair           lightRepair;
+    HardRepair            hardRepair;
+    Obstacle              obstacle;
 };
 
 void to_json(nlohmann::json& json, const Content& content);

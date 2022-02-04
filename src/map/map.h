@@ -7,18 +7,15 @@
 #include "models/content.h"
 #include "models/spawn_points.h"
 
-// TODO: rework hard and light repair, and tank spawn point.
-//       try to do this with base classes (think about problem of type).
-
 class Map
 {
 public:
-    Map();
+    Map() = default;
 
 public:
-    void        SetSize(const std::size_t& size) { this->size = size; }
-    auto&       GetSize() { return this->size; }
-    const auto& GetSize() const { return this->size; }
+    void       SetSize(const std::size_t& size) { this->size = size; }
+    auto       GetSize() { return this->size; }
+    const auto GetSize() const { return this->size; }
 
     void        SetName(std::string& name) { this->name = std::move(name); }
     auto&       GetName() { return this->name; }

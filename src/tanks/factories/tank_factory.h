@@ -10,8 +10,8 @@
 class TankFactory : public AbstractTankFactory
 {
 public:
-    TankFactory() {}
-    virtual ~TankFactory() {}
+    TankFactory()          = default;
+    virtual ~TankFactory() = default;
 
     AbstractTank* CreateMediumTank(int vehicleId) const override
     {

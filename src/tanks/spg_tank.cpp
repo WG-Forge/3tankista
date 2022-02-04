@@ -11,8 +11,6 @@ SpgTank::SpgTank(int vehicleId)
     SetDestructionPoints(1);
 }
 
-SpgTank::~SpgTank() {}
-
 bool SpgTank::CanShoot(const Vector3i& point) const
 {
     return GameArea::GetDistance(point, this->GetPosition()) == 3;
