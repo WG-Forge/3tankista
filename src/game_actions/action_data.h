@@ -7,19 +7,18 @@ class ActionData
 public:
     ActionData() = default;
     ActionData(const int vehicleId, const Vector3i& target);
-    virtual ~ActionData();
+    virtual ~ActionData() = default;
 
 public:
     void SetVehicleId(const int vehicleId) { this->vehicleId = vehicleId; }
-    auto GetVehicleId() { return this->vehicleId; }
-    const auto GetVehicleId() const { return this->vehicleId; }
+    auto GetVehicleId() const { return this->vehicleId; }
 
-    void            SetTarget(Vector3i target) { this->target = std::move(target); }
-    Vector3i&       GetTarget() { return this->target; }
+    void      SetTarget(Vector3i target) { this->target = std::move(target); }
+    Vector3i& GetTarget() { return this->target; }
     const Vector3i& GetTarget() const { return this->target; }
 
 private:
-    int      vehicleId;
+    int      vehicleId{};
     Vector3i target;
 };
 

@@ -25,7 +25,6 @@ bool AbstractTank::operator<(const AbstractTank& tank)
     return this->GetTankType() < tank.GetTankType();
 }
 
-
 void AbstractTank::Shoot(const Vector3i& point)
 {
     SendShootAction(vehicleId, point);
