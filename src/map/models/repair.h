@@ -1,5 +1,4 @@
-#ifndef REPAIR_H
-#define REPAIR_H
+#pragma once
 
 #include "nlohmann/json.hpp"
 
@@ -16,13 +15,12 @@ struct Repair
 
 public:
     Repair();
-    Repair(const RepairPower power);
-    virtual ~Repair();
+    explicit Repair(RepairPower power);
+    virtual ~Repair() = default;
 
 public:
-    void        SetPower(const RepairPower& power) { this->power = power; }
-    auto&       GetPower() { return this->power; }
-    const auto& GetPower() const { return this->power; }
+    void SetPower(RepairPower power) { this->power = power; }
+    auto GetPower() const { return this->power; }
 
 private:
     RepairPower power;
@@ -31,5 +29,3 @@ private:
 void to_json(nlohmann::json& json, const Repair& repair);
 
 void from_json(const nlohmann::json& json, Repair& repair);
-
-#endif // REPAIR_H

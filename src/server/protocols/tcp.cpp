@@ -11,8 +11,6 @@ Tcp::Tcp(const std::string& host, const std::string& port)
     asio::connect(this->GetSocket(), endPoints, this->GetErrorCode());
 }
 
-Tcp::~Tcp() {}
-
 std::size_t Tcp::Send(const asio::const_buffer& buffer)
 {
     return this->GetSocket().send(buffer, 0, this->GetErrorCode());

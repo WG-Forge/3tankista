@@ -1,29 +1,26 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
-#include "loginresponcemodel.h"
-
+#include "server/models/login_responce_model.h"
+#include "tanks/abstract_tank.h"
 #include <memory>
-
-#include "abstracttank.h"
 
 class Player
 {
 public:
-    Player();
-    virtual ~Player();
+    Player()          = default;
+    virtual ~Player() = default;
 
 public:
-    void SetData(const ServerModels::ClientDataModel& data)
+    void SetData(ServerModels::ClientDataModel& data)
     {
-        this->data = data;
+        this->data = std::move(data);
     }
     auto&       GetData() { return this->data; }
     const auto& GetData() const { return this->data; }
 
-    void SetTanks(const std::vector<std::shared_ptr<AbstractTank>>& vehicles)
+    void SetTanks(std::vector<std::shared_ptr<AbstractTank>>& vehicles)
     {
-        this->vehicles = vehicles;
+        this->vehicles = std::move(vehicles);
     }
     auto&       GetTanks() { return this->vehicles; }
     const auto& GetTanks() const { return this->vehicles; }
@@ -36,5 +33,3 @@ private:
 void to_json(nlohmann::json& json, const Player& player);
 
 void from_json(const nlohmann::json& json, Player& player);
-
-#endif // PLAYER_H

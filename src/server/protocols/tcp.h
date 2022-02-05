@@ -1,15 +1,13 @@
-#ifndef TCP_H
-#define TCP_H
-
-#include "string"
+#pragma once
 
 #include "asio.hpp"
+#include <string>
 
 class Tcp
 {
 public:
     Tcp(const std::string& host, const std::string& port);
-    virtual ~Tcp();
+    virtual ~Tcp() = default;
 
 protected:
     std::size_t Send(const asio::const_buffer& buffer);
@@ -33,5 +31,3 @@ private:
     asio::io_context      ioContext;
     asio::ip::tcp::socket socket;
 };
-
-#endif // TCP_H
