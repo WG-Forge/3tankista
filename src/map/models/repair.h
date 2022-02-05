@@ -15,13 +15,12 @@ struct Repair
 
 public:
     Repair();
-    Repair(const RepairPower power);
+    explicit Repair(RepairPower power);
     virtual ~Repair() = default;
 
 public:
-    void        SetPower(const RepairPower& power) { this->power = power; }
-    auto&       GetPower() { return this->power; }
-    const auto& GetPower() const { return this->power; }
+    void SetPower(RepairPower power) { this->power = power; }
+    auto GetPower() const { return this->power; }
 
 private:
     RepairPower power;

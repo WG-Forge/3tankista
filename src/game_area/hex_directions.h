@@ -6,7 +6,8 @@ class HexDirections
 {
 public:
     HexDirections();
-    virtual ~HexDirections() =default;
+    virtual ~HexDirections() = default;
+
     const auto  Size() const { return directions.size(); }
     const auto& operator[](int index) const { return directions[index]; }
 
@@ -15,8 +16,7 @@ protected:
     {
         this->directions = std::move(directions);
     }
-    auto& GetDirections() { return this->directions; }
-
+    auto&       GetDirections() { return this->directions; }
     const auto& GetDirections() const { return this->directions; }
 
 private:

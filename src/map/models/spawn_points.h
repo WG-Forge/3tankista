@@ -13,7 +13,8 @@ public:
         std::vector<std::pair<TankType, std::vector<Vector3i>>>;
 
 public:
-    SpawnPoints() = default;
+    SpawnPoints()          = default;
+    virtual ~SpawnPoints() = default;
 
 public:
     void SetTanksSpawnPoints(TanksTypeAndSpawnPos& tanksSpawnPoints)

@@ -4,12 +4,13 @@
 #include "hard_repair.h"
 #include "light_repair.h"
 #include "obstacle.h"
-#include <vector>
 #include "utility/matrix.hpp"
+#include <vector>
 
 struct Content
 {
-    Content() = default;
+    Content()          = default;
+    virtual ~Content() = default;
 
 public:
     void  SetBase(std::vector<Vector3i>& base) { this->base = std::move(base); }

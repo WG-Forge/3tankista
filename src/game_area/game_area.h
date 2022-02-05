@@ -77,11 +77,10 @@ public:
     void ClearMap();
 
 protected:
-    void SetSize(const int& size) { this->size = size; }
+    void SetSize(const int size) { this->size = size; }
 
 public:
-    auto       GetSize() { return this->size; }
-    const auto GetSize() const { return this->size; }
+    auto GetSize() const { return this->size; }
 
 protected:
     void SetMap(std::vector<std::vector<CellState>>& map)
