@@ -111,16 +111,14 @@ int main()
                 gameState->GetPlayers().end(),
                 [&](const Player& player)
                 { return player.GetData().index == gameState->GetWinner(); });
-            std::cerr << "Winner: " << winner->GetData().name << ";"
-                      << std::endl
-                      << "Capture points: "
-                      << gameState->GetWinPoints()
-                             .at(gameState->GetWinner()).capture
-                      << ";" << std::endl
-                      << "Kill points: "
-                      << gameState->GetWinPoints()
-                             .at(gameState->GetWinner()).kill
-                      << ";" << std::endl;
+            std::cerr
+                << "Winner: " << winner->GetData().name << ";" << std::endl
+                << "Capture points: "
+                << gameState->GetWinPoints().at(gameState->GetWinner()).capture
+                << ";" << std::endl
+                << "Kill points: "
+                << gameState->GetWinPoints().at(gameState->GetWinner()).kill
+                << ";" << std::endl;
             continue;
         }
 
