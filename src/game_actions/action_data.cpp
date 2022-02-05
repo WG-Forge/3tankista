@@ -6,8 +6,6 @@ ActionData::ActionData(const int vehicleId, const Vector3i& target)
 {
 }
 
-ActionData::~ActionData() {}
-
 void to_json(nlohmann::json& json, const ActionData& actionData)
 {
     json = nlohmann::json{ { "vehicle_id", actionData.GetVehicleId() },

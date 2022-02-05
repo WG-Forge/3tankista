@@ -29,8 +29,7 @@ bool Server::SendAction(const Action action, const std::string& data)
     const auto& sent = Tcp::Send(
         asio::const_buffer(this->GetBuffer().data(),
                            actionSizeBytes + messageSizeBytes + dataSize));
-    return sent == (actionSizeBytes + messageSizeBytes + dataSize) ? true
-                                                                   : false;
+    return sent == (actionSizeBytes + messageSizeBytes + dataSize);
 }
 
 std::string Server::ReceiveResult(Result& result)

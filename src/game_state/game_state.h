@@ -34,34 +34,28 @@ public:
     {
         this->numberPlayers = numberPlayers;
     }
-    auto       GetNumPlayers() { return this->numberPlayers; }
-    const auto GetNumPlayers() const { return this->numberPlayers; }
+    auto GetNumPlayers() const { return this->numberPlayers; }
 
     void SetNumTurns(const int numberTurns) { this->numberTurns = numberTurns; }
-    auto GetNumTurns() { return this->numberTurns; }
-    const auto GetNumTurns() const { return this->numberTurns; }
+    auto GetNumTurns() const { return this->numberTurns; }
 
     void SetCurrentTurn(const int currentTurn)
     {
         this->currentTurn = currentTurn;
     }
-    auto       GetCurrentTurn() { return this->currentTurn; }
-    const auto GetCurrentTurn() const { return this->currentTurn; }
+    auto GetCurrentTurn() const { return this->currentTurn; }
 
     void SetCurrentPlayerIdx(const int currentPlayerIndex)
     {
         this->currentPlayerIndex = currentPlayerIndex;
     }
-    auto       GetCurrentPlayerIdx() { return this->currentPlayerIndex; }
-    const auto GetCurrentPlayerIdx() const { return this->currentPlayerIndex; }
+    auto GetCurrentPlayerIdx() const { return this->currentPlayerIndex; }
 
-    void       SetFinished(const bool finished) { this->finished = finished; }
-    auto       GetFinished() { return this->finished; }
-    const auto GetFinished() const { return this->finished; }
+    void SetFinished(const bool finished) { this->finished = finished; }
+    auto GetFinished() const { return this->finished; }
 
-    void       SetWinner(const int winner) { this->winner = winner; }
-    auto       GetWinner() { return this->winner; }
-    const auto GetWinner() const { return this->winner; }
+    void SetWinner(const int winner) { this->winner = winner; }
+    auto GetWinner() const { return this->winner; }
 
     void SetPlayers(std::vector<Player>& players)
     {
