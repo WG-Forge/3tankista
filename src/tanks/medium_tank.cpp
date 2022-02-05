@@ -18,5 +18,6 @@ bool MediumTank::CanShoot(const Vector3i& point) const
 
 bool MediumTank::CanMove(const Vector3i& point) const
 {
-    return GameArea::GetDistance(point, this->GetPosition()) <= this->GetSpeed();
+    return GameArea::GetDistance(point, this->GetPosition()) <=
+           this->GetSpeed();
 }

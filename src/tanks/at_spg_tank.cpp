@@ -12,7 +12,6 @@ AtSpgTank::AtSpgTank(int vehicleId)
     SetDestructionPoints(2);
 }
 
-
 bool AtSpgTank::CanShoot(const Vector3i& point) const
 {
     return (GameArea::GetDistance(point, this->GetPosition()) <= 3) &&

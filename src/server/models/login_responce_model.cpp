@@ -14,6 +14,6 @@ void ServerModels::from_json(const nlohmann::json& json,
 {
     json.at("idx").get_to(loginResponceModel.index);
     json.at("name").get_to(loginResponceModel.name);
-   // json.at("password").get_to(loginResponceModel.password);
+    // json.at("password").get_to(loginResponceModel.password);
     json.at("is_observer").get_to(loginResponceModel.isObserver);
 }
