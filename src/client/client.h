@@ -23,9 +23,8 @@ public:
     auto&       GetData() { return this->data; }
     const auto& GetData() const { return this->data; }
 
-    void        SetResult(const Server::Result& result) { lastResult = result; }
-    auto&       GetResult() { return this->lastResult; }
-    const auto& GetResult() const { return this->lastResult; }
+    void SetResult(const Server::Result result) { lastResult = result; }
+    auto GetResult() const { return this->lastResult; }
 
 private:
     ServerModels::ClientDataModel data;

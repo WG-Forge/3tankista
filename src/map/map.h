@@ -10,12 +10,12 @@
 class Map
 {
 public:
-    Map() = default;
+    Map()          = default;
+    virtual ~Map() = default;
 
 public:
-    void       SetSize(const std::size_t& size) { this->size = size; }
-    auto       GetSize() { return this->size; }
-    const auto GetSize() const { return this->size; }
+    void SetSize(const std::size_t& size) { this->size = size; }
+    auto GetSize() const { return this->size; }
 
     void        SetName(std::string& name) { this->name = std::move(name); }
     auto&       GetName() { return this->name; }

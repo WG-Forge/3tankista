@@ -2,7 +2,7 @@
 #include <queue>
 #include <utility>
 
-PathFinder::PathFinder(std::shared_ptr<GameArea>  area)
+PathFinder::PathFinder(std::shared_ptr<GameArea> area)
     : area(std::move(area))
     , startPoint()
     , used()
