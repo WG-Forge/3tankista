@@ -2,14 +2,13 @@
 
 #include "matrix.hpp"
 
-#include "../third_party/ecs/src/ecs.h"
+#include "ecs.h"
 
 class PositionComponent : public ecs::Component<PositionComponent>
 {
 public:
     PositionComponent() = default;
     explicit PositionComponent(const Vector3i& position);
-
     virtual ~PositionComponent() = default;
 
 public:

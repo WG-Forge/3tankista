@@ -4,7 +4,7 @@
 #include "models.h"
 #include "tcp.h"
 
-#include "../third_party/ecs/src/ecs.h"
+#include "ecs.h"
 
 class ServerSystem : public Tcp,
                      public ecs::System<ServerSystem>,

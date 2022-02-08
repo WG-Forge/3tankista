@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../third_party/ecs/src/ecs.h"
+#include "ecs.h"
 
 class InputSystem : public ecs::System<InputSystem>
 {

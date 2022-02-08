@@ -2,7 +2,7 @@
 
 #include "models.h"
 
-#include "../third_party/ecs/src/ecs.h"
+#include "ecs.h"
 
 struct GameLoginEvent : public ecs::event::Event<GameLoginEvent>
 {

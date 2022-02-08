@@ -4,7 +4,7 @@
 #include "game_types.h"
 #include "simple_fsm.h"
 
-#include "../third_party/ecs/src/ecs.h"
+#include "ecs.h"
 
 class Game : public ecs::event::IEventListener, public SimpleFSM
 {
@@ -55,12 +55,7 @@ public:
      *			             |                    |
      *			             v                    |
      *                +------------+              |
-     *				  |  LOGOUTED  |<-------------+
-     *				  +------------+
-     *				         |
-     *				         v
-     *                +------------+
-     *			      | TERMINATED |
+     *			      | TERMINATED |<-------------+
      *			      +------------+
      *------------------------------------------------------------------------*/
 
@@ -74,11 +69,11 @@ public:
                      NO_ONLEAVE_PROC,
                      GameState::INITIALIZED)
 
-    // Transition to 'LOGIN'
+    // Transition to 'RESTARTED'
     TRANSITION_ENTRY(Game::GS_INITIALIZED,
                      Game::GS_RESTARTED,
                      Game::GS_RESTARTED_ENTER,
-                     Game::GS_RESTARTED_LEAVE,
+                     Game::GS_INITIALIZED_LEAVE,
                      GameState::RESTARTED)
 
     END_TRANSITION_TABLE
@@ -87,10 +82,10 @@ public:
     void GS_INITIALIZED();
     void GS_INITIALIZED_ENTER();
 
-    // 'LOGINED' gamestate
+    // 'RESTARTED' gamestate
     void GS_RESTARTED();
     void GS_RESTARTED_ENTER();
-    void GS_RESTARTED_LEAVE();
+    void GS_INITIALIZED_LEAVE();
 
     void OnLoginGame(const GameLoginEvent* event);
 

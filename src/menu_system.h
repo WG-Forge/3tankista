@@ -3,7 +3,7 @@
 #include "game_events.h"
 #include "models.h"
 
-#include "../third_party/ecs/src/ecs.h"
+#include "ecs.h"
 
 class MenuSystem : public ecs::System<MenuSystem>,
                    public ecs::event::IEventListener

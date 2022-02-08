@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include "game_configuration.h"
+
 Game::Game(const std::string& title)
     : gameTitle(title)
 {
@@ -12,19 +14,19 @@ void Game::Initialize()
 
 void Game::Run()
 {
-    ecs::Ecs_Engine->Update(1 / 60.0);
+    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 
-    ecs::Ecs_Engine->Update(1 / 60.0);
+    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 
-    ecs::Ecs_Engine->Update(1 / 60.0);
+    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 
-    ecs::Ecs_Engine->Update(1 / 60.0);
+    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 }

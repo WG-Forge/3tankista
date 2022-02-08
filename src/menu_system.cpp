@@ -4,7 +4,7 @@
 
 #include "game_events.h"
 
-#include "../third_party/ecs/src/ecs.h"
+#include "ecs.h"
 
 MenuSystem::MenuSystem()
 {
