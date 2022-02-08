@@ -4,6 +4,10 @@
 
 #include "../third_party/ecs/src/ecs.h"
 
+struct GameLoginEvent : public ecs::event::Event<GameLoginEvent>
+{
+};
+
 struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>
 {
     LoginRequestModel credentials;
@@ -14,12 +18,14 @@ struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>
     }
 };
 
-struct GameLoginEvent : public ecs::event::Event<GameLoginEvent>
+struct LoginResponceEvent : public ecs::event::Event<LoginResponceEvent>
 {
-};
+    LoginResponceModel playerData;
 
-struct GameLoginedEvent : public ecs::event::Event<GameLoginedEvent>
-{
+    LoginResponceEvent(const LoginResponceModel& playerData)
+        : playerData(playerData)
+    {
+    }
 };
 
 using GameObjectId     = ecs::EntityId;

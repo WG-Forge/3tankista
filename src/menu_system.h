@@ -1,17 +1,20 @@
 #pragma once
 
-#include "../third_party/ecs/src/ecs.h"
-
+#include "game_events.h"
 #include "models.h"
 
+#include "../third_party/ecs/src/ecs.h"
+
 class MenuSystem : public ecs::System<MenuSystem>,
-                   protected ecs::event::IEventListener
+                   public ecs::event::IEventListener
 {
 public:
     MenuSystem();
     ~MenuSystem();
 
-    static void RequestLoginCredentials();
+    const LoginRequestModel RequestLoginCredentials();
+
+    void OnLoginRequest(const GameLoginEvent* event);
 
 private:
     void RegisterEventCallbacks();

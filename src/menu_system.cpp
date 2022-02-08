@@ -16,7 +16,7 @@ MenuSystem::~MenuSystem()
     this->UnregisterEventCallbacks();
 }
 
-void MenuSystem::RequestLoginCredentials()
+const LoginRequestModel MenuSystem::RequestLoginCredentials()
 {
     LoginRequestModel credentials;
 
@@ -35,9 +35,22 @@ void MenuSystem::RequestLoginCredentials()
     std::cin >> isObserver;
     credentials.isObserver = isObserver.front() == 'y';
 
+    return credentials;
+}
+
+void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
+{
+    const auto& credentials = this->RequestLoginCredentials();
+
     ecs::Ecs_Engine->SendEvent<LoginRequestEvent>(credentials);
 }
 
-void MenuSystem::RegisterEventCallbacks() {}
+void MenuSystem::RegisterEventCallbacks()
+{
+    RegisterEventCallback(&MenuSystem::OnLoginRequest);
+}
 
-void MenuSystem::UnregisterEventCallbacks() {}
+void MenuSystem::UnregisterEventCallbacks()
+{
+    UnregisterEventCallback(&MenuSystem::OnLoginRequest);
+}

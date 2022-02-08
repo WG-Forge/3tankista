@@ -18,56 +18,51 @@ public:
     void Run();
 
 public:
-    //-------------------------------------------------------------------------------------------------
-    // Summary:	Game State Transitions.
-    //
-    //				+-----------------+
-    //				| NOT_INITIALIZED |
-    //				+-----------------+
-    //				         |
-    //				         v
-    //				  +-------------+
-    //				  | INITIALIZED |
-    //				  +-------------+
-    //				         |
-    //				         v
-    //                +-------------+
-    //				  |   LOGINED   |
-    //				  +-------------+
-    //				         |
-    //				         v
-    //				   +-----------+
-    //			  +--->| RESTARTED |<-------------+
-    //			  |    +-----------+              |
-    //			  |          |                    |
-    //			  |          v                    |
-    //			  |     +---------+               |
-    //			  |     | STARTED |-------------+ |
-    //			  |     +---------+             | |
-    //			  |          |   ^              v |
-    //			  |          |   |         +--------+
-    //			  |          |   +---------| PAUSED |
-    //			  |          |   |         +--------+
-    //			  |          v   v              ^ |
-    //			  |     +---------+             | |
-    //			  |     | RUNNING |-------------+ |
-    //			  |     +---------+               |
-    //			  |          |                    |
-    //			  |          v                    |
-    //			  |    +----------+               |
-    //			  +----| GAMEOVER |<--------------+
-    //			       +----------+               |
-    //			             |                    |
-    //			             v                    |
-    //                +------------+              |
-    //				  |  LOGOUTED  |<-------------+
-    //				  +------------+
-    //				         |
-    //				         v
-    //                +------------+
-    //			      | TERMINATED |
-    //			      +------------+
-    //-------------------------------------------------------------------------------------------------
+    /*------------------------------------------------------------------------
+     * Summary:	Game State Transitions.
+     *
+     *				+-----------------+
+     *				| NOT_INITIALIZED |
+     *				+-----------------+
+     *				         |
+     *				         v
+     *				  +-------------+
+     *				  | INITIALIZED |
+     *				  +-------------+
+     *				         |
+     *				         v
+     *				   +-----------+
+     *			  +--->| RESTARTED |<-------------+
+     *			  |    +-----------+              |
+     *			  |          |                    |
+     *			  |          v                    |
+     *			  |     +---------+               |
+     *			  |     | STARTED |-------------+ |
+     *			  |     +---------+             | |
+     *			  |          |   ^              v |
+     *			  |          |   |         +--------+
+     *			  |          |   +---------| PAUSED |
+     *			  |          |   |         +--------+
+     *			  |          v   v              ^ |
+     *			  |     +---------+             | |
+     *			  |     | RUNNING |-------------+ |
+     *			  |     +---------+               |
+     *			  |          |                    |
+     *			  |          v                    |
+     *			  |    +----------+               |
+     *			  +----| GAMEOVER |<--------------+
+     *			       +----------+               |
+     *			             |                    |
+     *			             v                    |
+     *                +------------+              |
+     *				  |  LOGOUTED  |<-------------+
+     *				  +------------+
+     *				         |
+     *				         v
+     *                +------------+
+     *			      | TERMINATED |
+     *			      +------------+
+     *------------------------------------------------------------------------*/
 
     // Define FSM Transition table
     BEGIN_TRANSITION_TABLE
@@ -81,10 +76,10 @@ public:
 
     // Transition to 'LOGIN'
     TRANSITION_ENTRY(Game::GS_INITIALIZED,
-                     Game::GS_LOGINED,
-                     Game::GS_LOGINED_ENTER,
-                     Game::GS_LOGINED_LEAVE,
-                     GameState::LOGINED)
+                     Game::GS_RESTARTED,
+                     Game::GS_RESTARTED_ENTER,
+                     Game::GS_RESTARTED_LEAVE,
+                     GameState::RESTARTED)
 
     END_TRANSITION_TABLE
 
@@ -93,9 +88,9 @@ public:
     void GS_INITIALIZED_ENTER();
 
     // 'LOGINED' gamestate
-    void GS_LOGINED();
-    void GS_LOGINED_ENTER();
-    void GS_LOGINED_LEAVE();
+    void GS_RESTARTED();
+    void GS_RESTARTED_ENTER();
+    void GS_RESTARTED_LEAVE();
 
     void OnLoginGame(const GameLoginEvent* event);
 
@@ -108,9 +103,9 @@ public:
     {
         return (this->GetActiveState() > GameState::INITIALIZED);
     }
-    inline bool IsLogined() const
+    inline bool IsRestarted() const
     {
-        return (this->GetActiveState() == GameState::LOGINED);
+        return (this->GetActiveState() == GameState::RESTARTED);
     }
 
 private:

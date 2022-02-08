@@ -4,7 +4,7 @@ enum GameState
 {
     NOT_INITIALIZED = 0,
     INITIALIZED,
-    LOGINED,
+    RESTARTED,
 
     MAX_GAMESTATES
 }; // enum GameState

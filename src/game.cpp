@@ -12,9 +12,21 @@ void Game::Initialize()
 
 void Game::Run()
 {
-    ecs::Ecs_Engine->SendEvent<GameLoginEvent>();
+    ecs::Ecs_Engine->Update(1 / 60.0);
+
+    this->UpdateStateMachine();
 
     ecs::Ecs_Engine->Update(1 / 60.0);
+
+    this->UpdateStateMachine();
+
+    ecs::Ecs_Engine->Update(1 / 60.0);
+
+    this->UpdateStateMachine();
+
+    ecs::Ecs_Engine->Update(1 / 60.0);
+
+    this->UpdateStateMachine();
 }
 
 void Game::InitializeECS()
@@ -24,5 +36,5 @@ void Game::InitializeECS()
 
 void Game::OnLoginGame(const GameLoginEvent* event)
 {
-    this->PushState(GameState::LOGINED);
+    this->PushState(GameState::RESTARTED);
 }
