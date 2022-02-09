@@ -8,8 +8,8 @@ class Obstacle : public GameObject<Obstacle>
 {
 public:
     Obstacle();
-    Obstacle(const Vector3i& position);
-    virtual ~Obstacle() = default;
+    explicit Obstacle(const Vector3i& position);
+    ~Obstacle() override = default;
 
 private:
     PositionComponent* position;

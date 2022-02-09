@@ -44,7 +44,7 @@ void ServerSystem::OnLoginRequest(const LoginRequestEvent* event)
     LoginResponceModel loginResponceData = nlohmann::json::parse(responce);
 
     // send action in ecs with reply
-    ecs::Ecs_Engine->SendEvent<LoginResponceEvent>(loginResponceData);
+    ecs::ecsEngine->SendEvent<LoginResponceEvent>(loginResponceData);
 
     return /*true*/;
 }

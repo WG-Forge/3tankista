@@ -14,19 +14,19 @@ void Game::Initialize()
 
 void Game::Run()
 {
-    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 
-    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 
-    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 
-    ecs::Ecs_Engine->Update(DELTA_TIME_STEP);
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 }

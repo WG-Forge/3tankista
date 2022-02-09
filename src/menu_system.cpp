@@ -42,7 +42,7 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
 {
     const auto& credentials = this->RequestLoginCredentials();
 
-    ecs::Ecs_Engine->SendEvent<LoginRequestEvent>(credentials);
+    ecs::ecsEngine->SendEvent<LoginRequestEvent>(credentials);
 }
 
 void MenuSystem::RegisterEventCallbacks()

@@ -8,13 +8,13 @@ class GameObject : public ecs::Entity<T>
 public:
     GameObject()
     {
-        ecs::Ecs_Engine->SendEvent<GameObjectCreated>(
+        ecs::ecsEngine->SendEvent<GameObjectCreated>(
             this->GetEntityID(), this->GetStaticEntityTypeID());
     }
 
     virtual ~GameObject()
     {
-        ecs::Ecs_Engine->SendEvent<GameObjectDestroyed>(
+        ecs::ecsEngine->SendEvent<GameObjectDestroyed>(
             this->GetEntityID(), this->GetStaticEntityTypeID());
     }
 };

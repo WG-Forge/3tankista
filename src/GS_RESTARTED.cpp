@@ -6,7 +6,7 @@ void Game::GS_RESTARTED() {}
 
 void Game::GS_RESTARTED_ENTER()
 {
-    ecs::Ecs_Engine->SendEvent<GameLoginEvent>();
+    ecs::ecsEngine->SendEvent<GameLoginEvent>();
 }
 
 void Game::GS_INITIALIZED_LEAVE() {}

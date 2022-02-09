@@ -6,13 +6,13 @@
 void Game::GS_INITIALIZED()
 {
     MenuSystem* MeS =
-        ecs::Ecs_Engine->GetSystemManager()->AddSystem<MenuSystem>();
+        ecs::ecsEngine->GetSystemManager()->AddSystem<MenuSystem>();
 
     ServerSystem* SeS =
-        ecs::Ecs_Engine->GetSystemManager()->AddSystem<ServerSystem>(
+        ecs::ecsEngine->GetSystemManager()->AddSystem<ServerSystem>(
             "wgforge-srv.wargaming.net", "443");
 
-    ecs::Ecs_Engine->GetSystemManager()->UpdateSystemWorkOrder();
+    ecs::ecsEngine->GetSystemManager()->UpdateSystemWorkOrder();
 
     ChangeState(GameState::RESTARTED);
 }
