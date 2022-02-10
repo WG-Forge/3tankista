@@ -1,8 +1,8 @@
 #pragma once
 
-#include "game_object.h"
+#include "game/game_object.h"
 
-#include "position_component.h"
+#include "components/position_component.h"
 
 class Obstacle : public GameObject<Obstacle>
 {

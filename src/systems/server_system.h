@@ -1,7 +1,7 @@
 #pragma once
 
-#include "game_events.h"
-#include "models.h"
+#include "game/game_events.h"
+#include "game/models/models.h"
 #include "tcp.h"
 
 #include "ecs.h"

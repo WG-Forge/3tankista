@@ -1,7 +1,7 @@
 #include "game.h"
 
-#include "menu_system.h"
-#include "server_system.h"
+#include "systems/menu_system.h"
+#include "systems/server_system.h"
 
 void Game::GS_INITIALIZED()
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "models.h"
+#include "game/models/models.h"
 
 #include "ecs.h"
 

@@ -2,7 +2,7 @@
 
 #include "game_events.h"
 #include "game_types.h"
-#include "simple_fsm.h"
+#include "game/fsm/simple_fsm.h"
 
 #include "ecs.h"
 
