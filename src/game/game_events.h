@@ -55,6 +55,16 @@ struct GameObjectDestroyed : public ecs::event::Event<GameObjectDestroyed>
     }
 };
 
+struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
+{
+    GameObjectId entityId;
+
+    TankDestroyedEvent(GameObjectId id)
+        : entityId(id)
+    {
+    }
+};
+
 //TODO: from action system
 struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
 {
