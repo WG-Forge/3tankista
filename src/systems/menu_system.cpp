@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "game_events.h"
+#include "game/game_events.h"
 
 #include "ecs.h"
 

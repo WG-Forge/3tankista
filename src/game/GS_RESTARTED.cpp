@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include "menu_system.h"
+#include "systems/menu_system.h"
 
 void Game::GS_RESTARTED() {}
 

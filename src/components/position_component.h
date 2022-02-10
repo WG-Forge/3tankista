@@ -1,6 +1,6 @@
 #pragma once
 
-#include "matrix.hpp"
+#include "utility/matrix.hpp"
 
 #include "ecs.h"
 
@@ -9,7 +9,7 @@ class PositionComponent : public ecs::Component<PositionComponent>
 public:
     PositionComponent() = default;
     explicit PositionComponent(const Vector3i& position);
-    virtual ~PositionComponent() = default;
+    ~PositionComponent() override = default;
 
 public:
     void  SetPosition(const Vector3i& position) { this->position = position; }
