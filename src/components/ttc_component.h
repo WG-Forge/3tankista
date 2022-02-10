@@ -1,12 +1,10 @@
 #pragma once
 #include "ecs.h"
-#include "utility/matrix.hpp"
 #include "utility/tank_types.h"
 
 class TTCComponent : public ecs::Component<TTCComponent>
 {
 public:
-    TTCComponent() = default;
     TTCComponent(const int      speed,
                  const int      maxHealth,
                  const int      damage,
