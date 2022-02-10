@@ -64,3 +64,15 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
     {
     }
 };
+
+//TODO: from action system
+struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
+{
+    std::vector<std::pair<GameObjectId, int>> entityIds;
+
+    explicit ShootResponceEvent(
+        std::vector<std::pair<GameObjectId, int>> entityIds)
+        : entityIds(std::move(entityIds))
+    {
+    }
+};
