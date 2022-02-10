@@ -55,6 +55,7 @@ struct GameObjectDestroyed : public ecs::event::Event<GameObjectDestroyed>
     }
 };
 
+//TODO: from action system
 struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
 {
     std::vector<std::pair<GameObjectId, int>> entityIds;
