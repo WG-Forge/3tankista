@@ -1,9 +1,5 @@
-//
-// Created by serge on 10.02.22.
-//
-
 #include "tank.h"
-Tank::Tank(GameObjectId spawnId)
+Tank::Tank()
 {
     this->positionComponent =
         AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });

@@ -7,7 +7,7 @@
 class Obstacle : public GameObject<Obstacle>
 {
 public:
-    explicit Obstacle(GameObjectId spawnId);
+    explicit Obstacle();
     ~Obstacle() override = default;
 
 private:

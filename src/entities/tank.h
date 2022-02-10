@@ -12,7 +12,7 @@
 class Tank : public GameObject<Tank>
 {
 public:
-    explicit Tank(GameObjectId spawnId);
+    explicit Tank();
     ~Tank() override = default;
 
 private:
