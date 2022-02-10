@@ -6,5 +6,6 @@ enum class TankType
     LIGHT,
     HEAVY,
     MEDIUM,
-    AT_SPG
+    AT_SPG,
+    NO_TYPE
 };
