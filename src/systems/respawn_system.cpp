@@ -1,5 +1,6 @@
 #include "respawn_system.h"
 #include "components/position_component.h"
+#include "components/spawn_position_component.h"
 
 RespawnSystem::RespawnSystem()
 {
