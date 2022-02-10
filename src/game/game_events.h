@@ -54,3 +54,13 @@ struct GameObjectDestroyed : public ecs::event::Event<GameObjectDestroyed>
     {
     }
 };
+
+struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
+{
+    GameObjectId entityId;
+
+    TankDestroyedEvent(GameObjectId id)
+        : entityId(id)
+    {
+    }
+};
