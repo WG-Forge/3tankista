@@ -1,5 +1,7 @@
 #include "tank.h"
-Tank::Tank()
+Tank::Tank(const ecs::EntityId&   entityId,
+           ecs::ComponentManager* componentManager)
+    : GameObject<Tank>(entityId, componentManager)
 {
     this->positionComponent =
         AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });

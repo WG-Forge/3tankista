@@ -65,7 +65,7 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
     }
 };
 
-//TODO: from action system
+// TODO: from action system
 struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
 {
     std::vector<std::pair<GameObjectId, int>> entityIds;
@@ -75,4 +75,28 @@ struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
         : entityIds(std::move(entityIds))
     {
     }
+};
+
+struct WindowMinimizedEvent : public ecs::event::Event<WindowMinimizedEvent>
+{
+};
+
+struct WindowRestoredEvent : public ecs::event::Event<WindowRestoredEvent>
+{
+};
+
+struct WindowResizedEvent : public ecs::event::Event<WindowResizedEvent>
+{
+    int width;
+    int height;
+
+    WindowResizedEvent(int w, int h)
+        : width(w)
+        , height(h)
+    {
+    }
+};
+
+struct WindowCloseEvent : public ecs::event::Event<WindowCloseEvent>
+{
 };

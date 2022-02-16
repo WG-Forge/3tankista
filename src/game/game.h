@@ -1,8 +1,11 @@
 #pragma once
 
+#include "game/fsm/simple_fsm.h"
+#include "game_configuration.h"
 #include "game_events.h"
 #include "game_types.h"
-#include "game/fsm/simple_fsm.h"
+
+#include "render_utility/opengl.h"
 
 #include "ecs.h"
 
@@ -10,10 +13,12 @@ class Game : public ecs::event::IEventListener, public SimpleFSM
 {
 public:
     explicit Game(const std::string& title = "Game Name");
-    ~Game() = default;
+    virtual ~Game();
 
 public:
-    void Initialize();
+    void Initialize(const int  width,
+                    const int  height,
+                    const bool fullscreen = false);
 
     void Run();
 
@@ -106,6 +111,30 @@ public:
 private:
     void InitializeECS();
 
+    void InitializeGLFW();
+
+    void ProcessWindowEvent();
+
+    void Terminate();
+
+    void RegisterEventCallbacks();
+    void UnregisterEventCallbacks();
+
 private:
+    void GLFWWindowCloseCallback(const WindowCloseEvent* event);
+
+    static void GLFWWindowCloseCallbackHelper(GLFWwindow* window);
+
+private:
+    GLFWwindow* window;
+
+    int windowPosX;
+    int windowPosY;
+
+    int windowWidth;
+    int windowHeight;
+
+    bool fullscreen;
+
     const std::string gameTitle;
 };

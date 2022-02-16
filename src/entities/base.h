@@ -6,7 +6,7 @@
 class Base : GameObject<Base>
 {
 public:
-    Base();
+    Base(const ecs::EntityId &entityId, ecs::ComponentManager *componentManager);
     ~Base() override = default;
 
 private:
