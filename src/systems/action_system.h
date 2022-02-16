@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ecs.h"
+#include "game/game_events.h"
 
 class ActionSystem : public ecs::System<ActionSystem>,
                      public ecs::event::IEventListener

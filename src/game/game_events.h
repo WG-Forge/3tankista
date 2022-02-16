@@ -1,10 +1,8 @@
 #pragma once
 
-#include <utility>
-
-#include "game/models/models.h"
-
 #include "ecs.h"
+#include "game/models/models.h"
+#include <utility>
 
 struct GameLoginEvent : public ecs::event::Event<GameLoginEvent>
 {
@@ -20,11 +18,11 @@ struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>
     }
 };
 
-struct LoginResponceEvent : public ecs::event::Event<LoginResponceEvent>
+struct LoginResponseEvent : public ecs::event::Event<LoginResponseEvent>
 {
-    LoginResponceModel playerData;
+    LoginResponseModel playerData;
 
-    LoginResponceEvent(const LoginResponceModel& playerData)
+    LoginResponseEvent(const LoginResponseModel& playerData)
         : playerData(playerData)
     {
     }
@@ -68,19 +66,48 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
 };
 
 // TODO: from action system
-struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
+struct ShootResponseEvent : public ecs::event::Event<ShootResponseEvent>
 {
-    std::vector<std::pair<GameObjectId, int>> entityIds;
+    int                     playerId;
+    std::vector<ShootModel> actions;
 
-    explicit ShootResponceEvent(
-        std::vector<std::pair<GameObjectId, int>> entityIds)
-        : entityIds(std::move(entityIds))
+    explicit ShootResponseEvent(const int                      playerId,
+                                const std::vector<ShootModel>& actions)
+        : playerId(playerId)
+        , actions(actions)
+    {
+    }
+};
+
+struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
+{
+    int                    playerId;
+    std::vector<ChatModel> actions;
+
+    explicit ChatResponseEvent(const int                     playerId,
+                               const std::vector<ChatModel>& actions)
+        : playerId(playerId)
+        , actions(actions)
+    {
+    }
+};
+
+struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>
+{
+    int                    playerId;
+    std::vector<MoveModel> actions;
+
+    explicit MoveResponseEvent(const int                     playerId,
+                               const std::vector<MoveModel>& actions)
+        : playerId(playerId)
+        , actions(actions)
     {
     }
 };
 
 struct GameStateRequestEvent : public ecs::event::Event<GameStateRequestEvent>
 {
+    // TODO: Add code (GameStateRequestEvent)
 };
 
 struct GameStateResponseEvent : public ecs::event::Event<GameStateResponseEvent>
@@ -93,7 +120,19 @@ struct GameStateResponseEvent : public ecs::event::Event<GameStateResponseEvent>
     }
 };
 
-struct GameActionsResponseEvent : public ecs::event::Event<GameActionsResponseEvent>
+struct GameActionsRequestEvent
+    : public ecs::event::Event<GameActionsRequestEvent>
 {
+    // TODO: Add code (GameActionsRequestEvent)
+};
 
+struct GameActionsResponseEvent
+    : public ecs::event::Event<GameActionsResponseEvent>
+{
+    GameActionsModel gameActionsModel;
+
+    explicit GameActionsResponseEvent(const GameActionsModel& model)
+        : gameActionsModel(model)
+    {
+    }
 };

@@ -20,19 +20,19 @@ void from_json(const nlohmann::json& json, LoginRequestModel& loginRequestModel)
     json.at("is_observer").get_to(loginRequestModel.isObserver);
 }
 
-void to_json(nlohmann::json& json, const LoginResponceModel& loginResponceModel)
+void to_json(nlohmann::json& json, const LoginResponseModel& loginResponseModel)
 {
-    json = nlohmann::json{ { "idx", loginResponceModel.index },
-                           { "name", loginResponceModel.name },
-                           { "is_observer", loginResponceModel.isObserver } };
+    json = nlohmann::json{ { "idx", loginResponseModel.index },
+                           { "name", loginResponseModel.name },
+                           { "is_observer", loginResponseModel.isObserver } };
 }
 
 void from_json(const nlohmann::json& json,
-               LoginResponceModel&   loginResponceModel)
+               LoginResponseModel&   loginResponseModel)
 {
-    json.at("idx").get_to(loginResponceModel.index);
-    json.at("name").get_to(loginResponceModel.name);
-    json.at("is_observer").get_to(loginResponceModel.isObserver);
+    json.at("idx").get_to(loginResponseModel.index);
+    json.at("name").get_to(loginResponseModel.name);
+    json.at("is_observer").get_to(loginResponseModel.isObserver);
 }
 
 void to_json(nlohmann::json& json, const PlayerModel& playerModel)

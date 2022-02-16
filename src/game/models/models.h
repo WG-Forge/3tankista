@@ -23,7 +23,7 @@ void to_json(nlohmann::json& json, const LoginRequestModel& loginRequestModel);
 void from_json(const nlohmann::json& json,
                LoginRequestModel&    loginRequestModel);
 
-struct LoginResponceModel
+struct LoginResponseModel
 {
     uint64_t    index;
     std::string name;
@@ -31,10 +31,10 @@ struct LoginResponceModel
 };
 
 void to_json(nlohmann::json&           json,
-             const LoginResponceModel& loginResponceModel);
+             const LoginResponseModel& loginResponseModel);
 
 void from_json(const nlohmann::json& json,
-               LoginResponceModel&   loginResponceModel);
+               LoginResponseModel&   loginResponseModel);
 
 struct PlayerModel
 {

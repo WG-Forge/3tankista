@@ -49,6 +49,7 @@ void GameStateSystem::OnGameStateResponseEvent(
         componentManager->GetComponent<CapturePointsComponent>(entity)
             ->SetCapturePoints(tank.second.capturePoints);
     }
+    ecs::ecsEngine->GetEntityManager().
 }
 
 void GameStateSystem::RegisterEventCallbacks()
