@@ -4,10 +4,11 @@
 
 #include "render_utility/material.h"
 
+using Color = Vector4f;
+
 class MaterialComponent : public Material,
                           public ecs::Component<MaterialComponent>
 {
-    using Color = Vector4f;
 
 public:
     inline static const Color DEFAULT_COLOR0{ 0.8f, 0.8f, 8.0f, 1.0f };

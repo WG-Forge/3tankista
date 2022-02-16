@@ -5,6 +5,7 @@
 #include "systems/server_system.h"
 
 #include "entities/map.h"
+#include "entities/obstacle.h"
 
 void Game::GS_INITIALIZED()
 {
@@ -21,11 +22,17 @@ void Game::GS_INITIALIZED()
 
     ecs::ecsEngine->GetSystemManager()->UpdateSystemWorkOrder();
 
-    GameObjectId entityId =
-        ecs::ecsEngine->GetEntityManager()->CreateEntity<Map>();
+    //    GameObjectId mapId =
+    //        ecs::ecsEngine->GetEntityManager()->CreateEntity<Map>();
 
-    ecs::IEntity* gameObject =
-        ecs::ecsEngine->GetEntityManager()->GetEntity(entityId);
+    //    ecs::IEntity* map =
+    //    ecs::ecsEngine->GetEntityManager()->GetEntity(mapId);
+
+    GameObjectId obstacleId =
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>();
+
+    ecs::IEntity* obstacle =
+        ecs::ecsEngine->GetEntityManager()->GetEntity(obstacleId);
 
     ChangeState(GameState::RESTARTED);
 }

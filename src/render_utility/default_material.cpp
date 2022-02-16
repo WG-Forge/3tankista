@@ -15,13 +15,13 @@ void DefaultMaterial::Use() const
 
 void DefaultMaterial::Unuse() const
 {
-    glUseProgram(0);
+    this->shader->Unuse();
 }
 
 bool DefaultMaterial::Initialize()
 {
-    this->shader = std::make_unique<Shader>("../shaders/default.vert",
-                                            "../shaders/default.frag");
+    this->shader = std::make_unique<Shader>("shaders/default.vert",
+                                            "shaders/default.frag");
     //    this->shader = new Shader(
     //        new VertexShader(VERTEXT_SHADER), new
     //        FragmentShader(FRAGMENT_SHADER));

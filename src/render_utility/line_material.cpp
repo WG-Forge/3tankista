@@ -20,12 +20,7 @@ void LineMaterial::Unuse() const
 bool LineMaterial::Initialize()
 {
     this->shader =
-        std::make_unique<Shader>("/home/vlad/game_dev/wg_forge/wot_strategy/"
-                                 "build-3tankista-Desktop_Qt_5_15_2_GCC_64bit-"
-                                 "Debug/src/shaders/line.vert",
-                                 "/home/vlad/game_dev/wg_forge/wot_strategy/"
-                                 "build-3tankista-Desktop_Qt_5_15_2_GCC_64bit-"
-                                 "Debug/src/shaders/line.frag");
+        std::make_unique<Shader>("shaders/line.vert", "shaders/line.frag");
     //    return (this->shader->failed() == false && this->shader->IsLinked());
     return true;
 }

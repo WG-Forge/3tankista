@@ -1,7 +1,10 @@
 #pragma once
 
+#include "components/material_component.h"
 #include "components/position_component.h"
+
 #include "game/game_object.h"
+
 #include <memory>
 
 class Obstacle : public GameObject<Obstacle>
@@ -13,4 +16,5 @@ public:
 
 private:
     PositionComponent* position;
+    MaterialComponent* material;
 };

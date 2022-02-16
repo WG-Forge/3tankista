@@ -18,5 +18,6 @@ Map::Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager)
     this->position = this->AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });
 
     this->material = this->AddComponent<MaterialComponent>(
-        MaterialGenerator::CreateMaterial<LineMaterial>());
+        MaterialGenerator::CreateMaterial<LineMaterial>(),
+        Color{ 0.0f, 0.0f, 0.0f, 1.0f });
 }

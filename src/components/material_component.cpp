@@ -12,6 +12,7 @@ MaterialComponent::~MaterialComponent() {}
 void MaterialComponent::Apply()
 {
     // set uniform
+    this->SetUniform4fv("aColor", color);
 }
 
 void MaterialComponent::SetColor(const float r,

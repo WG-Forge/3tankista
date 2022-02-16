@@ -10,7 +10,6 @@ public:
     static constexpr Type MATERIAL_TYPE{ Type::LINE_MATERIAL };
 
     LineMaterial();
-
     virtual ~LineMaterial();
 
     virtual inline const MaterialID GetMaterialID() const override
@@ -68,11 +67,10 @@ public:
     virtual void SetUniform4fv(const std::string& uniformName,
                                const Vector4f&    vec4) override
     {
-        //        if (this->shader != nullptr)
-        //        {
-        //            glUniform4fv((*this->shader)(uniformName), 1, (const
-        //            GLfloat*)vec4);
-        //    }
+        if (this->shader != nullptr)
+        {
+            shader->SetVec4(uniformName, vec4);
+        }
     }
 
     virtual void SetUniformMatrix4fv(const std::string& uniformName,

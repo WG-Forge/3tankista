@@ -99,7 +99,7 @@ void RenderSystem::Update(float dt)
             {
                 // draw with indices
                 glDrawElements(
-                    GL_LINES,
+                    GL_TRIANGLES,
                     renderable.shape->GetIndexesCount(),
                     VERTEX_INDEX_DATA_TYPE,
                     (const GLvoid*)(renderable.shape->GetIndexDataIndex()));
@@ -137,7 +137,7 @@ void RenderSystem::InitializeOpenGL()
         return;
     }
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
 }
 
 void RenderSystem::TerminateOpenGL()

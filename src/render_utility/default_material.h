@@ -65,13 +65,13 @@ public:
     virtual const MaterialVertexAttributeLoc GetNormalVertexAttributeLocation()
         const override
     {
-        return NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC;
+        return -1 /*NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC*/;
     }
 
     virtual const MaterialVertexAttributeLoc
     GetTexCoordVertexAttributeLocation() const override
     {
-        return TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC;
+        return -1 /*TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC*/;
     }
 
     virtual const MaterialVertexAttributeLoc GetColorVertexAttributeLocation()
@@ -85,9 +85,7 @@ public:
     {
         if (this->shader != nullptr)
         {
-            //            glUniform4fv(
-            //                (*this->m_ShaderProgram)(uniformName), 1, (const
-            //                GLfloat*)vec4);
+            shader->SetVec4(uniformName, vec4);
         }
     }
 
