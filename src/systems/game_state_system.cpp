@@ -13,8 +13,8 @@ GameStateSystem::~GameStateSystem()
     UnregisterEventCallbacks();
 }
 
-void GameStateSystem::OnGameStateResponceEvent(
-    const GameStateResponceEvent* event)
+void GameStateSystem::OnGameStateResponseEvent(
+    const GameStateResponseEvent* event)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
@@ -53,10 +53,10 @@ void GameStateSystem::OnGameStateResponceEvent(
 
 void GameStateSystem::RegisterEventCallbacks()
 {
-    RegisterEventCallback(&GameStateSystem::OnGameStateResponceEvent);
+    RegisterEventCallback(&GameStateSystem::OnGameStateResponseEvent);
 }
 
 void GameStateSystem::UnregisterEventCallbacks()
 {
-    UnregisterEventCallback(&GameStateSystem::OnGameStateResponceEvent);
+    UnregisterEventCallback(&GameStateSystem::OnGameStateResponseEvent);
 }

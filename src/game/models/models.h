@@ -1,8 +1,10 @@
 #pragma once
 
 #include <string>
+#include <variant>
 
 #include "nlohmann/json.hpp"
+#include "systems/server_system.h"
 #include "utility/matrix.hpp"
 #include "utility/tank_types.h"
 
@@ -41,6 +43,10 @@ struct PlayerModel
     bool        isObserver;
 };
 
+void to_json(nlohmann::json& json, const PlayerModel& playerModel);
+
+void from_json(const nlohmann::json& json, PlayerModel& playerModel);
+
 struct TankModel
 {
     int      playerId;
@@ -51,11 +57,19 @@ struct TankModel
     int      capturePoints;
 };
 
+void to_json(nlohmann::json& json, const TankModel& tankModel);
+
+void from_json(const nlohmann::json& json, TankModel& tankModel);
+
 struct WinPointsModel
 {
     int capture;
     int kill;
 };
+
+void to_json(nlohmann::json& json, const WinPointsModel& winPointsModel);
+
+void from_json(const nlohmann::json& json, WinPointsModel& winPointsModel);
 
 struct GameStateModel
 {
@@ -71,3 +85,57 @@ struct GameStateModel
     int                                       winner;
     std::unordered_map<int, WinPointsModel>   winPoints;
 };
+
+void to_json(nlohmann::json& json, const GameStateModel& gameStateModel);
+
+void from_json(const nlohmann::json& json, GameStateModel& gameStateModel);
+
+struct ShootModel
+{
+    int      vehicleId;
+    Vector3i target;
+};
+
+void to_json(nlohmann::json& json, const ShootModel& shootModel);
+
+void from_json(const nlohmann::json& json, ShootModel& shootModel);
+
+struct MoveModel
+{
+    int      vehicleId;
+    Vector3i target;
+};
+
+void to_json(nlohmann::json& json, const MoveModel& moveModel);
+
+void from_json(const nlohmann::json& json, MoveModel& moveModel);
+
+struct ChatModel
+{
+    std::string message;
+};
+
+void to_json(nlohmann::json& json, const ChatModel& chatModel);
+
+void from_json(const nlohmann::json& json, ChatModel& chatModel);
+
+struct ActionModel
+{
+    int playerIndex;
+    // TODO: Remove from ServerSystem enum Action
+    ServerSystem::Action                           actionType;
+    std::variant<ShootModel, MoveModel, ChatModel> data;
+};
+
+void to_json(nlohmann::json& json, const ActionModel& actionModel);
+
+void from_json(const nlohmann::json& json, ActionModel& actionModel);
+
+struct GameActionsModel
+{
+    std::vector<ActionModel> actions;
+};
+
+void to_json(nlohmann::json& json, const GameActionsModel& gameActionsModel);
+
+void from_json(const nlohmann::json& json, GameActionsModel& gameActionsModel);

@@ -34,3 +34,192 @@ void from_json(const nlohmann::json& json,
     json.at("name").get_to(loginResponceModel.name);
     json.at("is_observer").get_to(loginResponceModel.isObserver);
 }
+
+void to_json(nlohmann::json& json, const PlayerModel& playerModel)
+{
+    json = nlohmann::json{ { "idx", playerModel.idx },
+                           { "name", playerModel.name },
+                           { "is_observer", playerModel.isObserver } };
+}
+
+void from_json(const nlohmann::json& json, PlayerModel& playerModel)
+{
+    json.at("idx").get_to(playerModel.idx);
+    json.at("name").get_to(playerModel.name);
+    json.at("is_observer").get_to(playerModel.isObserver);
+}
+
+#include "utility/enum_parser.h"
+
+void to_json(nlohmann::json& json, const TankModel& tankModel)
+{
+    EnumParser<TankType> enumParser;
+    json = nlohmann::json{ { "player_id", tankModel.playerId },
+                           { "vehicle_type",
+                             enumParser.Enum2String(tankModel.vehicleType) },
+                           { "health", tankModel.health },
+                           { "spawn_position", tankModel.spawnPosition },
+                           { "position", tankModel.position },
+                           { "capture_points", tankModel.capturePoints } };
+}
+
+void from_json(const nlohmann::json& json, TankModel& tankModel)
+{
+    EnumParser<TankType> enumParser;
+    json.at("player_id").get_to(tankModel.playerId);
+    tankModel.vehicleType = enumParser.String2Enum(json.at("vehicle_type"));
+    json.at("health").get_to(tankModel.health);
+    json.at("spawn_position").get_to(tankModel.spawnPosition);
+    json.at("position").get_to(tankModel.position);
+    json.at("capture_points").get_to(tankModel.capturePoints);
+}
+
+void to_json(nlohmann::json& json, const WinPointsModel& winPointsModel)
+{
+    json = nlohmann::json{ { "capture", winPointsModel.capture },
+                           { "kill", winPointsModel.kill } };
+}
+
+void from_json(const nlohmann::json& json, WinPointsModel& winPointsModel)
+{
+    json.at("capture").get_to(winPointsModel.capture);
+    json.at("kill").get_to(winPointsModel.kill);
+}
+
+void to_json(nlohmann::json& json, const GameStateModel& gameStateModel)
+{
+    json = nlohmann::json{ { "num_players", gameStateModel.numberPlayers },
+                           { "num_turns", gameStateModel.numberTurns },
+                           { "current_turn", gameStateModel.currentTurn },
+                           { "players", gameStateModel.players },
+                           { "observers", gameStateModel.observers },
+                           { "current_player_idx",
+                             gameStateModel.currentPlayerIndex },
+                           { "finished", gameStateModel.finished },
+                           { "vehicles", gameStateModel.vehicles },
+                           { "attack_matrix", gameStateModel.attackMatrix },
+                           { "winner", gameStateModel.winner },
+                           { "win_points", gameStateModel.winPoints } };
+}
+
+void from_json(const nlohmann::json& json, GameStateModel& gameStateModel)
+{
+    json.at("number_players").get_to(gameStateModel.numberPlayers);
+    json.at("num_turns").get_to(gameStateModel.numberTurns);
+    json.at("current_turn").get_to(gameStateModel.currentTurn);
+    json.at("players").get_to(gameStateModel.players);
+    json.at("observers").get_to(gameStateModel.observers);
+    json.at("current_player_idx").get_to(gameStateModel.currentPlayerIndex);
+    json.at("finished").get_to(gameStateModel.finished);
+    json.at("vehicles").get_to(gameStateModel.vehicles);
+    json.at("attack_matrix").get_to(gameStateModel.attackMatrix);
+    json.at("winner").get_to(gameStateModel.winner);
+    json.at("win_points").get_to(gameStateModel.winPoints);
+}
+
+void to_json(nlohmann::json& json, const ShootModel& shootModel)
+{
+    json = nlohmann::json{ { "vehicle_id", shootModel.vehicleId },
+                           { "target", shootModel.target } };
+}
+
+void from_json(const nlohmann::json& json, ShootModel& shootModel)
+{
+    json.at("vehicle_id").get_to(shootModel.vehicleId);
+    json.at("target").get_to(shootModel.target);
+}
+
+void to_json(nlohmann::json& json, const MoveModel& moveModel)
+{
+    json = nlohmann::json{ { "vehicle_id", moveModel.vehicleId },
+                           { "target", moveModel.target } };
+}
+
+void from_json(const nlohmann::json& json, MoveModel& moveModel)
+{
+    json.at("vehicle_id").get_to(moveModel.vehicleId);
+    json.at("target").get_to(moveModel.target);
+}
+
+void to_json(nlohmann::json& json, const ChatModel& chatModel)
+{
+    json = nlohmann::json{ { "message", chatModel.message } };
+}
+
+void from_json(const nlohmann::json& json, ChatModel& chatModel)
+{
+    json.at("message").get_to(chatModel.message);
+}
+
+void to_json(nlohmann::json& json, const ActionModel& actionModel)
+{
+    switch (actionModel.actionType)
+    {
+        case ServerSystem::Action::CHAT:
+        {
+            json =
+                nlohmann::json{ { "player_id", actionModel.playerIndex },
+                                { "action_type", (int)actionModel.actionType },
+                                { "data",
+                                  std::get<ChatModel>(actionModel.data) } };
+            break;
+        }
+        case ServerSystem::Action::MOVE:
+        {
+            json =
+                nlohmann::json{ { "player_id", actionModel.playerIndex },
+                                { "action_type", (int)actionModel.actionType },
+                                { "data",
+                                  std::get<MoveModel>(actionModel.data) } };
+            break;
+        }
+        case ServerSystem::Action::SHOOT:
+        {
+            json =
+                nlohmann::json{ { "player_id", actionModel.playerIndex },
+                                { "action_type", (int)actionModel.actionType },
+                                { "data",
+                                  std::get<ShootModel>(actionModel.data) } };
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void from_json(const nlohmann::json& json, ActionModel& actionModel)
+{
+    json.at("player_id").get_to(actionModel.playerIndex);
+    actionModel.actionType =
+        (ServerSystem::Action)json.at("action_type").get<int>();
+    switch (actionModel.actionType)
+    {
+        case ServerSystem::Action::CHAT:
+        {
+            json.at("data").get_to(std::get<ChatModel>(actionModel.data));
+            break;
+        }
+        case ServerSystem::Action::MOVE:
+        {
+            json.at("data").get_to(std::get<MoveModel>(actionModel.data));
+            break;
+        }
+        case ServerSystem::Action::SHOOT:
+        {
+            json.at("data").get_to(std::get<ShootModel>(actionModel.data));
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void to_json(nlohmann::json& json, const GameActionsModel& gameActionsModel)
+{
+    json = nlohmann::json{ { "actions", gameActionsModel.actions } };
+}
+
+void from_json(const nlohmann::json& json, GameActionsModel& gameActionsModel)
+{
+    json.at("actions").get_to(gameActionsModel.actions);
+}

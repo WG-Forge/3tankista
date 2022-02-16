@@ -10,7 +10,7 @@ public:
     GameStateSystem();
     ~GameStateSystem() override;
 
-    void OnGameStateResponceEvent(const GameStateResponceEvent* event);
+    void OnGameStateResponseEvent(const GameStateResponseEvent* event);
 private:
     void RegisterEventCallbacks();
     void UnregisterEventCallbacks();

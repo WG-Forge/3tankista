@@ -9,7 +9,7 @@ public:
     ActionSystem();
     ~ActionSystem() override;
 
-    OnGameActionsResponceEvent();
+    void OnGameActionsResponseEvent(const GameActionsResponseEvent* event);
 
 private:
     void RegisterEventCallbacks();

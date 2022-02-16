@@ -10,6 +10,7 @@ class ServerSystem : public Tcp,
                      public ecs::System<ServerSystem>,
                      public ecs::event::IEventListener
 {
+public:
     enum class Action
     {
         LOGIN        = 1,
@@ -23,6 +24,7 @@ class ServerSystem : public Tcp,
         SHOOT        = 102
     };
 
+private:
     enum class Result
     {
         OKEY                     = 0,

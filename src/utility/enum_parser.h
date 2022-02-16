@@ -27,9 +27,9 @@ public:
         bool terminateRequest = false;
         for (const auto& it : enumMap)
         {
-            if (it->second == value)
+            if (it.second == value)
             {
-                return it->first;
+                return it.first;
             }
         }
 

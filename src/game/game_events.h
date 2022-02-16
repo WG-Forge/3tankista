@@ -83,12 +83,17 @@ struct GameStateRequestEvent : public ecs::event::Event<GameStateRequestEvent>
 {
 };
 
-struct GameStateResponceEvent : public ecs::event::Event<GameStateResponceEvent>
+struct GameStateResponseEvent : public ecs::event::Event<GameStateResponseEvent>
 {
     GameStateModel gameState;
 
-    explicit GameStateResponceEvent(const GameStateModel& model)
+    explicit GameStateResponseEvent(const GameStateModel& model)
         : gameState(model)
     {
     }
+};
+
+struct GameActionsResponseEvent : public ecs::event::Event<GameActionsResponseEvent>
+{
+
 };
