@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "game/models/models.h"
 
 #include "ecs.h"
@@ -65,7 +67,7 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
     }
 };
 
-//TODO: from action system
+// TODO: from action system
 struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
 {
     std::vector<std::pair<GameObjectId, int>> entityIds;
@@ -73,6 +75,20 @@ struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
     explicit ShootResponceEvent(
         std::vector<std::pair<GameObjectId, int>> entityIds)
         : entityIds(std::move(entityIds))
+    {
+    }
+};
+
+struct GameStateRequestEvent : public ecs::event::Event<GameStateRequestEvent>
+{
+};
+
+struct GameStateResponceEvent : public ecs::event::Event<GameStateResponceEvent>
+{
+    GameStateModel gameState;
+
+    explicit GameStateResponceEvent(const GameStateModel& model)
+        : gameState(model)
     {
     }
 };
