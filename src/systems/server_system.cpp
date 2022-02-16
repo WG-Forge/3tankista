@@ -1,6 +1,5 @@
 #include "server_system.h"
 
-#include "nlohmann/json.hpp"
 
 ServerSystem::ServerSystem(const std::string& host, const std::string& port)
     : Tcp(host, port)
@@ -49,14 +48,50 @@ void ServerSystem::OnLoginRequest(const LoginRequestEvent* event)
     return /*true*/;
 }
 
+void ServerSystem::OnMapRequest(const MapRequestEvent* event)
+{
+    // send inquiry on server
+    const auto& sent =
+        SendAction(Action::MAP, nlohmann::json(""));
+
+    if (!sent)
+    {
+        std::cerr << "Data wasn't sent" << std::endl;
+        LogError("Data wasn't sent");
+    }
+
+    Result lastResult = Result::OKEY;
+    auto   responce   = ReceiveResult(lastResult);
+
+    if (lastResult != ServerSystem::Result::OKEY)
+    {
+        std::cerr << "No response was received from the server" << std::endl;
+        LogError("Login request result: " +
+                 static_cast<int>(this->GetResult()));
+    }
+
+    if (responce.empty())
+    {
+        LogError("No response was received from the server");
+        return /*false*/;
+    }
+
+    MapModel mapModel = nlohmann::json::parse(responce);
+
+    // send action in ecs with reply
+    ecs::ecsEngine->SendEvent<MapResponceEvent>(mapModel);
+}
+
 void ServerSystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&ServerSystem::OnLoginRequest);
+    RegisterEventCallback(&ServerSystem::OnMapRequest);
 }
 
 void ServerSystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&ServerSystem::OnLoginRequest);
+    UnregisterEventCallback(&ServerSystem::OnMapRequest);
 }
 
 bool ServerSystem::SendAction(const Action action, const std::string& data)

@@ -1,12 +1,13 @@
 #pragma once
 
-#include "game/models/models.h"
-
 #include "ecs.h"
+#include "entities/models/map_model.h"
+#include "game/models/models.h"
 
 struct GameLoginEvent : public ecs::event::Event<GameLoginEvent>
 {
 };
+
 
 struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>
 {
@@ -65,7 +66,7 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
     }
 };
 
-//TODO: from action system
+// TODO: from action system
 struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
 {
     std::vector<std::pair<GameObjectId, int>> entityIds;
@@ -73,6 +74,21 @@ struct ShootResponceEvent : public ecs::event::Event<ShootResponceEvent>
     explicit ShootResponceEvent(
         std::vector<std::pair<GameObjectId, int>> entityIds)
         : entityIds(std::move(entityIds))
+    {
+    }
+};
+
+struct MapRequestEvent : public ecs::event::Event<MapRequestEvent>
+{
+
+};
+
+struct MapResponceEvent : public ecs::event::Event<MapResponceEvent>
+{
+    MapModel mapModel;
+
+    explicit MapResponceEvent(MapModel mapModel)
+        : mapModel(std::move(mapModel))
     {
     }
 };

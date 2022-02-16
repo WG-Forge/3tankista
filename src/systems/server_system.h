@@ -1,9 +1,12 @@
 #pragma once
 
+
 #include "game/game_events.h"
 #include "game/models/models.h"
+#include "entities/models/map_model.h"
 #include "tcp.h"
 
+#include "nlohmann/json.hpp"
 #include "ecs.h"
 
 class ServerSystem : public Tcp,
@@ -41,6 +44,7 @@ public:
     ~ServerSystem();
 
     void OnLoginRequest(const LoginRequestEvent* event);
+    void OnMapRequest(const MapRequestEvent* event);
 
 private:
     void RegisterEventCallbacks();

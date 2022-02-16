@@ -6,7 +6,9 @@ template <typename T>
 class GameObject : public ecs::Entity<T>
 {
 public:
-    GameObject()
+    GameObject(const ecs::EntityId&   entityId,
+               ecs::ComponentManager* componentManager)
+        : ecs::Entity<T>(entityId, componentManager)
     {
         ecs::ecsEngine->SendEvent<GameObjectCreated>(
             this->GetEntityID(), this->GetStaticEntityTypeID());

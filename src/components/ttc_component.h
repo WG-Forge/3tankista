@@ -1,18 +1,16 @@
 #pragma once
+
 #include "ecs.h"
-#include "utility/tank_types.h"
+
 
 class TTCComponent : public ecs::Component<TTCComponent>
 {
 public:
-    TTCComponent(const int      speed,
-                 const int      maxHealth,
-                 const int      damage,
-                 const TankType tankType)
+    TTCComponent(const int speed, const int maxHealth, const int damage)
         : speed(speed)
         , maxHealth(maxHealth)
         , damage(damage)
-        , tankType(tankType)
+
     {
     }
     ~TTCComponent() override = default;
@@ -27,12 +25,11 @@ public:
     void SetMaxHealth(const int maxHealth) { this->maxHealth = maxHealth; }
     auto GetMaxHealth() const { return this->maxHealth; }
 
-    void SetTankType(const TankType tankType) { this->tankType = tankType; }
-    auto GetTankType() const { return this->tankType; }
+    // void SetTankType(const TankType tankType) { this->tankType = tankType; }
+    // auto GetTankType() const { return this->tankType; }
 
 private:
-    int      speed;
-    int      maxHealth;
-    TankType tankType;
-    int      damage;
+    int speed;
+    int maxHealth;
+    int damage;
 };
