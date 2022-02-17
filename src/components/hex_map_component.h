@@ -1,15 +1,8 @@
 #pragma once
 
 #include "ecs.h"
+#include "enums/cell_state.h"
 #include "utility/matrix.hpp"
-
-enum class CellState
-{
-    EMPTY,
-    ENEMY,
-    FRIEND,
-    OBSTACLE
-};
 
 class HexMapComponent : public ecs::Component<HexMapComponent>
 {
@@ -30,10 +23,7 @@ public:
     auto GetSize() const { return this->size; }
 
 protected:
-    void SetMap(std::vector<std::vector<CellState>>& map)
-    {
-        this->map = std::move(map);
-    }
+    void        SetMap(std::vector<std::vector<CellState>>& map) { this->map = std::move(map); }
     auto&       GetMap() { return this->map; }
     const auto& GetMap() const { return this->map; }
 

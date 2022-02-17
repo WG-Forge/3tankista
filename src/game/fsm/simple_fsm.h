@@ -13,10 +13,9 @@
 ///
 /// Date:	10/10/2017
 ///-------------------------------------------------------------------------------------------------
-#define BEGIN_TRANSITION_TABLE                                                 \
-    virtual const SimpleFSM_TransitionTableEntry* GetTransitionTable(          \
-        size_t& transitioncount) const override                                \
-    {                                                                          \
+#define BEGIN_TRANSITION_TABLE                                                                                         \
+    virtual const SimpleFSM_TransitionTableEntry* GetTransitionTable(size_t& transitioncount) const override           \
+    {                                                                                                                  \
         static const SimpleFSM_TransitionTableEntry TRANSITION_TABLE[] = {
 
 ///-------------------------------------------------------------------------------------------------
@@ -36,11 +35,11 @@
 ///
 /// Date:	10/10/2017
 ///-------------------------------------------------------------------------------------------------
-#define TRANSITION_ENTRY(from, to, onEnter, onLeave, code)                     \
-    { (SimpleFSM_State)(&from),                                                \
-      (SimpleFSM_State)(&to),                                                  \
-      code,                                                                    \
-      (SimpleFSM_State)(&onEnter),                                             \
+#define TRANSITION_ENTRY(from, to, onEnter, onLeave, code)                                                             \
+    { (SimpleFSM_State)(&from),                                                                                        \
+      (SimpleFSM_State)(&to),                                                                                          \
+      code,                                                                                                            \
+      (SimpleFSM_State)(&onEnter),                                                                                     \
       (SimpleFSM_State)(&onLeave) },
 
 ///-------------------------------------------------------------------------------------------------
@@ -53,18 +52,17 @@
 ///
 /// Date:	10/10/2017
 ///-------------------------------------------------------------------------------------------------
-#define END_TRANSITION_TABLE                                                   \
-    {                                                                          \
-        nullptr, nullptr, NULL_TRANSITION, nullptr, nullptr                    \
-    }                                                                          \
-    }                                                                          \
-    ;                                                                          \
-                                                                               \
-    static const size_t TRANSITION_TABLE_LEN =                                 \
-        (sizeof(TRANSITION_TABLE) / sizeof(TRANSITION_TABLE[0])) - 1;          \
-                                                                               \
-    transitioncount = TRANSITION_TABLE_LEN;                                    \
-    return TRANSITION_TABLE;                                                   \
+#define END_TRANSITION_TABLE                                                                                           \
+    {                                                                                                                  \
+        nullptr, nullptr, NULL_TRANSITION, nullptr, nullptr                                                            \
+    }                                                                                                                  \
+    }                                                                                                                  \
+    ;                                                                                                                  \
+                                                                                                                       \
+    static const size_t TRANSITION_TABLE_LEN = (sizeof(TRANSITION_TABLE) / sizeof(TRANSITION_TABLE[0])) - 1;           \
+                                                                                                                       \
+    transitioncount = TRANSITION_TABLE_LEN;                                                                            \
+    return TRANSITION_TABLE;                                                                                           \
     }
 
 ///-------------------------------------------------------------------------------------------------
@@ -116,8 +114,7 @@ private:
     SimpleFSM_State activeState;
 
 protected:
-    virtual const SimpleFSM_TransitionTableEntry* GetTransitionTable(
-        std::size_t& transitionCount) const = 0;
+    virtual const SimpleFSM_TransitionTableEntry* GetTransitionTable(std::size_t& transitionCount) const = 0;
 
 public:
     // Defines null state, onEnter and onLeave callbacks
@@ -145,8 +142,7 @@ public:
     ///-------------------------------------------------------------------------------------------------
     inline SimpleFSM_TransitionCode GetActiveState() const
     {
-        return (this->stateStack.empty() == false ? this->stateStack.top()
-                                                  : NULL_TRANSITION);
+        return (this->stateStack.empty() == false ? this->stateStack.top() : NULL_TRANSITION);
     }
 
     ///-------------------------------------------------------------------------------------------------
@@ -198,13 +194,11 @@ public:
         }
 
         std::size_t                           transitionCount = 0;
-        const SimpleFSM_TransitionTableEntry* transitionTable =
-            this->GetTransitionTable(transitionCount);
+        const SimpleFSM_TransitionTableEntry* transitionTable = this->GetTransitionTable(transitionCount);
 
         for (std::size_t i = 0; i < transitionCount; ++i)
         {
-            if ((this->activeState == transitionTable[i].thisState) &&
-                (code == transitionTable[i].code))
+            if ((this->activeState == transitionTable[i].thisState) && (code == transitionTable[i].code))
             {
                 // onLeave proc
                 if (transitionTable[i].onLeave != nullptr)

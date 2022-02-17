@@ -1,5 +1,5 @@
+#include "entities/map/obstacle.h"
 #include "game/game.h"
-#include "entities/obstacle.h"
 int main(int argc, char** argv)
 {
 

@@ -15,10 +15,7 @@ public:
     ~SpawnPositionComponent() override = default;
 
 public:
-    void SetSpawnPosition(const Vector3i& spawnPosition)
-    {
-        this->spawnPosition = spawnPosition;
-    }
+    void        SetSpawnPosition(const Vector3i& spawnPosition) { this->spawnPosition = spawnPosition; }
     auto&       GetSpawnPosition() { return this->spawnPosition; }
     const auto& GetSpawnPosition() const { return this->spawnPosition; }
 

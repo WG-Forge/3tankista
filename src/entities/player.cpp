@@ -1,11 +1,13 @@
 #include "player.h"
 
-Player::Player()
+Player::Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager)
+    : GameObject<Player>(entityId, componentManager)
 {
     this->playerIdComponent = AddComponent<PlayerIdComponent>(0);
 }
 
-Player::Player(const int playerId)
+Player::Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int playerId)
+    : GameObject<Player>(entityId, componentManager)
 {
     this->playerIdComponent = AddComponent<PlayerIdComponent>(playerId);
 }

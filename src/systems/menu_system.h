@@ -5,8 +5,7 @@
 
 #include "ecs.h"
 
-class MenuSystem : public ecs::System<MenuSystem>,
-                   public ecs::event::IEventListener
+class MenuSystem : public ecs::System<MenuSystem>, public ecs::event::IEventListener
 {
 public:
     MenuSystem();

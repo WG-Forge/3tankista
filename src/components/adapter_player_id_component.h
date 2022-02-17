@@ -12,15 +12,9 @@ public:
     }
     ~AdapterPlayerIdComponent() override = default;
 
-    GameObjectId Get(int playerId) const
-    {
-        return adaptationTable.at(playerId);
-    }
+    GameObjectId Get(int playerId) const { return adaptationTable.at(playerId); }
 
-    void Add(int playerId, GameObjectId gameObjectId)
-    {
-        adaptationTable[playerId] = gameObjectId;
-    }
+    void Add(int playerId, GameObjectId gameObjectId) { adaptationTable[playerId] = gameObjectId; }
 
     void Remove(int playerId) { adaptationTable.erase(playerId); }
 

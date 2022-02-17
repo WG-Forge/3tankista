@@ -13,8 +13,7 @@ GameStateSystem::~GameStateSystem()
     UnregisterEventCallbacks();
 }
 
-void GameStateSystem::OnGameStateResponseEvent(
-    const GameStateResponseEvent* event)
+void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* event)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
@@ -36,20 +35,13 @@ void GameStateSystem::OnGameStateResponseEvent(
     // Create tanks
     for (auto& tank : event->gameState.vehicles)
     {
-        auto entity =
-            entityManager->CreateEntity<Tank>(factory, tank.second.vehicleType);
-        componentManager->GetComponent<PlayerIdComponent>(entity)->SetPlayerId(
-            tank.second.playerId);
-        componentManager->GetComponent<VehicleIdComponent>(entity)
-            ->SetVehicleId(tank.first);
-        componentManager->GetComponent<SpawnPositionComponent>(entity)
-            ->SetSpawnPosition(tank.second.spawnPosition);
-        componentManager->GetComponent<PositionComponent>(entity)->SetPosition(
-            tank.second.position);
-        componentManager->GetComponent<CapturePointsComponent>(entity)
-            ->SetCapturePoints(tank.second.capturePoints);
+        auto entity = entityManager->CreateEntity<Tank>(factory, tank.second.vehicleType);
+        componentManager->GetComponent<PlayerIdComponent>(entity)->SetPlayerId(tank.second.playerId);
+        componentManager->GetComponent<VehicleIdComponent>(entity)->SetVehicleId(tank.first);
+        componentManager->GetComponent<SpawnPositionComponent>(entity)->SetSpawnPosition(tank.second.spawnPosition);
+        componentManager->GetComponent<PositionComponent>(entity)->SetPosition(tank.second.position);
+        componentManager->GetComponent<CapturePointsComponent>(entity)->SetCapturePoints(tank.second.capturePoints);
     }
-    ecs::ecsEngine->GetEntityManager().
 }
 
 void GameStateSystem::RegisterEventCallbacks()

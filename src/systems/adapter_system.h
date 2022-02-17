@@ -3,8 +3,7 @@
 #include "ecs.h"
 #include "game/game_events.h"
 
-class AdapterSystem : public ecs::System<AdapterSystem>,
-                      public ecs::event::IEventListener
+class AdapterSystem : public ecs::System<AdapterSystem>, public ecs::event::IEventListener
 {
 public:
     AdapterSystem();

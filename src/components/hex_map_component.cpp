@@ -2,8 +2,7 @@
 
 HexMapComponent::HexMapComponent(int size)
     : size(size)
-    , map((size << 1) | 1,
-          std::vector<CellState>((size << 1) | 1, CellState::EMPTY))
+    , map((size << 1) | 1, std::vector<CellState>((size << 1) | 1, CellState::EMPTY))
 {
 }
 
@@ -19,6 +18,5 @@ CellState HexMapComponent::GetCell(const Vector2i& position) const
 
 void HexMapComponent::ClearMap()
 {
-    map.assign((size << 1) | 1,
-               std::vector<CellState>((size << 1) | 1, CellState::EMPTY));
+    map.assign((size << 1) | 1, std::vector<CellState>((size << 1) | 1, CellState::EMPTY));
 }

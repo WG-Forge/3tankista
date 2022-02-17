@@ -1,5 +1,5 @@
 #include "tank_types.h"
-#include "enum_parser.h"
+#include "utility/enum_parser.h"
 
 template <>
 EnumParser<TankType>::EnumParser()

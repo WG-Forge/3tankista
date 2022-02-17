@@ -1,6 +1,5 @@
 #include "server_system.h"
 
-
 ServerSystem::ServerSystem(const std::string& host, const std::string& port)
     : Tcp(host, port)
 {
@@ -38,15 +37,13 @@ void ServerSystem::OnMapRequest(const MapRequestEvent* event)
     if (responce.empty())
     {
         LogError("No response was received from the server");
-        return /*false*/;
     }
 
     MapModel mapModel = nlohmann::json::parse(responce);
 
     // send action in ecs with reply
-    ecs::ecsEngine->SendEvent<MapResponceEvent>(mapModel);
+    ecs::ecsEngine->SendEvent<MapResponseEvent>(mapModel);
 }*/
-
 
 void ServerSystem::RegisterEventCallbacks()
 {
@@ -61,44 +58,32 @@ void ServerSystem::UnregisterEventCallbacks()
 bool ServerSystem::SendAction(const Action action, const std::string& data)
 {
     std::size_t dataSize = data.size();
-    if (this->GetBuffer().size() <
-        actionSizeBytes + messageSizeBytes + dataSize)
+    if (this->GetBuffer().size() < actionSizeBytes + messageSizeBytes + dataSize)
     {
         this->GetBuffer().resize(actionSizeBytes + messageSizeBytes + dataSize);
     }
 
     std::memcpy(this->GetBuffer().data(), &action, sizeof(Action::LOGIN));
-    std::memcpy(this->GetBuffer().data() + actionSizeBytes,
-                &dataSize,
-                sizeof(dataSize));
-    std::memcpy(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
-                data.data(),
-                dataSize);
+    std::memcpy(this->GetBuffer().data() + actionSizeBytes, &dataSize, sizeof(dataSize));
+    std::memcpy(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes, data.data(), dataSize);
 
-    const auto& sent = Tcp::Send(
-        asio::const_buffer(this->GetBuffer().data(),
-                           actionSizeBytes + messageSizeBytes + dataSize));
+    const auto& sent =
+        Tcp::Send(asio::const_buffer(this->GetBuffer().data(), actionSizeBytes + messageSizeBytes + dataSize));
     return sent == (actionSizeBytes + messageSizeBytes + dataSize);
 }
 
 nlohmann::json ServerSystem::ReceiveResult(Result& result)
 {
-    Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data(),
-                                      actionSizeBytes + messageSizeBytes));
+    Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data(), actionSizeBytes + messageSizeBytes));
     result       = Result(*(this->GetBuffer()).data());
     int dataSize = *(int*)(this->GetBuffer().data() + actionSizeBytes);
-    if (this->GetBuffer().size() <
-        dataSize + actionSizeBytes + messageSizeBytes)
+    if (this->GetBuffer().size() < dataSize + actionSizeBytes + messageSizeBytes)
     {
         this->GetBuffer().resize(dataSize + actionSizeBytes + messageSizeBytes);
     }
-    Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data() +
-                                          actionSizeBytes + messageSizeBytes,
-                                      dataSize));
-    return std::move(nlohmann::json::parse(
-        this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
-        this->GetBuffer().data() + actionSizeBytes + messageSizeBytes +
-            dataSize));
+    Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes, dataSize));
+    return std::move(nlohmann::json::parse(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
+                                           this->GetBuffer().data() + actionSizeBytes + messageSizeBytes + dataSize));
 }
 
 void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
@@ -113,8 +98,7 @@ void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
     auto   response = ReceiveResult(result);
     if (result != Result::OKEY)
     {
-        LogWarning("Result status is not OKEY " +
-                   static_cast<int>(this->GetResult()));
+        LogWarning("Result status is not OKEY " + static_cast<int>(this->GetResult()));
     }
     ecs::ecsEngine->SendEvent<ReceiveActionEvent>(event->action, event->json, result, response);
 }

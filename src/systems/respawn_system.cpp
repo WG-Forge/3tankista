@@ -12,10 +12,11 @@ RespawnSystem::~RespawnSystem()
     this->UnregisterEventCallbacks();
 }
 
-void RespawnSystem::OnTankDestroyedEvent(const TankDestroyedEvent* event) {
+void RespawnSystem::OnTankDestroyedEvent(const TankDestroyedEvent* event)
+{
     auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto position = componentManager->GetComponent<PositionComponent>(event->entityId);
-    auto spawnPosition = componentManager->GetComponent<SpawnPositionComponent>(event->entityId);
+    auto position         = componentManager->GetComponent<PositionComponent>(event->entityId);
+    auto spawnPosition    = componentManager->GetComponent<SpawnPositionComponent>(event->entityId);
     position->SetPosition(spawnPosition->GetSpawnPosition());
 }
 

@@ -3,10 +3,10 @@
 #include <string>
 #include <variant>
 
+#include "enums/action.h"
+#include "enums/tank_types.h"
 #include "nlohmann/json.hpp"
-#include "systems/server_system.h"
 #include "utility/matrix.hpp"
-#include "utility/tank_types.h"
 
 struct LoginRequestModel
 {
@@ -20,8 +20,7 @@ struct LoginRequestModel
 
 void to_json(nlohmann::json& json, const LoginRequestModel& loginRequestModel);
 
-void from_json(const nlohmann::json& json,
-               LoginRequestModel&    loginRequestModel);
+void from_json(const nlohmann::json& json, LoginRequestModel& loginRequestModel);
 
 struct LoginResponseModel
 {
@@ -30,11 +29,9 @@ struct LoginResponseModel
     bool        isObserver;
 };
 
-void to_json(nlohmann::json&           json,
-             const LoginResponseModel& loginResponseModel);
+void to_json(nlohmann::json& json, const LoginResponseModel& loginResponseModel);
 
-void from_json(const nlohmann::json& json,
-               LoginResponseModel&   loginResponseModel);
+void from_json(const nlohmann::json& json, LoginResponseModel& loginResponseModel);
 
 struct PlayerModel
 {
@@ -123,7 +120,7 @@ struct ActionModel
 {
     int playerIndex;
     // TODO: Remove from ServerSystem enum Action
-    ServerSystem::Action                           actionType;
+    Action                                         actionType;
     std::variant<ShootModel, MoveModel, ChatModel> data;
 };
 
@@ -139,3 +136,25 @@ struct GameActionsModel
 void to_json(nlohmann::json& json, const GameActionsModel& gameActionsModel);
 
 void from_json(const nlohmann::json& json, GameActionsModel& gameActionsModel);
+
+struct SpawnPointsModel
+{
+    std::vector<std::pair<TankType, std::vector<Vector3i>>> spawnPoints;
+};
+
+void to_json(nlohmann::json& json, const SpawnPointsModel& spawnPointsModel);
+
+void from_json(const nlohmann::json& json, SpawnPointsModel& spawnPointsModel);
+
+struct MapModel
+{
+    std::vector<SpawnPointsModel> mapSpawnPoints;
+    std::vector<Vector3i>         obstacle;
+    std::vector<Vector3i>         base;
+    int                           size;
+    std::string                   name;
+};
+
+void to_json(nlohmann::json& json, const MapModel& mapModel);
+
+void from_json(const nlohmann::json& json, MapModel& mapModel);

@@ -2,12 +2,10 @@
 
 #include "ecs.h"
 
-
 class TtcComponent : public ecs::Component<TtcComponent>
 {
 public:
-
-    TTCComponent(const int speed, const int maxHealth, const int damage)
+    TtcComponent(const int speed, const int maxHealth, const int damage)
         : speed(speed)
         , maxHealth(maxHealth)
         , damage(damage)

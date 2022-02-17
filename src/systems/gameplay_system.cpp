@@ -6,9 +6,8 @@
 #include "entities/tank.h"
 #include <queue>
 
-const std::vector<Vector2i> GameplaySystem::PathFinder::HEX_DIRECTIONS = {
-    { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }
-};
+const std::vector<Vector2i> GameplaySystem::PathFinder::HEX_DIRECTIONS = { { 1, 0 },  { 1, -1 }, { 0, -1 },
+                                                                           { -1, 0 }, { -1, 1 }, { 0, 1 } };
 
 GameplaySystem::GameplaySystem()
     : pathFinder()
@@ -33,9 +32,7 @@ Vector3i GameplaySystem::Hex2Cube(const Vector2i& point)
 
 int GameplaySystem::GetDistance(const Vector3i& first, const Vector3i& second)
 {
-    return (abs(first.x() - second.x()) + abs(first.y() - second.y()) +
-            abs(first.z() - second.z())) /
-           2;
+    return (abs(first.x() - second.x()) + abs(first.y() - second.y()) + abs(first.z() - second.z())) / 2;
 }
 
 int GameplaySystem::GetDistance(const Vector2i& first, const Vector2i& second)
@@ -45,8 +42,7 @@ int GameplaySystem::GetDistance(const Vector2i& first, const Vector2i& second)
 
 Vector3i GameplaySystem::Shift(const Vector3i& position, int value)
 {
-    return Vector3i(
-        position.x() + value, position.y() + value, position.z() + value);
+    return Vector3i(position.x() + value, position.y() + value, position.z() + value);
 }
 
 Vector2i GameplaySystem::Shift(const Vector2i& position, int value)
@@ -71,22 +67,16 @@ void GameplaySystem::SetHexMapComponentCell(HexMapComponent* component,
     component->SetCell(Shift(Cube2Hex(position), component->GetSize()), state);
 }
 
-CellState GameplaySystem::GetHexMapComponentCell(HexMapComponent* component,
-                                                 const Vector3i&  position)
+CellState GameplaySystem::GetHexMapComponentCell(HexMapComponent* component, const Vector3i& position)
 {
     return component->GetCell(Shift(Cube2Hex(position), component->GetSize()));
 }
 
 void GameplaySystem::PathFinder::Bfs(const Vector2i& from)
 {
-    this->used.assign((area->GetSize() << 1) | 1,
-                      std::vector<bool>((area->GetSize() << 1) | 1, false));
-    this->lastDirections.assign(
-        (area->GetSize() << 1) | 1,
-        std::vector<signed char>((area->GetSize() << 1) | 1, -1));
-    this->distance.assign(
-        (area->GetSize() << 1) | 1,
-        std::vector<int>((area->GetSize() << 1) | 1, NO_PATH));
+    this->used.assign((area->GetSize() << 1) | 1, std::vector<bool>((area->GetSize() << 1) | 1, false));
+    this->lastDirections.assign((area->GetSize() << 1) | 1, std::vector<signed char>((area->GetSize() << 1) | 1, -1));
+    this->distance.assign((area->GetSize() << 1) | 1, std::vector<int>((area->GetSize() << 1) | 1, NO_PATH));
     std::queue<Vector2i> q;
     q.push(from);
     this->used[from.x()][from.y()]     = true;
@@ -105,8 +95,7 @@ void GameplaySystem::PathFinder::Bfs(const Vector2i& from)
             {
                 this->used[destination.x()][destination.y()]           = true;
                 this->lastDirections[destination.x()][destination.y()] = i;
-                this->distance[destination.x()][destination.y()] =
-                    distance[now.x()][now.y()] + 1;
+                this->distance[destination.x()][destination.y()]       = distance[now.x()][now.y()] + 1;
                 q.push(destination);
             }
         }
@@ -115,23 +104,19 @@ void GameplaySystem::PathFinder::Bfs(const Vector2i& from)
 
 int GameplaySystem::PathFinder::GetDistance(const Vector3i& point)
 {
-    auto newPoint =
-        GameplaySystem::Shift(GameplaySystem::Cube2Hex(point), area->GetSize());
+    auto newPoint = GameplaySystem::Shift(GameplaySystem::Cube2Hex(point), area->GetSize());
     return distance[newPoint.x()][newPoint.y()];
 }
 
-std::vector<Vector3i> GameplaySystem::PathFinder::GetShortestPath(
-    const Vector3i& point)
+std::vector<Vector3i> GameplaySystem::PathFinder::GetShortestPath(const Vector3i& point)
 {
-    Vector2i now =
-        GameplaySystem::Shift(GameplaySystem::Cube2Hex(point), area->GetSize());
+    Vector2i              now = GameplaySystem::Shift(GameplaySystem::Cube2Hex(point), area->GetSize());
     std::vector<Vector3i> result;
     if (distance[now.x()][now.y()] == NO_PATH)
         return result;
     while (!(now == startPoint))
     {
-        result.push_back(GameplaySystem::Hex2Cube(
-            GameplaySystem::Shift(now, -(area->GetSize()))));
+        result.push_back(GameplaySystem::Hex2Cube(GameplaySystem::Shift(now, -(area->GetSize()))));
         now -= HEX_DIRECTIONS[lastDirections[now.x()][now.y()]];
     }
     std::reverse(result.begin(), result.end());
@@ -142,52 +127,41 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto gameArea = componentManager->begin<HexMapComponent>().operator->();
-    auto                                                       currentPlayerId =
-        componentManager->begin<CurrentPlayerComponent>()->GetCurrentPlayerId();
+    auto gameArea         = componentManager->begin<HexMapComponent>().operator->();
+    auto currentPlayerId  = componentManager->begin<CurrentPlayerComponent>()->GetCurrentPlayerId();
 
     gameArea->ClearMap();
     std::vector<Tank*> currentPlayerTanks;
     std::vector<Tank*> enemies;
-    for (auto it = componentManager->begin<VehicleIdComponent>();
-         componentManager->end<VehicleIdComponent>() != it;
+    for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
          ++it)
     {
         auto tank = (Tank*)entityManager->GetEntity(it->GetOwner());
-        if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() ==
-            currentPlayerId)
+        if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == currentPlayerId)
         {
             currentPlayerTanks.push_back(tank);
-            SetHexMapComponentCell(
-                gameArea,
-                tank->GetComponent<PositionComponent>()->GetPosition(),
-                CellState::FRIEND);
+            SetHexMapComponentCell(gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::FRIEND);
         }
         else
         {
             enemies.push_back(tank);
-            SetHexMapComponentCell(
-                gameArea,
-                tank->GetComponent<PositionComponent>()->GetPosition(),
-                CellState::ENEMY);
+            SetHexMapComponentCell(gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::ENEMY);
         }
     }
-    for (auto it = componentManager->begin<ObstacleIdComponent>();
-         componentManager->end<ObstacleIdComponent>() != it;
+    for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
          ++it)
     {
-        SetHexMapComponentCell(gameArea,
-                               entityManager->GetEntity(it->GetOwner())
-                                   ->GetComponent<PositionComponent>()
-                                   ->GetPosition(),
-                               CellState::OBSTACLE);
+        SetHexMapComponentCell(
+            gameArea,
+            entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
+            CellState::OBSTACLE);
     }
     std::sort(currentPlayerTanks.begin(),
               currentPlayerTanks.end(),
               [](Tank* lhs, Tank* rhs)
               {
-                  return lhs->GetComponent<TtcComponent>()->GetTankType() <
-                         rhs->GetComponent<TtcComponent>()->GetTankType();
+                  return lhs->GetComponent<TankTypeComponent>()->GetTankType() <
+                         rhs->GetComponent<TankTypeComponent>()->GetTankType();
               });
     for (auto tank : currentPlayerTanks)
     {
@@ -197,9 +171,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
         {
             if (CanShoot(tank, enemy) && CheckNeutrality(tank, enemy))
             {
-                if (target == nullptr ||
-                    target->GetComponent<HealthComponent>()->GetHealth() >
-                        enemy->GetComponent<HealthComponent>()->GetHealth())
+                if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
+                                             enemy->GetComponent<HealthComponent>()->GetHealth())
                 {
                     target = enemy;
                 }
@@ -213,25 +186,19 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
         else
         {
             // Move to the nearest base
-            pathFinder.SetStartPoint(
-                tank->GetComponent<PositionComponent>()->GetPosition());
+            pathFinder.SetStartPoint(tank->GetComponent<PositionComponent>()->GetPosition());
 
             auto     it = componentManager->begin<BaseIdComponent>();
-            Vector3i nearestBasePos = entityManager->GetEntity(it->GetOwner())
-                                          ->GetComponent<PositionComponent>()
-                                          ->GetPosition();
+            Vector3i nearestBasePos =
+                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition();
             ++it;
             for (; componentManager->end<BaseIdComponent>() != it; ++it)
             {
-                auto basePosition = entityManager->GetEntity(it->GetOwner())
-                                        ->GetComponent<PositionComponent>()
-                                        ->GetPosition();
-                if (pathFinder.GetDistance(nearestBasePos) ==
-                        PathFinder::NO_PATH ||
-                    (pathFinder.GetDistance(nearestBasePos) >
-                         pathFinder.GetDistance(basePosition) &&
-                     pathFinder.GetDistance(basePosition) !=
-                         PathFinder::NO_PATH))
+                auto basePosition =
+                    entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition();
+                if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
+                    (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
+                     pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
                 {
                     nearestBasePos = basePosition;
                 }
@@ -241,16 +208,10 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             auto path = pathFinder.GetShortestPath(nearestBasePos);
             if (path.empty())
                 continue; // STAY
-            SetHexMapComponentCell(
-                gameArea,
-                tank->GetComponent<PositionComponent>()->GetPosition(),
-                CellState::EMPTY);
-            SetHexMapComponentCell(
-                gameArea,
-                path[std::min((int)path.size(),
-                              tank->GetComponent<TtcComponent>()->GetSpeed()) -
-                     1],
-                CellState::FRIEND);
+            SetHexMapComponentCell(gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::EMPTY);
+            SetHexMapComponentCell(gameArea,
+                                   path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
+                                   CellState::FRIEND);
             // TODO: add event body
             ecs::ecsEngine->SendEvent<MoveRequestEvent>();
             //            tank->Move(path[std::min((int)path.size(),
@@ -261,12 +222,9 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 
 bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
 {
-    auto attackMatrixComponent =
-        ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>();
-    int tankPlayerId =
-        playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
-    int enemyPlayerId =
-        enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+    auto attackMatrixComponent = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>();
+    int  tankPlayerId          = playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+    int  enemyPlayerId         = enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
 
     // If he attacked us
     if (attackMatrixComponent->IsAttacked(enemyPlayerId, tankPlayerId))
@@ -299,4 +257,3 @@ void GameplaySystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&GameplaySystem::OnPlayEvent);
 }
-

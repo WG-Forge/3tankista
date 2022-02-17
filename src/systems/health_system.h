@@ -4,8 +4,7 @@
 
 #include "ecs.h"
 
-class HealthSystem : public ecs::System<HealthSystem>,
-                     public ecs::event::IEventListener
+class HealthSystem : public ecs::System<HealthSystem>, public ecs::event::IEventListener
 {
 public:
     HealthSystem();

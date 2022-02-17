@@ -2,12 +2,11 @@
 
 #include "components/hex_map_component.h"
 #include "ecs.h"
+#include "entities/tank.h"
 #include "game/game_events.h"
 #include "utility/matrix.hpp"
-#include "entities/tank.h"
 
-class GameplaySystem : public ecs::System<GameplaySystem>,
-                       public ecs::event::IEventListener
+class GameplaySystem : public ecs::System<GameplaySystem>, public ecs::event::IEventListener
 {
 public:
     GameplaySystem();
@@ -37,8 +36,7 @@ private:
      * @param second - second point in cubic coords
      * @return distance between points.
      */
-    static inline int GetDistance(const Vector3i& first,
-                                  const Vector3i& second);
+    static inline int GetDistance(const Vector3i& first, const Vector3i& second);
 
     /**
      * Getting the distance on a hexagonal grid without taking into account
@@ -47,8 +45,7 @@ private:
      * @param second - second point in hex coords
      * @return distance between points.
      */
-    static inline int GetDistance(const Vector2i& first,
-                                  const Vector2i& second);
+    static inline int GetDistance(const Vector2i& first, const Vector2i& second);
 
     static inline Vector3i Shift(const Vector3i& position, int value);
     static inline Vector2i Shift(const Vector2i& position, int value);
@@ -56,8 +53,7 @@ private:
     static inline void      SetHexMapComponentCell(HexMapComponent* component,
                                                    const Vector3i&  position,
                                                    const CellState& state);
-    static inline CellState GetHexMapComponentCell(HexMapComponent* component,
-                                                   const Vector3i&  position);
+    static inline CellState GetHexMapComponentCell(HexMapComponent* component, const Vector3i& position);
 
     /**
      * Checks whether a point in cubic coordinates belongs to a hexagonal grid.
@@ -92,23 +88,15 @@ private:
         void  Bfs(const Vector2i& from);
 
     public:
-        void SetHexMapComponent(HexMapComponent* component)
-        {
-            area = component;
-        }
+        void SetHexMapComponent(HexMapComponent* component) { area = component; }
         auto GetHexMapComponent() { return area; }
 
         void SetStartPoint(const Vector3i& point)
         {
-            startPoint = GameplaySystem::Shift(GameplaySystem::Cube2Hex(point),
-                                               area->GetSize());
+            startPoint = GameplaySystem::Shift(GameplaySystem::Cube2Hex(point), area->GetSize());
             Bfs(startPoint);
         }
-        auto GetStartPoint()
-        {
-            return GameplaySystem::Hex2Cube(
-                GameplaySystem::Shift(startPoint, -area->GetSize()));
-        }
+        auto GetStartPoint() { return GameplaySystem::Hex2Cube(GameplaySystem::Shift(startPoint, -area->GetSize())); }
 
     private:
         HexMapComponent*                      area = nullptr;

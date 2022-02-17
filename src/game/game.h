@@ -1,8 +1,8 @@
 #pragma once
 
+#include "game/fsm/simple_fsm.h"
 #include "game_events.h"
 #include "game_types.h"
-#include "game/fsm/simple_fsm.h"
 
 #include "ecs.h"
 
@@ -63,11 +63,8 @@ public:
     BEGIN_TRANSITION_TABLE
 
     // Initial State
-    TRANSITION_ENTRY(NULL_STATE,
-                     Game::GS_INITIALIZED,
-                     Game::GS_INITIALIZED_ENTER,
-                     NO_ONLEAVE_PROC,
-                     GameState::INITIALIZED)
+    TRANSITION_ENTRY(
+        NULL_STATE, Game::GS_INITIALIZED, Game::GS_INITIALIZED_ENTER, NO_ONLEAVE_PROC, GameState::INITIALIZED)
 
     // Transition to 'RESTARTED'
     TRANSITION_ENTRY(Game::GS_INITIALIZED,
@@ -90,18 +87,9 @@ public:
     void OnLoginGame(const GameLoginEvent* event);
 
 public:
-    inline GameState GetActiveGameState() const
-    {
-        return (GameState)this->GetActiveState();
-    }
-    inline bool IsInitialized() const
-    {
-        return (this->GetActiveState() > GameState::INITIALIZED);
-    }
-    inline bool IsRestarted() const
-    {
-        return (this->GetActiveState() == GameState::RESTARTED);
-    }
+    inline GameState GetActiveGameState() const { return (GameState)this->GetActiveState(); }
+    inline bool      IsInitialized() const { return (this->GetActiveState() > GameState::INITIALIZED); }
+    inline bool      IsRestarted() const { return (this->GetActiveState() == GameState::RESTARTED); }
 
 private:
     void InitializeECS();

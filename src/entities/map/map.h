@@ -4,7 +4,7 @@
 #include "components/size_component.h"
 #include "content.h"
 #include "game/game_object.h"
-#include "models/map_model.h"
+#include "game/models/models.h"
 #include "spawn_points.h"
 #include <string>
 
@@ -14,14 +14,11 @@ public:
     Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager);
     ~Map() override = default;
 
-    void  SetContent(const GameObjectId& content) { this->content = content; }
-    auto& GetContent() { return this->content; }
+    void        SetContent(const GameObjectId& content) { this->content = content; }
+    auto&       GetContent() { return this->content; }
     const auto& GetContent() const { return this->content; }
 
-    void SetSpawnPoints(const std::vector<GameObjectId>& spawnPoints)
-    {
-        this->spawnPoints = spawnPoints;
-    }
+    void        SetSpawnPoints(const std::vector<GameObjectId>& spawnPoints) { this->spawnPoints = spawnPoints; }
     auto&       GetSpawnPoints() { return this->spawnPoints; }
     const auto& GetSpawnPoints() const { return this->spawnPoints; }
 

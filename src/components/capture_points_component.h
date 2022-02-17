@@ -12,10 +12,7 @@ public:
     ~CapturePointsComponent() override = default;
 
 public:
-    void SetCapturePoints(const int capturePoints)
-    {
-        this->capturePoints = capturePoints;
-    }
+    void SetCapturePoints(const int capturePoints) { this->capturePoints = capturePoints; }
     auto GetCapturePoints() const { return this->capturePoints; }
 
 private:

@@ -12,8 +12,8 @@ public:
     ~PositionComponent() override = default;
 
 public:
-    void  SetPosition(const Vector3i& position) { this->position = position; }
-    auto& GetPosition() { return this->position; }
+    void        SetPosition(const Vector3i& position) { this->position = position; }
+    auto&       GetPosition() { return this->position; }
     const auto& GetPosition() const { return this->position; }
 
 private:

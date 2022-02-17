@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ecs.h"
+#include "enums/tank_types.h"
 #include "utility/matrix.hpp"
-#include "utility/tank_types.h"
 
 class TankTypeComponent : public ecs::Component<TankTypeComponent>
 {

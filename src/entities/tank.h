@@ -14,10 +14,11 @@
 class Tank : public GameObject<Tank>
 {
 public:
+    Tank(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager);
     Tank(const ecs::EntityId&   entityId,
-         ecs::ComponentManager* componentManager);
-    Tank(const ecs::EntityId&   entityId,
-         ecs::ComponentManager* componentManager, const AbstractFactory& factory, TankType type);
+         ecs::ComponentManager* componentManager,
+         const AbstractFactory& factory,
+         TankType               type);
     ~Tank() override = default;
 
 private:
@@ -25,7 +26,7 @@ private:
     VehicleIdComponent*     vehicleIdComponent;
     SpawnPositionComponent* spawnPositionComponent;
     PositionComponent*      positionComponent;
-    TTCComponent*           ttcComponent;
+    TtcComponent*           ttcComponent;
     CapturePointsComponent* capturePointsComponent;
     TankTypeComponent*      tankTypeComponent;
 };

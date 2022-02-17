@@ -1,19 +1,19 @@
 #pragma once
 
 #include "ecs.h"
-#include "entities/models/map_model.h"
-#include "game/models/models.h"
+#include "enums/action.h"
+#include "enums/result.h"
+#include "nlohmann/json.hpp"
 #include <utility>
 
 // ServerSystem events
 
 struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 {
-    ServerSystem::Action action;
-    nlohmann::json       json;
+    Action         action;
+    nlohmann::json json;
 
-    SendActionEvent(const ServerSystem::Action action,
-                    const nlohmann::json&      json)
+    SendActionEvent(const Action action, const nlohmann::json& json)
         : action(action)
         , json(json)
     {
@@ -22,15 +22,15 @@ struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 
 struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
 {
-    ServerSystem::Action action;
-    nlohmann::json       sentJson;
-    ServerSystem::Result result;
-    nlohmann::json       json;
+    Action         action;
+    nlohmann::json sentJson;
+    Result         result;
+    nlohmann::json json;
 
-    ReceiveActionEvent(const ServerSystem::Action action,
-                       const nlohmann::json&      sentJson,
-                       const ServerSystem::Result result,
-                       const nlohmann::json&      json)
+    ReceiveActionEvent(const Action          action,
+                       const nlohmann::json& sentJson,
+                       const Result          result,
+                       const nlohmann::json& json)
         : action(action)
         , sentJson(sentJson)
         , result(result)
@@ -39,7 +39,7 @@ struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
     }
 };
 
-
+#include "game/models/models.h"
 // AdapterSystem events
 
 struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>
@@ -76,7 +76,7 @@ struct MapResponseEvent : public ecs::event::Event<MapResponseEvent>
 {
     MapModel mapModel;
 
-    explicit MapResponceEvent(MapModel mapModel)
+    explicit MapResponseEvent(MapModel mapModel)
         : mapModel(std::move(mapModel))
     {
     }
@@ -97,14 +97,12 @@ struct GameStateResponseEvent : public ecs::event::Event<GameStateResponseEvent>
     }
 };
 
-struct GameActionsRequestEvent
-    : public ecs::event::Event<GameActionsRequestEvent>
+struct GameActionsRequestEvent : public ecs::event::Event<GameActionsRequestEvent>
 {
     // TODO: Add code (GameActionsRequestEvent)
 };
 
-struct GameActionsResponseEvent
-    : public ecs::event::Event<GameActionsResponseEvent>
+struct GameActionsResponseEvent : public ecs::event::Event<GameActionsResponseEvent>
 {
     GameActionsModel gameActionsModel;
 
@@ -130,8 +128,7 @@ struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
     int                    playerId;
     std::vector<ChatModel> actions;
 
-    explicit ChatResponseEvent(const int                     playerId,
-                               const std::vector<ChatModel>& actions)
+    explicit ChatResponseEvent(const int playerId, const std::vector<ChatModel>& actions)
         : playerId(playerId)
         , actions(actions)
     {
@@ -148,8 +145,7 @@ struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>
     int                    playerId;
     std::vector<MoveModel> actions;
 
-    explicit MoveResponseEvent(const int                     playerId,
-                               const std::vector<MoveModel>& actions)
+    explicit MoveResponseEvent(const int playerId, const std::vector<MoveModel>& actions)
         : playerId(playerId)
         , actions(actions)
     {
@@ -166,8 +162,7 @@ struct ShootResponseEvent : public ecs::event::Event<ShootResponseEvent>
     int                     playerId;
     std::vector<ShootModel> actions;
 
-    explicit ShootResponseEvent(const int                      playerId,
-                                const std::vector<ShootModel>& actions)
+    explicit ShootResponseEvent(const int playerId, const std::vector<ShootModel>& actions)
         : playerId(playerId)
         , actions(actions)
     {

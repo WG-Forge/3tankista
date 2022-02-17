@@ -3,8 +3,7 @@
 #include "ecs.h"
 #include "game/game_events.h"
 
-class RespawnSystem : public ecs::System<RespawnSystem>,
-                      public ecs::event::IEventListener
+class RespawnSystem : public ecs::System<RespawnSystem>, public ecs::event::IEventListener
 {
 public:
     RespawnSystem();

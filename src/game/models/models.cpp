@@ -1,4 +1,5 @@
 #include "models.h"
+#include "utility/singleton.h"
 
 void to_json(nlohmann::json& json, const LoginRequestModel& loginRequestModel)
 {
@@ -27,8 +28,7 @@ void to_json(nlohmann::json& json, const LoginResponseModel& loginResponseModel)
                            { "is_observer", loginResponseModel.isObserver } };
 }
 
-void from_json(const nlohmann::json& json,
-               LoginResponseModel&   loginResponseModel)
+void from_json(const nlohmann::json& json, LoginResponseModel& loginResponseModel)
 {
     json.at("idx").get_to(loginResponseModel.index);
     json.at("name").get_to(loginResponseModel.name);
@@ -54,13 +54,11 @@ void from_json(const nlohmann::json& json, PlayerModel& playerModel)
 void to_json(nlohmann::json& json, const TankModel& tankModel)
 {
     EnumParser<TankType> enumParser;
-    json = nlohmann::json{ { "player_id", tankModel.playerId },
-                           { "vehicle_type",
-                             enumParser.Enum2String(tankModel.vehicleType) },
-                           { "health", tankModel.health },
-                           { "spawn_position", tankModel.spawnPosition },
-                           { "position", tankModel.position },
-                           { "capture_points", tankModel.capturePoints } };
+    json = nlohmann::json{
+        { "player_id", tankModel.playerId }, { "vehicle_type", enumParser.Enum2String(tankModel.vehicleType) },
+        { "health", tankModel.health },      { "spawn_position", tankModel.spawnPosition },
+        { "position", tankModel.position },  { "capture_points", tankModel.capturePoints }
+    };
 }
 
 void from_json(const nlohmann::json& json, TankModel& tankModel)
@@ -76,8 +74,7 @@ void from_json(const nlohmann::json& json, TankModel& tankModel)
 
 void to_json(nlohmann::json& json, const WinPointsModel& winPointsModel)
 {
-    json = nlohmann::json{ { "capture", winPointsModel.capture },
-                           { "kill", winPointsModel.kill } };
+    json = nlohmann::json{ { "capture", winPointsModel.capture }, { "kill", winPointsModel.kill } };
 }
 
 void from_json(const nlohmann::json& json, WinPointsModel& winPointsModel)
@@ -88,18 +85,14 @@ void from_json(const nlohmann::json& json, WinPointsModel& winPointsModel)
 
 void to_json(nlohmann::json& json, const GameStateModel& gameStateModel)
 {
-    json = nlohmann::json{ { "num_players", gameStateModel.numberPlayers },
-                           { "num_turns", gameStateModel.numberTurns },
-                           { "current_turn", gameStateModel.currentTurn },
-                           { "players", gameStateModel.players },
-                           { "observers", gameStateModel.observers },
-                           { "current_player_idx",
-                             gameStateModel.currentPlayerIndex },
-                           { "finished", gameStateModel.finished },
-                           { "vehicles", gameStateModel.vehicles },
-                           { "attack_matrix", gameStateModel.attackMatrix },
-                           { "winner", gameStateModel.winner },
-                           { "win_points", gameStateModel.winPoints } };
+    json = nlohmann::json{
+        { "num_players", gameStateModel.numberPlayers },  { "num_turns", gameStateModel.numberTurns },
+        { "current_turn", gameStateModel.currentTurn },   { "players", gameStateModel.players },
+        { "observers", gameStateModel.observers },        { "current_player_idx", gameStateModel.currentPlayerIndex },
+        { "finished", gameStateModel.finished },          { "vehicles", gameStateModel.vehicles },
+        { "attack_matrix", gameStateModel.attackMatrix }, { "winner", gameStateModel.winner },
+        { "win_points", gameStateModel.winPoints }
+    };
 }
 
 void from_json(const nlohmann::json& json, GameStateModel& gameStateModel)
@@ -119,8 +112,7 @@ void from_json(const nlohmann::json& json, GameStateModel& gameStateModel)
 
 void to_json(nlohmann::json& json, const ShootModel& shootModel)
 {
-    json = nlohmann::json{ { "vehicle_id", shootModel.vehicleId },
-                           { "target", shootModel.target } };
+    json = nlohmann::json{ { "vehicle_id", shootModel.vehicleId }, { "target", shootModel.target } };
 }
 
 void from_json(const nlohmann::json& json, ShootModel& shootModel)
@@ -131,8 +123,7 @@ void from_json(const nlohmann::json& json, ShootModel& shootModel)
 
 void to_json(nlohmann::json& json, const MoveModel& moveModel)
 {
-    json = nlohmann::json{ { "vehicle_id", moveModel.vehicleId },
-                           { "target", moveModel.target } };
+    json = nlohmann::json{ { "vehicle_id", moveModel.vehicleId }, { "target", moveModel.target } };
 }
 
 void from_json(const nlohmann::json& json, MoveModel& moveModel)
@@ -155,31 +146,25 @@ void to_json(nlohmann::json& json, const ActionModel& actionModel)
 {
     switch (actionModel.actionType)
     {
-        case ServerSystem::Action::CHAT:
+        case Action::CHAT:
         {
-            json =
-                nlohmann::json{ { "player_id", actionModel.playerIndex },
-                                { "action_type", (int)actionModel.actionType },
-                                { "data",
-                                  std::get<ChatModel>(actionModel.data) } };
+            json = nlohmann::json{ { "player_id", actionModel.playerIndex },
+                                   { "action_type", (int)actionModel.actionType },
+                                   { "data", std::get<ChatModel>(actionModel.data) } };
             break;
         }
-        case ServerSystem::Action::MOVE:
+        case Action::MOVE:
         {
-            json =
-                nlohmann::json{ { "player_id", actionModel.playerIndex },
-                                { "action_type", (int)actionModel.actionType },
-                                { "data",
-                                  std::get<MoveModel>(actionModel.data) } };
+            json = nlohmann::json{ { "player_id", actionModel.playerIndex },
+                                   { "action_type", (int)actionModel.actionType },
+                                   { "data", std::get<MoveModel>(actionModel.data) } };
             break;
         }
-        case ServerSystem::Action::SHOOT:
+        case Action::SHOOT:
         {
-            json =
-                nlohmann::json{ { "player_id", actionModel.playerIndex },
-                                { "action_type", (int)actionModel.actionType },
-                                { "data",
-                                  std::get<ShootModel>(actionModel.data) } };
+            json = nlohmann::json{ { "player_id", actionModel.playerIndex },
+                                   { "action_type", (int)actionModel.actionType },
+                                   { "data", std::get<ShootModel>(actionModel.data) } };
             break;
         }
         default:
@@ -190,21 +175,20 @@ void to_json(nlohmann::json& json, const ActionModel& actionModel)
 void from_json(const nlohmann::json& json, ActionModel& actionModel)
 {
     json.at("player_id").get_to(actionModel.playerIndex);
-    actionModel.actionType =
-        (ServerSystem::Action)json.at("action_type").get<int>();
+    actionModel.actionType = (Action)json.at("action_type").get<int>();
     switch (actionModel.actionType)
     {
-        case ServerSystem::Action::CHAT:
+        case Action::CHAT:
         {
             json.at("data").get_to(std::get<ChatModel>(actionModel.data));
             break;
         }
-        case ServerSystem::Action::MOVE:
+        case Action::MOVE:
         {
             json.at("data").get_to(std::get<MoveModel>(actionModel.data));
             break;
         }
-        case ServerSystem::Action::SHOOT:
+        case Action::SHOOT:
         {
             json.at("data").get_to(std::get<ShootModel>(actionModel.data));
             break;
@@ -222,4 +206,50 @@ void to_json(nlohmann::json& json, const GameActionsModel& gameActionsModel)
 void from_json(const nlohmann::json& json, GameActionsModel& gameActionsModel)
 {
     json.at("actions").get_to(gameActionsModel.actions);
+}
+
+void to_json(nlohmann::json& json, const SpawnPointsModel& spawnPointsModel)
+{
+    json = nlohmann::json{ "" };
+}
+
+void from_json(const nlohmann::json& json, SpawnPointsModel& spawnPointsModel)
+{
+    for (const auto& [key, value] : json.items())
+    {
+        std::vector<Vector3i> positions;
+        json.at(key).get_to<std::vector<Vector3i>>(positions);
+        spawnPointsModel.spawnPoints.emplace_back(std::make_pair<TankType, std::vector<Vector3i>>(
+            SINGLETON(EnumParser<TankType>)->String2Enum(key), std::move(positions)));
+    }
+}
+
+void to_json(nlohmann::json& json, const MapModel& mapModel)
+{
+    json = nlohmann::json{ "" };
+}
+
+void from_json(const nlohmann::json& json, MapModel& mapModel)
+{
+    try
+    {
+        mapModel.size = json.at("size");
+        json.at("name").get_to<std::string>(mapModel.name);
+        nlohmann::json jsonContent = json.at("content");
+        jsonContent.at("base").get_to<std::vector<Vector3i>>(mapModel.base);
+        jsonContent.at("obstacle").get_to<std::vector<Vector3i>>(mapModel.obstacle);
+        json.at("spawn_points").get_to<std::vector<SpawnPointsModel>>(mapModel.mapSpawnPoints);
+    }
+    catch (nlohmann::json::type_error& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
+    catch (nlohmann::json::out_of_range& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
+    catch (nlohmann::json::parse_error& exception)
+    {
+        std::cout << exception.what() << std::endl << std::flush;
+    }
 }

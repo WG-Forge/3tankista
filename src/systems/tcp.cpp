@@ -22,9 +22,7 @@ std::size_t Tcp::Receive(const asio::mutable_buffer& buffer)
     while (sz > 0)
     {
         sz -= this->GetSocket().receive(
-            asio::mutable_buffer((char*)buffer.data() + buffer.size() - sz, sz),
-            0,
-            this->GetErrorCode());
+            asio::mutable_buffer((char*)buffer.data() + buffer.size() - sz, sz), 0, this->GetErrorCode());
     }
     return buffer.size();
 }
