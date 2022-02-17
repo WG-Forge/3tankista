@@ -1,7 +1,8 @@
 #pragma once
 
-#include "game/game_object.h"
+#include "components/base_id_component.h"
 #include "components/position_component.h"
+#include "game/game_object.h"
 
 class Base : GameObject<Base>
 {
@@ -10,5 +11,6 @@ public:
     ~Base() override = default;
 
 private:
+    BaseIdComponent*   baseId;
     PositionComponent* position;
 };

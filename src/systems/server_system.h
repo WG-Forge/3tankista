@@ -10,6 +10,7 @@ class ServerSystem : public Tcp,
                      public ecs::System<ServerSystem>,
                      public ecs::event::IEventListener
 {
+public:
     enum class Action
     {
         LOGIN        = 1,
@@ -33,6 +34,7 @@ class ServerSystem : public Tcp,
         INTERNAL_SERVER_ERROR    = 500
     };
 
+private:
     static constexpr uint8_t actionSizeBytes  = 4;
     static constexpr uint8_t messageSizeBytes = 4;
 
@@ -40,15 +42,15 @@ public:
     ServerSystem(const std::string& host, const std::string& port);
     ~ServerSystem();
 
-    void OnLoginRequest(const LoginRequestEvent* event);
+    void OnSendActionEvent(const SendActionEvent* event);
 
 private:
     void RegisterEventCallbacks();
     void UnregisterEventCallbacks();
 
 private:
-    bool        SendAction(const Action action, const std::string& data);
-    std::string ReceiveResult(Result& result);
+    bool           SendAction(const Action action, const std::string& data);
+    nlohmann::json ReceiveResult(Result& result);
 
 private:
     void  SetBuffer(std::string& buffer) { this->buffer = std::move(buffer); }

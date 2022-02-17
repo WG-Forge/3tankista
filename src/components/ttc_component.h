@@ -2,10 +2,10 @@
 #include "ecs.h"
 #include "utility/tank_types.h"
 
-class TTCComponent : public ecs::Component<TTCComponent>
+class TtcComponent : public ecs::Component<TtcComponent>
 {
 public:
-    TTCComponent(const int      speed,
+    TtcComponent(const int      speed,
                  const int      maxHealth,
                  const int      damage,
                  const TankType tankType)
@@ -15,7 +15,7 @@ public:
         , tankType(tankType)
     {
     }
-    ~TTCComponent() override = default;
+    ~TtcComponent() override = default;
 
 public:
     void SetSpeed(const int speed) { this->speed = speed; }

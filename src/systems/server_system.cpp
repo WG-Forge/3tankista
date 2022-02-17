@@ -13,50 +13,14 @@ ServerSystem::~ServerSystem()
     this->UnregisterEventCallbacks();
 }
 
-void ServerSystem::OnLoginRequest(const LoginRequestEvent* event)
-{
-    // send inquiry on server
-    const auto& sent =
-        SendAction(Action::LOGIN, nlohmann::json(event->credentials).dump());
-
-    if (!sent)
-    {
-        LogError("Data wasn't sent");
-        return /*false*/;
-    }
-
-    Result lastResult = Result::OKEY;
-    auto   responce   = ReceiveResult(lastResult);
-
-    if (lastResult != ServerSystem::Result::OKEY)
-    {
-        LogError("Login request result: " +
-                 static_cast<int>(this->GetResult()));
-        return /*false*/;
-    }
-
-    if (responce.empty())
-    {
-        LogError("No response was received from the server");
-        return /*false*/;
-    }
-
-    LoginResponceModel loginResponceData = nlohmann::json::parse(responce);
-
-    // send action in ecs with reply
-    ecs::ecsEngine->SendEvent<LoginResponceEvent>(loginResponceData);
-
-    return /*true*/;
-}
-
 void ServerSystem::RegisterEventCallbacks()
 {
-    RegisterEventCallback(&ServerSystem::OnLoginRequest);
+    RegisterEventCallback(&ServerSystem::OnSendActionEvent);
 }
 
 void ServerSystem::UnregisterEventCallbacks()
 {
-    UnregisterEventCallback(&ServerSystem::OnLoginRequest);
+    UnregisterEventCallback(&ServerSystem::OnSendActionEvent);
 }
 
 bool ServerSystem::SendAction(const Action action, const std::string& data)
@@ -82,17 +46,40 @@ bool ServerSystem::SendAction(const Action action, const std::string& data)
     return sent == (actionSizeBytes + messageSizeBytes + dataSize);
 }
 
-std::string ServerSystem::ReceiveResult(Result& result)
+nlohmann::json ServerSystem::ReceiveResult(Result& result)
 {
     Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data(),
                                       actionSizeBytes + messageSizeBytes));
     result       = Result(*(this->GetBuffer()).data());
     int dataSize = *(int*)(this->GetBuffer().data() + actionSizeBytes);
-    this->GetBuffer().resize(dataSize + actionSizeBytes + messageSizeBytes);
+    if (this->GetBuffer().size() <
+        dataSize + actionSizeBytes + messageSizeBytes)
+    {
+        this->GetBuffer().resize(dataSize + actionSizeBytes + messageSizeBytes);
+    }
     Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data() +
                                           actionSizeBytes + messageSizeBytes,
                                       dataSize));
-    return std::move(std::string{ this->GetBuffer().begin() + actionSizeBytes +
-                                      messageSizeBytes,
-                                  this->GetBuffer().end() });
+    return std::move(nlohmann::json::parse(
+        this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
+        this->GetBuffer().data() + actionSizeBytes + messageSizeBytes +
+            dataSize));
+}
+
+void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
+{
+    auto sent = SendAction(event->action, event->json.dump());
+    if (!sent)
+    {
+        LogError("Data wasn't sent");
+        return;
+    }
+    Result result   = Result::OKEY;
+    auto   response = ReceiveResult(result);
+    if (result != Result::OKEY)
+    {
+        LogWarning("Result status is not OKEY " +
+                   static_cast<int>(this->GetResult()));
+    }
+    ecs::ecsEngine->SendEvent<ReceiveActionEvent>(event->action, event->json, result, response);
 }
