@@ -2,6 +2,7 @@
 
 #include "components/adapter_player_id_component.h"
 #include "components/adapter_vehicle_id_component.h"
+#include "components/hex_map_component.h"
 #include "ecs.h"
 
 class World : public ecs::Entity<World>
@@ -13,4 +14,5 @@ public:
 private:
     AdapterPlayerIdComponent*  adapterPlayerIdComponent;
     AdapterVehicleIdComponent* adapterVehicleIdComponent;
+    HexMapComponent*           hexMapComponent;
 };
