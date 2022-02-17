@@ -17,6 +17,7 @@ MapSystem::~MapSystem()
 
 void MapSystem::OnMapResponse(const MapResponseEvent* event)
 {
+    ecs::ecsEngine->GetEntityManager()->
     auto mapEntityId = ecs::ecsEngine->GetEntityManager()->CreateEntity<Map>();
     auto mapIEntity  = ecs::ecsEngine->GetEntityManager()->GetEntity(mapEntityId);
 

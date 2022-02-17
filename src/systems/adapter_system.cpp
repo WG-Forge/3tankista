@@ -34,7 +34,8 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::MAP:
             {
-                // TODO: Map Model
+                auto model = event->json.get<MapModel>();
+                ecs::ecsEngine->SendEvent<MapResponseEvent>(model);
                 break;
             }
             case Action::GAME_STATE:

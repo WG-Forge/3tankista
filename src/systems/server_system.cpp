@@ -11,39 +11,6 @@ ServerSystem::~ServerSystem()
     this->UnregisterEventCallbacks();
 }
 
-/*
-void ServerSystem::OnMapRequest(const MapRequestEvent* event)
-{
-    // send inquiry on server
-    const auto& sent =
-        SendAction(Action::MAP, nlohmann::json(""));
-
-    if (!sent)
-    {
-        std::cerr << "Data wasn't sent" << std::endl;
-        LogError("Data wasn't sent");
-    }
-
-    Result lastResult = Result::OKEY;
-    auto   responce   = ReceiveResult(lastResult);
-
-    if (lastResult != ServerSystem::Result::OKEY)
-    {
-        std::cerr << "No response was received from the server" << std::endl;
-        LogError("Login request result: " +
-                 static_cast<int>(this->GetResult()));
-    }
-
-    if (responce.empty())
-    {
-        LogError("No response was received from the server");
-    }
-
-    MapModel mapModel = nlohmann::json::parse(responce);
-
-    // send action in ecs with reply
-    ecs::ecsEngine->SendEvent<MapResponseEvent>(mapModel);
-}*/
 
 void ServerSystem::RegisterEventCallbacks()
 {

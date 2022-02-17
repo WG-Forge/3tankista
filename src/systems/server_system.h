@@ -16,8 +16,7 @@ private:
 public:
     ServerSystem(const std::string& host, const std::string& port);
     ~ServerSystem();
-
-    // void OnMapRequest(const MapRequestEvent* event);
+    
     void OnSendActionEvent(const SendActionEvent* event);
 
 private:
