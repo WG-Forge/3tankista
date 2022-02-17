@@ -8,7 +8,8 @@
 class Obstacle : public GameObject<Obstacle>
 {
 public:
-    Obstacle();
+    Obstacle(const ecs::EntityId&   entityId,
+             ecs::ComponentManager* componentManager);
     ~Obstacle() override = default;
 
 private:

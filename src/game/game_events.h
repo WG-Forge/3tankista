@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ecs.h"
+#include "entities/models/map_model.h"
 #include "game/models/models.h"
 #include <utility>
 
@@ -38,6 +39,7 @@ struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
     }
 };
 
+
 // AdapterSystem events
 
 struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>
@@ -68,12 +70,16 @@ struct LogoutRequestEvent : public ecs::event::Event<LogoutRequestEvent>
 
 struct MapRequestEvent : public ecs::event::Event<MapRequestEvent>
 {
-    // TODO: Add code (MapRequestEvent)
 };
 
 struct MapResponseEvent : public ecs::event::Event<MapResponseEvent>
 {
-    // TODO: Add code (MapResponseEvent)
+    MapModel mapModel;
+
+    explicit MapResponceEvent(MapModel mapModel)
+        : mapModel(std::move(mapModel))
+    {
+    }
 };
 
 struct GameStateRequestEvent : public ecs::event::Event<GameStateRequestEvent>

@@ -1,9 +1,12 @@
 #pragma once
 
+
 #include "game/game_events.h"
 #include "game/models/models.h"
+#include "entities/models/map_model.h"
 #include "tcp.h"
 
+#include "nlohmann/json.hpp"
 #include "ecs.h"
 
 class ServerSystem : public Tcp,
@@ -41,7 +44,8 @@ private:
 public:
     ServerSystem(const std::string& host, const std::string& port);
     ~ServerSystem();
-
+    
+    //void OnMapRequest(const MapRequestEvent* event);
     void OnSendActionEvent(const SendActionEvent* event);
 
 private:
