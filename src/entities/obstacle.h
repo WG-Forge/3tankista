@@ -1,5 +1,6 @@
 #pragma once
 
+#include "components/obstacle_id_component.h"
 #include "components/position_component.h"
 #include "game/game_object.h"
 #include <memory>
@@ -12,5 +13,6 @@ public:
     ~Obstacle() override = default;
 
 private:
-    PositionComponent* position;
+    ObstacleIdComponent* obstacleId;
+    PositionComponent*   position;
 };

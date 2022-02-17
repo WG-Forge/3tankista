@@ -3,9 +3,10 @@
 #include "ecs.h"
 
 
-class TTCComponent : public ecs::Component<TTCComponent>
+class TtcComponent : public ecs::Component<TtcComponent>
 {
 public:
+
     TTCComponent(const int speed, const int maxHealth, const int damage)
         : speed(speed)
         , maxHealth(maxHealth)
@@ -13,7 +14,7 @@ public:
 
     {
     }
-    ~TTCComponent() override = default;
+    ~TtcComponent() override = default;
 
 public:
     void SetSpeed(const int speed) { this->speed = speed; }
@@ -24,9 +25,6 @@ public:
 
     void SetMaxHealth(const int maxHealth) { this->maxHealth = maxHealth; }
     auto GetMaxHealth() const { return this->maxHealth; }
-
-    // void SetTankType(const TankType tankType) { this->tankType = tankType; }
-    // auto GetTankType() const { return this->tankType; }
 
 private:
     int speed;

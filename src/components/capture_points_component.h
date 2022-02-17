@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ecs.h"
 
 class CapturePointsComponent : public ecs::Component<CapturePointsComponent>

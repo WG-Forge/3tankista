@@ -7,6 +7,7 @@
 #include "components/spawn_position_component.h"
 #include "components/tank_type_component.h"
 #include "components/ttc_component.h"
+#include "components/ttc_factories/abstract_factory.h"
 #include "components/vehicle_id_component.h"
 #include "game/game_object.h"
 
@@ -15,6 +16,8 @@ class Tank : public GameObject<Tank>
 public:
     Tank(const ecs::EntityId&   entityId,
          ecs::ComponentManager* componentManager);
+    Tank(const ecs::EntityId&   entityId,
+         ecs::ComponentManager* componentManager, const AbstractFactory& factory, TankType type);
     ~Tank() override = default;
 
 private:

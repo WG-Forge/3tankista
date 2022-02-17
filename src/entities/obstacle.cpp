@@ -5,4 +5,5 @@ Obstacle::Obstacle(const ecs::EntityId&   entityId,
     : GameObject<Obstacle>(entityId, componentManager)
 {
     this->position = AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });
+    this->obstacleId = AddComponent<ObstacleIdComponent>();
 }

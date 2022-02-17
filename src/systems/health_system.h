@@ -11,7 +11,7 @@ public:
     HealthSystem();
     ~HealthSystem() override;
 
-    void OnShootResponce(const ShootResponceEvent* event);
+    void OnShootResponse(const ShootResponseEvent* event);
 
 private:
     void RegisterEventCallbacks();

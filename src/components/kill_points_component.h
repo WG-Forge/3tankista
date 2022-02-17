@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ecs.h"
 
 class KillPointsComponent : public ecs::Component<KillPointsComponent>
