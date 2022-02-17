@@ -1,11 +1,17 @@
 #include "gameplay_system.h"
+#include "components/attack_matrix_component.h"
+#include "components/base_id_component.h"
+#include "components/current_player_component.h"
+#include "components/obstacle_id_component.h"
+#include "entities/tank.h"
 #include <queue>
 
-const std::vector<Vector2i> GameplaySystem::HEX_DIRECTIONS = {
+const std::vector<Vector2i> GameplaySystem::PathFinder::HEX_DIRECTIONS = {
     { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }
 };
 
 GameplaySystem::GameplaySystem()
+    : pathFinder()
 {
     RegisterEventCallbacks();
 }
@@ -132,6 +138,165 @@ std::vector<Vector3i> GameplaySystem::PathFinder::GetShortestPath(
     return result;
 }
 
-void GameplaySystem::RegisterEventCallbacks() {}
+void GameplaySystem::OnPlayEvent(const PlayEvent* event)
+{
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto gameArea = componentManager->begin<HexMapComponent>().operator->();
+    auto                                                       currentPlayerId =
+        componentManager->begin<CurrentPlayerComponent>()->GetCurrentPlayerId();
 
-void GameplaySystem::UnregisterEventCallbacks() {}
+    gameArea->ClearMap();
+    std::vector<Tank*> currentPlayerTanks;
+    std::vector<Tank*> enemies;
+    for (auto it = componentManager->begin<VehicleIdComponent>();
+         componentManager->end<VehicleIdComponent>() != it;
+         ++it)
+    {
+        auto tank = (Tank*)entityManager->GetEntity(it->GetOwner());
+        if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() ==
+            currentPlayerId)
+        {
+            currentPlayerTanks.push_back(tank);
+            SetHexMapComponentCell(
+                gameArea,
+                tank->GetComponent<PositionComponent>()->GetPosition(),
+                CellState::FRIEND);
+        }
+        else
+        {
+            enemies.push_back(tank);
+            SetHexMapComponentCell(
+                gameArea,
+                tank->GetComponent<PositionComponent>()->GetPosition(),
+                CellState::ENEMY);
+        }
+    }
+    for (auto it = componentManager->begin<ObstacleIdComponent>();
+         componentManager->end<ObstacleIdComponent>() != it;
+         ++it)
+    {
+        SetHexMapComponentCell(gameArea,
+                               entityManager->GetEntity(it->GetOwner())
+                                   ->GetComponent<PositionComponent>()
+                                   ->GetPosition(),
+                               CellState::OBSTACLE);
+    }
+    std::sort(currentPlayerTanks.begin(),
+              currentPlayerTanks.end(),
+              [](Tank* lhs, Tank* rhs)
+              {
+                  return lhs->GetComponent<TtcComponent>()->GetTankType() <
+                         rhs->GetComponent<TtcComponent>()->GetTankType();
+              });
+    for (auto tank : currentPlayerTanks)
+    {
+        // Can attack someone?
+        Tank* target = nullptr;
+        for (auto& enemy : enemies)
+        {
+            if (CanShoot(tank, enemy) && CheckNeutrality(tank, enemy))
+            {
+                if (target == nullptr ||
+                    target->GetComponent<HealthComponent>()->GetHealth() >
+                        enemy->GetComponent<HealthComponent>()->GetHealth())
+                {
+                    target = enemy;
+                }
+            }
+        }
+        if (target != nullptr)
+        {
+            // TODO: Add event body
+            ecs::ecsEngine->SendEvent<ShootRequestEvent>();
+        }
+        else
+        {
+            // Move to the nearest base
+            pathFinder.SetStartPoint(
+                tank->GetComponent<PositionComponent>()->GetPosition());
+
+            auto     it = componentManager->begin<BaseIdComponent>();
+            Vector3i nearestBasePos = entityManager->GetEntity(it->GetOwner())
+                                          ->GetComponent<PositionComponent>()
+                                          ->GetPosition();
+            ++it;
+            for (; componentManager->end<BaseIdComponent>() != it; ++it)
+            {
+                auto basePosition = entityManager->GetEntity(it->GetOwner())
+                                        ->GetComponent<PositionComponent>()
+                                        ->GetPosition();
+                if (pathFinder.GetDistance(nearestBasePos) ==
+                        PathFinder::NO_PATH ||
+                    (pathFinder.GetDistance(nearestBasePos) >
+                         pathFinder.GetDistance(basePosition) &&
+                     pathFinder.GetDistance(basePosition) !=
+                         PathFinder::NO_PATH))
+                {
+                    nearestBasePos = basePosition;
+                }
+            }
+            if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH)
+                continue; // STAY
+            auto path = pathFinder.GetShortestPath(nearestBasePos);
+            if (path.empty())
+                continue; // STAY
+            SetHexMapComponentCell(
+                gameArea,
+                tank->GetComponent<PositionComponent>()->GetPosition(),
+                CellState::EMPTY);
+            SetHexMapComponentCell(
+                gameArea,
+                path[std::min((int)path.size(),
+                              tank->GetComponent<TtcComponent>()->GetSpeed()) -
+                     1],
+                CellState::FRIEND);
+            // TODO: add event body
+            ecs::ecsEngine->SendEvent<MoveRequestEvent>();
+            //            tank->Move(path[std::min((int)path.size(),
+            //            tank->GetSpeed()) - 1]);
+        }
+    }
+}
+
+bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
+{
+    auto attackMatrixComponent =
+        ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>();
+    int tankPlayerId =
+        playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+    int enemyPlayerId =
+        enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+
+    // If he attacked us
+    if (attackMatrixComponent->IsAttacked(enemyPlayerId, tankPlayerId))
+        return true;
+
+    // If he attacked by somebody else
+    auto attackMatrix = attackMatrixComponent->GetAttackMatrix();
+    for (auto& [who, whom] : attackMatrix)
+    {
+        if (who == tankPlayerId)
+            continue;
+        if (whom.find(enemyPlayerId) != whom.end())
+            return false;
+    }
+    return true;
+}
+
+bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
+{
+    // TODO: Implement CanShootMethod
+    return false;
+}
+
+void GameplaySystem::RegisterEventCallbacks()
+{
+    RegisterEventCallback(&GameplaySystem::OnPlayEvent);
+}
+
+void GameplaySystem::UnregisterEventCallbacks()
+{
+    UnregisterEventCallback(&GameplaySystem::OnPlayEvent);
+}
+

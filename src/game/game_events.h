@@ -168,6 +168,8 @@ struct ShootResponseEvent : public ecs::event::Event<ShootResponseEvent>
     }
 };
 
+// Other Inner Events
+
 struct GameLoginEvent : public ecs::event::Event<GameLoginEvent>
 {
 };
@@ -207,4 +209,8 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
         : entityId(id)
     {
     }
+};
+
+struct PlayEvent : public ecs::event::Event<PlayEvent>
+{
 };

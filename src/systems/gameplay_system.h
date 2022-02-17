@@ -2,7 +2,9 @@
 
 #include "components/hex_map_component.h"
 #include "ecs.h"
+#include "game/game_events.h"
 #include "utility/matrix.hpp"
+#include "entities/tank.h"
 
 class GameplaySystem : public ecs::System<GameplaySystem>,
                        public ecs::event::IEventListener
@@ -10,6 +12,8 @@ class GameplaySystem : public ecs::System<GameplaySystem>,
 public:
     GameplaySystem();
     ~GameplaySystem() override;
+
+    void OnPlayEvent(const PlayEvent* event);
 
 private:
     /**
@@ -113,6 +117,9 @@ private:
         std::vector<std::vector<signed char>> lastDirections;
         std::vector<std::vector<int>>         distance;
     };
+
+    bool CheckNeutrality(Tank* playerTank, Tank* enemyTank);
+    bool CanShoot(Tank* playerTank, Tank* enemyTank);
 
 private:
     void RegisterEventCallbacks();

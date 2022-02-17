@@ -16,16 +16,16 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
 {
     if (event->result == ServerSystem::Result::OKEY)
     {
-        auto playerAdapter = *ecs::ecsEngine->GetComponentManager()
+        auto playerAdapter = ecs::ecsEngine->GetComponentManager()
                                   ->begin<AdapterPlayerIdComponent>();
-        auto vehicleAdapter = *ecs::ecsEngine->GetComponentManager()
+        auto vehicleAdapter = ecs::ecsEngine->GetComponentManager()
                                    ->begin<AdapterVehicleIdComponent>();
         switch (event->action)
         {
             case ServerSystem::Action::LOGIN:
             {
                 auto model  = event->json.get<LoginResponseModel>();
-                model.index = playerAdapter.Get(model.index);
+                model.index = playerAdapter->Get(model.index);
                 ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
                 break;
             }
@@ -82,20 +82,20 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
                 auto model = event->json.get<GameActionsModel>();
                 for (auto& action : model.actions)
                 {
-                    action.playerIndex = playerAdapter.Get(action.playerIndex);
+                    action.playerIndex = playerAdapter->Get(action.playerIndex);
                     switch (action.actionType)
                     {
                         case ServerSystem::Action::SHOOT:
                         {
                             auto tmp      = std::get<ShootModel>(action.data);
-                            tmp.vehicleId = vehicleAdapter.Get(tmp.vehicleId);
+                            tmp.vehicleId = vehicleAdapter->Get(tmp.vehicleId);
                             action.data   = tmp;
                             break;
                         }
                         case ServerSystem::Action::MOVE:
                         {
                             auto tmp      = std::get<MoveModel>(action.data);
-                            tmp.vehicleId = vehicleAdapter.Get(tmp.vehicleId);
+                            tmp.vehicleId = vehicleAdapter->Get(tmp.vehicleId);
                             action.data   = tmp;
                             break;
                         }
