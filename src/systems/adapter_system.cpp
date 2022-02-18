@@ -16,9 +16,17 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
 {
     if (event->result == Result::OKEY)
     {
-        auto playerAdapter  = ecs::ecsEngine->GetComponentManager()->begin<AdapterPlayerIdComponent>();
-        auto vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
-        auto json = nlohmann::json::parse(event->data);
+        auto           playerAdapter  = ecs::ecsEngine->GetComponentManager()->begin<AdapterPlayerIdComponent>();
+        auto           vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
+        nlohmann::json json;
+        if (!event->data.empty())
+        {
+            json = nlohmann::json::parse(event->data);
+        }
+        else
+        {
+            json = nlohmann::json::parse(event->sentData);
+        }
         switch (event->action)
         {
             case Action::LOGIN:
@@ -97,6 +105,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
                         }
                         case Action::MOVE:
                         {
+                            std::cout << model.actions.data() << "\n";
                             auto tmp      = std::get<MoveModel>(action.data);
                             tmp.vehicleId = vehicleAdapter->Get(tmp.vehicleId);
                             action.data   = tmp;
@@ -121,7 +130,11 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::MOVE:
             {
-                // No model for move
+
+                auto json  = nlohmann::json::parse(event->sentData);
+                auto model = json.get<MoveModel>();
+                std::cerr << "MOVE: " << model.vehicleId << " => (" << model.target.x() << "," << model.target.y()
+                          << "," << model.target.z() << ')' << std::endl;
                 break;
             }
             case Action::SHOOT:
@@ -175,8 +188,8 @@ void AdapterSystem::OnChatRequestEvent(const ChatRequestEvent* event)
 
 void AdapterSystem::OnMoveRequestEvent(const MoveRequestEvent* event)
 {
-    // TODO: Move request event
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::MOVE, std::string{});
+
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::MOVE, nlohmann::json(event->moveModel).dump());
 }
 
 void AdapterSystem::OnShootRequestEvent(const ShootRequestEvent* event)

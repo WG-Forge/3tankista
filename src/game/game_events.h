@@ -22,9 +22,9 @@ struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 
 struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
 {
-    Action      action;
+    Action         action;
     std::string sentData;
-    Result      result;
+    Result         result;
     std::string data;
 
     ReceiveActionEvent(const Action action, std::string sentData, const Result result, std::string data)
@@ -152,7 +152,11 @@ struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
 
 struct MoveRequestEvent : public ecs::event::Event<MoveRequestEvent>
 {
-    // TODO: add code (MoveResponseEvent)
+    MoveModel moveModel;
+    explicit MoveRequestEvent(MoveModel moveModel)
+        : moveModel(std::move(moveModel))
+    {
+    }
 };
 
 struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>

@@ -39,6 +39,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     for (auto& now : event->gameState.observers)
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx);
+        adapterId->Add(now.idx, entity);
     }
 
     TtcComponentFactory factory;

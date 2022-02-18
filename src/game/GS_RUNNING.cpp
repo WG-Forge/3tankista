@@ -3,7 +3,7 @@
 
 void Game::GS_RUNNING()
 {
-
+    ecs::ecsEngine->SendEvent<GameFinishedRequestEvent>();
 }
 
 void Game::GS_RUNNING_ENTER()

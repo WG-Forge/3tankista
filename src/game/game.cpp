@@ -16,33 +16,33 @@ void Game::Initialize()
 
 void Game::Run()
 {
-    ecs::ecsEngine->Update(100*DELTA_TIME_STEP);
-
-    this->UpdateStateMachine();
-
-    ecs::ecsEngine->Update(100*DELTA_TIME_STEP);
-
-    this->UpdateStateMachine();
-
-    ecs::ecsEngine->Update(100*DELTA_TIME_STEP);
-
-    this->UpdateStateMachine();
-
-    ecs::ecsEngine->Update(100*DELTA_TIME_STEP);
-
-    this->UpdateStateMachine();
-
-    ecs::ecsEngine->Update(100*DELTA_TIME_STEP);
-
-    this->UpdateStateMachine();
-
-    ecs::ecsEngine->Update(100*DELTA_TIME_STEP);
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
 
     ecs::ecsEngine->Update(DELTA_TIME_STEP);
 
     this->UpdateStateMachine();
+
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
+
+    this->UpdateStateMachine();
+
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
+
+    this->UpdateStateMachine();
+
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
+
+    this->UpdateStateMachine();
+
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
+
+    this->UpdateStateMachine();
+
+    ecs::ecsEngine->Update(DELTA_TIME_STEP);
+
+
 }
 
 void Game::InitializeECS()

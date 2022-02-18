@@ -49,15 +49,13 @@ std::string ServerSystem::ReceiveResult(Result& result)
     }
     Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes, dataSize));
     return std::move(std::string(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
-                                           this->GetBuffer().data() + actionSizeBytes + messageSizeBytes + dataSize));
+                                 this->GetBuffer().data() + actionSizeBytes + messageSizeBytes + dataSize));
 }
 
 void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
 {
-    bool sent;
 
-    sent = SendAction(event->action, event->data);
-
+    auto sent = SendAction(event->action, event->data);
     if (!sent)
     {
         LogError("Data wasn't sent");

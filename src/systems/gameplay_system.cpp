@@ -215,7 +215,9 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                                    path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
                                    CellState::FRIEND);
             // TODO: add event body
-            ecs::ecsEngine->SendEvent<MoveRequestEvent>();
+            ecs::ecsEngine->SendEvent<MoveRequestEvent>(
+                MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
+                           path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1] });
             //            tank->Move(path[std::min((int)path.size(),
             //            tank->GetSpeed()) - 1]);
         }
