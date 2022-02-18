@@ -9,7 +9,6 @@ void Game::GS_RUNNING()
 void Game::GS_RUNNING_ENTER()
 {
     ecs::ecsEngine->SendEvent<GameFinishedRequestEvent>();
-
 }
 
 void Game::GS_STARTED_LEAVE() {}

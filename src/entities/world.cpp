@@ -8,5 +8,5 @@ World::World(const ecs::EntityId& entityId, ecs::ComponentManager* componentMana
     hexMapComponent           = AddComponent<HexMapComponent>(0);
     currentPlayerComponent    = AddComponent<CurrentPlayerComponent>(0);
     attackMatrixComponent     = AddComponent<AttackMatrixComponent>();
-    turnComponent             = AddComponent<TurnComponent>(0,1);
+    turnComponent             = AddComponent<TurnComponent>(0, 1);
 }

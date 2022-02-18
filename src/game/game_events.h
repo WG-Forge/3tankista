@@ -22,9 +22,9 @@ struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 
 struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
 {
-    Action         action;
+    Action      action;
     std::string sentData;
-    Result         result;
+    Result      result;
     std::string data;
 
     ReceiveActionEvent(const Action action, std::string sentData, const Result result, std::string data)
@@ -81,7 +81,6 @@ struct MapResponseEvent : public ecs::event::Event<MapResponseEvent>
 
 struct GameStateRequestEvent : public ecs::event::Event<GameStateRequestEvent>
 {
-    // TODO: Add code (GameStateRequestEvent)
 };
 
 struct GameStateResponseEvent : public ecs::event::Event<GameStateResponseEvent>
@@ -96,7 +95,6 @@ struct GameStateResponseEvent : public ecs::event::Event<GameStateResponseEvent>
 
 struct GameActionsRequestEvent : public ecs::event::Event<GameActionsRequestEvent>
 {
-    // TODO: Add code (GameActionsRequestEvent)
 };
 
 struct GameActionsResponseEvent : public ecs::event::Event<GameActionsResponseEvent>
@@ -135,7 +133,12 @@ struct WorldCreateEvent : public ecs::event::Event<WorldCreateEvent>
 
 struct ChatRequestEvent : public ecs::event::Event<ChatRequestEvent>
 {
-    // TODO: add code (ChatRequestEvent)
+    ChatModel chatModel;
+
+    explicit ChatRequestEvent(ChatModel data)
+        : chatModel(std::move(chatModel))
+    {
+    }
 };
 
 struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
@@ -153,6 +156,7 @@ struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
 struct MoveRequestEvent : public ecs::event::Event<MoveRequestEvent>
 {
     MoveModel moveModel;
+
     explicit MoveRequestEvent(MoveModel moveModel)
         : moveModel(std::move(moveModel))
     {
@@ -173,7 +177,12 @@ struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>
 
 struct ShootRequestEvent : public ecs::event::Event<ShootRequestEvent>
 {
-    // TODO: add code MoveRequestEvent
+    ShootModel shootModel;
+
+    explicit ShootRequestEvent(ShootModel model)
+        : shootModel(std::move(model))
+    {
+    }
 };
 
 struct ShootResponseEvent : public ecs::event::Event<ShootResponseEvent>

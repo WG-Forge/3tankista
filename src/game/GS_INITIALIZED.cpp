@@ -9,6 +9,7 @@
 #include "systems/menu_system.h"
 #include "systems/respawn_system.h"
 #include "systems/server_system.h"
+#include "systems/move_system.h"
 
 void Game::GS_INITIALIZED()
 {
@@ -16,6 +17,7 @@ void Game::GS_INITIALIZED()
     auto* SeS = ecs::ecsEngine->GetSystemManager()->AddSystem<ServerSystem>("wgforge-srv.wargaming.net", "443");
     auto* MaS = ecs::ecsEngine->GetSystemManager()->AddSystem<MapSystem>();
     auto* HeS = ecs::ecsEngine->GetSystemManager()->AddSystem<HealthSystem>();
+    auto* MoS = ecs::ecsEngine->GetSystemManager()->AddSystem<MoveSystem>();
     auto* GpS = ecs::ecsEngine->GetSystemManager()->AddSystem<GameplaySystem>();
     auto* GsS = ecs::ecsEngine->GetSystemManager()->AddSystem<GameStateSystem>();
     auto* AcS = ecs::ecsEngine->GetSystemManager()->AddSystem<ActionSystem>();
@@ -31,4 +33,3 @@ void Game::GS_INITIALIZED_ENTER()
 {
     this->InitializeECS();
 }
-

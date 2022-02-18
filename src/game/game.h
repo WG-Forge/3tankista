@@ -9,7 +9,7 @@
 class Game : public ecs::event::IEventListener, public SimpleFSM
 {
 public:
-    explicit Game(std::string  title = "Game Name");
+    explicit Game(std::string title = "Game Name");
     ~Game() = default;
 
 public:

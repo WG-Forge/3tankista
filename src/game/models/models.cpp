@@ -214,17 +214,17 @@ void from_json(const nlohmann::json& json, ActionModel& actionModel)
     {
         case Action::CHAT:
         {
-            json.at("data").get_to(std::get<ChatModel>(actionModel.data));
+            actionModel.data = json.at("data").get<ChatModel>();
             break;
         }
         case Action::MOVE:
         {
-            json.at("data").get_to(std::get<MoveModel>(actionModel.data));
+            actionModel.data = json.at("data").get<MoveModel>();
             break;
         }
         case Action::SHOOT:
         {
-            json.at("data").get_to(std::get<ShootModel>(actionModel.data));
+            actionModel.data = json.at("data").get<ShootModel>();
             break;
         }
         default:

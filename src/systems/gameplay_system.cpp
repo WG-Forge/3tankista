@@ -137,7 +137,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
          ++it)
     {
-        auto tank = (Tank*)entityManager->GetEntity(it->GetOwner());
+        auto tank = (Tank*)entityManager->GetEntity(it->GetVehicleId());
         if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == currentPlayerId)
         {
             currentPlayerTanks.push_back(tank);
@@ -181,8 +181,9 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
         }
         if (target != nullptr)
         {
-            // TODO: Add event body
-            ecs::ecsEngine->SendEvent<ShootRequestEvent>();
+            ecs::ecsEngine->SendEvent<ShootRequestEvent>(
+                ShootModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
+                            target->GetComponent<PositionComponent>()->GetPosition() });
         }
         else
         {
@@ -214,14 +215,13 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             SetHexMapComponentCell(gameArea,
                                    path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
                                    CellState::FRIEND);
-            // TODO: add event body
             ecs::ecsEngine->SendEvent<MoveRequestEvent>(
                 MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
                            path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1] });
-            //            tank->Move(path[std::min((int)path.size(),
-            //            tank->GetSpeed()) - 1]);
         }
     }
+    ecs::ecsEngine->SendEvent<TurnRequestEvent>();
+    ecs::ecsEngine->SendEvent<GameActionsRequestEvent>();
 }
 
 void GameplaySystem::OnGameFinishedEvent(const GameFinishedResponseEvent* event)

@@ -23,7 +23,6 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     auto world            = ecs::ecsEngine->GetEntityManager()->GetEntity(
         ecs::ecsEngine->GetComponentManager()->begin<TurnComponent>()->GetOwner());
     world->GetComponent<TurnComponent>()->SetNumOfTurns(event->gameState.numberTurns);
-    world->GetComponent<CurrentPlayerComponent>()->SetCurrentPlayerId(event->gameState.currentPlayerIndex);
     world->GetComponent<TurnComponent>()->SetCurrentTurn(event->gameState.currentTurn);
     auto adapterId = world->GetComponent<AdapterPlayerIdComponent>();
     auto vehicleId = world->GetComponent<AdapterVehicleIdComponent>();
@@ -33,23 +32,25 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx);
         adapterId->Add(now.idx, entity);
+        entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
+    world->GetComponent<CurrentPlayerComponent>()->SetCurrentPlayerId(adapterId->Get(event->gameState.currentPlayerIndex));
 
     // Create observers
     for (auto& now : event->gameState.observers)
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx);
         adapterId->Add(now.idx, entity);
+        entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
 
     TtcComponentFactory factory;
-
     // Create tanks
     for (auto& tank : event->gameState.vehicles)
     {
         auto entity = entityManager->CreateEntity<Tank>(factory, tank.second.vehicleType);
-        componentManager->GetComponent<PlayerIdComponent>(entity)->SetPlayerId(tank.second.playerId);
-        componentManager->GetComponent<VehicleIdComponent>(entity)->SetVehicleId(tank.first);
+        componentManager->GetComponent<PlayerIdComponent>(entity)->SetPlayerId(adapterId->Get(tank.second.playerId));
+        componentManager->GetComponent<VehicleIdComponent>(entity)->SetVehicleId(entity);
         componentManager->GetComponent<SpawnPositionComponent>(entity)->SetSpawnPosition(tank.second.spawnPosition);
         componentManager->GetComponent<PositionComponent>(entity)->SetPosition(tank.second.position);
         componentManager->GetComponent<CapturePointsComponent>(entity)->SetCapturePoints(tank.second.capturePoints);

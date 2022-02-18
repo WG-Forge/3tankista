@@ -10,9 +10,6 @@ void Game::GS_STARTED_ENTER()
 {
     ecs::ecsEngine->SendEvent<MapRequestEvent>();
     ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
-
 }
 
-void Game::GS_RESTARTED_LEAVE() {
-
-}
+void Game::GS_RESTARTED_LEAVE() {}

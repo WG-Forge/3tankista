@@ -54,7 +54,8 @@ std::string ServerSystem::ReceiveResult(Result& result)
 
 void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
 {
-
+    std::cerr << "Request: " << static_cast<int>(event->action) << " " << event->data << '\n';
+    LogInfo("Request to server: ", event->action, event->data);
     auto sent = SendAction(event->action, event->data);
     if (!sent)
     {
@@ -63,11 +64,11 @@ void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
     }
     Result result   = Result::OKEY;
     auto   response = ReceiveResult(result);
+    std::cerr << "Response: " << static_cast<int>(result) << " " << response << "\n\n\n";
+    LogInfo("Response from server: ", result, responce);
     if (result != Result::OKEY)
     {
         LogWarning("Result status is not OKEY " + static_cast<int>(this->GetResult()));
     }
-    std::cout << response << "\n";
-
     ecs::ecsEngine->SendEvent<ReceiveActionEvent>(event->action, event->data, result, response);
 }

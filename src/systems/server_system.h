@@ -24,7 +24,7 @@ private:
     void UnregisterEventCallbacks();
 
 private:
-    bool           SendAction(const Action action, const std::string& data);
+    bool        SendAction(const Action action, const std::string& data);
     std::string ReceiveResult(Result& result);
 
 private:
