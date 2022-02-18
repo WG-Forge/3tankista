@@ -3,6 +3,7 @@
 #include "components/base_id_component.h"
 #include "components/current_player_component.h"
 #include "components/obstacle_id_component.h"
+#include "components/turn_component.h"
 #include "entities/tank.h"
 #include <queue>
 
@@ -186,6 +187,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
         else
         {
             // Move to the nearest base
+            pathFinder.SetHexMapComponent(gameArea);
             pathFinder.SetStartPoint(tank->GetComponent<PositionComponent>()->GetPosition());
 
             auto     it = componentManager->begin<BaseIdComponent>();

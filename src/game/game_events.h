@@ -10,28 +10,28 @@
 
 struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 {
-    Action         action;
-    nlohmann::json json;
+    Action      action;
+    std::string data;
 
-    SendActionEvent(const Action action, nlohmann::json json)
+    SendActionEvent(const Action action, std::string data)
         : action(action)
-        , json(std::move(json))
+        , data(std::move(data))
     {
     }
 };
 
 struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
 {
-    Action         action;
-    nlohmann::json sentJson;
-    Result         result;
-    nlohmann::json json;
+    Action      action;
+    std::string sentData;
+    Result      result;
+    std::string data;
 
-    ReceiveActionEvent(const Action action, nlohmann::json sentJson, const Result result, nlohmann::json json)
+    ReceiveActionEvent(const Action action, std::string sentData, const Result result, std::string data)
         : action(action)
-        , sentJson(std::move(sentJson))
+        , sentData(std::move(sentData))
         , result(result)
-        , json(std::move(json))
+        , data(std::move(data))
     {
     }
 };
@@ -127,9 +127,8 @@ struct GameFinishedResponseEvent : public ecs::event::Event<GameFinishedResponse
     }
 };
 
-struct WorldCreateEvent: public ecs::event::Event<WorldCreateEvent>
+struct WorldCreateEvent : public ecs::event::Event<WorldCreateEvent>
 {
-
 };
 
 // No turn response

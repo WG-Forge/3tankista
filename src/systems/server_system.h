@@ -24,8 +24,8 @@ private:
     void UnregisterEventCallbacks();
 
 private:
-    bool           SendAction(const Action action, const std::string& data);
-    nlohmann::json ReceiveResult(Result& result);
+    bool        SendAction(const Action action, const std::string& data);
+    std::string ReceiveResult(Result& result);
 
 private:
     void        SetBuffer(std::string& buffer) { this->buffer = std::move(buffer); }
