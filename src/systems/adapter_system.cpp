@@ -18,15 +18,16 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     {
         auto playerAdapter  = ecs::ecsEngine->GetComponentManager()->begin<AdapterPlayerIdComponent>();
         auto vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
+        auto json = nlohmann::json::parse(event->data);
         switch (event->action)
         {
             case Action::LOGIN:
             {
 
-                //auto model=   nlohmann::json(event->data).get<LoginResponseModel>();
-                std::cout<<nlohmann::json(event->data).dump()<<"\n";
-                // model.index = playerAdapter->Get(model.index);
-                // ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
+                auto model = json.get<LoginResponseModel>();
+                // std::cout<<nlohmann::json(event->data).dump()<<"\n";
+                //                 model.index = playerAdapter->Get(model.index);
+                ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
 
                 break;
             }
@@ -37,13 +38,13 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::MAP:
             {
-                auto model = nlohmann::json(event->data).get<MapModel>();
+                auto model = json.get<MapModel>();
                 ecs::ecsEngine->SendEvent<MapResponseEvent>(model);
                 break;
             }
             case Action::GAME_STATE:
             {
-                auto model = nlohmann::json(event->data).get<GameStateModel>();
+                auto model = json.get<GameStateModel>();
                 // No need to adapt GameState
                 /*
                 for (auto& now : model.players)
@@ -81,7 +82,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::GAME_ACTIONS:
             {
-                auto model = nlohmann::json(event->data).get<GameActionsModel>();
+                auto model = json.get<GameActionsModel>();
                 for (auto& action : model.actions)
                 {
                     action.playerIndex = playerAdapter->Get(action.playerIndex);
