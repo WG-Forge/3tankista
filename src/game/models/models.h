@@ -77,7 +77,7 @@ struct GameStateModel
     std::vector<PlayerModel>                  observers;
     int                                       currentPlayerIndex;
     bool                                      finished;
-    std::unordered_map<int, TankModel>        vehicles;
+    std::vector<std::pair<int, TankModel>>    vehicles;
     std::unordered_map<int, std::vector<int>> attackMatrix;
     int                                       winner;
     std::unordered_map<int, WinPointsModel>   winPoints;
@@ -118,8 +118,7 @@ void from_json(const nlohmann::json& json, ChatModel& chatModel);
 
 struct ActionModel
 {
-    int playerIndex;
-    // TODO: Remove from ServerSystem enum Action
+    int                                            playerIndex;
     Action                                         actionType;
     std::variant<ShootModel, MoveModel, ChatModel> data;
 };

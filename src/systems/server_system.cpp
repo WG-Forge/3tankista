@@ -11,7 +11,6 @@ ServerSystem::~ServerSystem()
     this->UnregisterEventCallbacks();
 }
 
-
 void ServerSystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&ServerSystem::OnSendActionEvent);
@@ -39,7 +38,7 @@ bool ServerSystem::SendAction(const Action action, const std::string& data)
     return sent == (actionSizeBytes + messageSizeBytes + dataSize);
 }
 
-nlohmann::json ServerSystem::ReceiveResult(Result& result)
+std::string ServerSystem::ReceiveResult(Result& result)
 {
     Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data(), actionSizeBytes + messageSizeBytes));
     result       = Result(*(this->GetBuffer()).data());
@@ -49,13 +48,14 @@ nlohmann::json ServerSystem::ReceiveResult(Result& result)
         this->GetBuffer().resize(dataSize + actionSizeBytes + messageSizeBytes);
     }
     Tcp::Receive(asio::mutable_buffer(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes, dataSize));
-    return std::move(nlohmann::json::parse(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
-                                           this->GetBuffer().data() + actionSizeBytes + messageSizeBytes + dataSize));
+    return std::move(std::string(this->GetBuffer().data() + actionSizeBytes + messageSizeBytes,
+                                 this->GetBuffer().data() + actionSizeBytes + messageSizeBytes + dataSize));
 }
 
 void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
 {
-    auto sent = SendAction(event->action, event->json.dump());
+
+    auto sent = SendAction(event->action, event->data);
     if (!sent)
     {
         LogError("Data wasn't sent");
@@ -67,5 +67,7 @@ void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
     {
         LogWarning("Result status is not OKEY " + static_cast<int>(this->GetResult()));
     }
-    ecs::ecsEngine->SendEvent<ReceiveActionEvent>(event->action, event->json, result, response);
+    std::cout << response << "\n";
+
+    ecs::ecsEngine->SendEvent<ReceiveActionEvent>(event->action, event->data, result, response);
 }

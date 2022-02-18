@@ -16,7 +16,7 @@ private:
 public:
     ServerSystem(const std::string& host, const std::string& port);
     ~ServerSystem();
-    
+
     void OnSendActionEvent(const SendActionEvent* event);
 
 private:
@@ -25,7 +25,7 @@ private:
 
 private:
     bool           SendAction(const Action action, const std::string& data);
-    nlohmann::json ReceiveResult(Result& result);
+    std::string ReceiveResult(Result& result);
 
 private:
     void        SetBuffer(std::string& buffer) { this->buffer = std::move(buffer); }

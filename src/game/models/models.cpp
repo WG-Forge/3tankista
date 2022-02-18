@@ -97,17 +97,51 @@ void to_json(nlohmann::json& json, const GameStateModel& gameStateModel)
 
 void from_json(const nlohmann::json& json, GameStateModel& gameStateModel)
 {
-    json.at("number_players").get_to(gameStateModel.numberPlayers);
+    json.at("num_players").get_to(gameStateModel.numberPlayers);
     json.at("num_turns").get_to(gameStateModel.numberTurns);
     json.at("current_turn").get_to(gameStateModel.currentTurn);
     json.at("players").get_to(gameStateModel.players);
     json.at("observers").get_to(gameStateModel.observers);
-    json.at("current_player_idx").get_to(gameStateModel.currentPlayerIndex);
     json.at("finished").get_to(gameStateModel.finished);
-    json.at("vehicles").get_to(gameStateModel.vehicles);
-    json.at("attack_matrix").get_to(gameStateModel.attackMatrix);
-    json.at("winner").get_to(gameStateModel.winner);
-    json.at("win_points").get_to(gameStateModel.winPoints);
+    std::vector<std::pair<int, TankModel>> vehicles;
+    for (const auto& [key, value] : json["vehicles"].items())
+    {
+        TankModel model;
+        from_json(value, model);
+        vehicles.emplace_back(std::make_pair(std::stoi(key), model));
+    }
+    gameStateModel.vehicles = std::move(vehicles);
+    std::unordered_map<int, std::vector<int>> attackMatrix;
+    for (const auto& [key, value] : json["attack_matrix"].items())
+    {
+        std::vector<int> ids(value);
+        attackMatrix.insert(std::make_pair(std::stoi(key), ids));
+    }
+    gameStateModel.attackMatrix = std::move(attackMatrix);
+    if (json.at("current_player_idx").empty())
+    {
+        gameStateModel.currentPlayerIndex = 0;
+    }
+    else
+    {
+        json.at("current_player_idx").get_to(gameStateModel.currentPlayerIndex);
+    }
+    if (json.at("winner").empty())
+    {
+        gameStateModel.winner = 0;
+    }
+    else
+    {
+        json.at("winner").get_to(gameStateModel.winner);
+    }
+    std::unordered_map<int, WinPointsModel> winPoints;
+    for (const auto& [key, value] : json["win_points"].items())
+    {
+        WinPointsModel tempwp{};
+        from_json(value, tempwp);
+        winPoints.insert(std::make_pair(std::stoi(key), tempwp));
+    }
+    gameStateModel.winPoints = std::move(winPoints);
 }
 
 void to_json(nlohmann::json& json, const ShootModel& shootModel)

@@ -16,15 +16,27 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
 {
     if (event->result == Result::OKEY)
     {
-        auto playerAdapter  = ecs::ecsEngine->GetComponentManager()->begin<AdapterPlayerIdComponent>();
-        auto vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
+        auto           playerAdapter  = ecs::ecsEngine->GetComponentManager()->begin<AdapterPlayerIdComponent>();
+        auto           vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
+        nlohmann::json json;
+        if (!event->data.empty())
+        {
+            json = nlohmann::json::parse(event->data);
+        }
+        else
+        {
+            json = nlohmann::json::parse(event->sentData);
+        }
         switch (event->action)
         {
             case Action::LOGIN:
             {
-                auto model  = event->json.get<LoginResponseModel>();
-                model.index = playerAdapter->Get(model.index);
+
+                auto model = json.get<LoginResponseModel>();
+                // std::cout<<nlohmann::json(event->data).dump()<<"\n";
+                //                 model.index = playerAdapter->Get(model.index);
                 ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
+
                 break;
             }
             case Action::LOGOUT:
@@ -34,13 +46,13 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::MAP:
             {
-                auto model = event->json.get<MapModel>();
+                auto model = json.get<MapModel>();
                 ecs::ecsEngine->SendEvent<MapResponseEvent>(model);
                 break;
             }
             case Action::GAME_STATE:
             {
-                auto model = event->json.get<GameStateModel>();
+                auto model = json.get<GameStateModel>();
                 // No need to adapt GameState
                 /*
                 for (auto& now : model.players)
@@ -78,7 +90,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::GAME_ACTIONS:
             {
-                auto model = event->json.get<GameActionsModel>();
+                auto model = json.get<GameActionsModel>();
                 for (auto& action : model.actions)
                 {
                     action.playerIndex = playerAdapter->Get(action.playerIndex);
@@ -93,6 +105,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
                         }
                         case Action::MOVE:
                         {
+                            std::cout << model.actions.data() << "\n";
                             auto tmp      = std::get<MoveModel>(action.data);
                             tmp.vehicleId = vehicleAdapter->Get(tmp.vehicleId);
                             action.data   = tmp;
@@ -117,7 +130,11 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::MOVE:
             {
-                // No model for move
+
+                auto json  = nlohmann::json::parse(event->sentData);
+                auto model = json.get<MoveModel>();
+                std::cerr << "MOVE: " << model.vehicleId << " => (" << model.target.x() << "," << model.target.y()
+                          << "," << model.target.z() << ')' << std::endl;
                 break;
             }
             case Action::SHOOT:
@@ -135,50 +152,50 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
 
 void AdapterSystem::OnLoginRequestEvent(const LoginRequestEvent* event)
 {
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::LOGIN, event->credentials);
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::LOGIN, nlohmann::json(event->credentials).dump());
 }
 
 void AdapterSystem::OnLogoutRequestEvent(const LogoutRequestEvent* event)
 {
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::LOGOUT, nlohmann::json());
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::LOGOUT, std::string{});
 }
 
 void AdapterSystem::OnMapRequestEvent(const MapRequestEvent* event)
 {
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::MAP, nlohmann::json());
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::MAP, std::string{});
 }
 
 void AdapterSystem::OnGameStateRequestEvent(const GameStateRequestEvent* event)
 {
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_STATE, nlohmann::json());
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_STATE, std::string{});
 }
 
 void AdapterSystem::OnGameActionsRequestEvent(const GameActionsRequestEvent* event)
 {
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_ACTIONS, nlohmann::json());
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_ACTIONS, std::string{});
 }
 
 void AdapterSystem::OnTurnRequestEvent(const TurnRequestEvent* event)
 {
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, nlohmann::json());
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
 }
 
 void AdapterSystem::OnChatRequestEvent(const ChatRequestEvent* event)
 {
     // TODO: Chat request event
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::CHAT, nlohmann::json());
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::CHAT, std::string{});
 }
 
 void AdapterSystem::OnMoveRequestEvent(const MoveRequestEvent* event)
 {
-    // TODO: Move request event
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::MOVE, nlohmann::json());
+
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::MOVE, nlohmann::json(event->moveModel).dump());
 }
 
 void AdapterSystem::OnShootRequestEvent(const ShootRequestEvent* event)
 {
     // TODO: Shoot request event
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::SHOOT, nlohmann::json());
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::SHOOT, std::string{});
 }
 
 void AdapterSystem::RegisterEventCallbacks()

@@ -3,6 +3,7 @@
 #include "components/base_id_component.h"
 #include "components/current_player_component.h"
 #include "components/obstacle_id_component.h"
+#include "components/turn_component.h"
 #include "entities/tank.h"
 #include <queue>
 
@@ -186,6 +187,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
         else
         {
             // Move to the nearest base
+            pathFinder.SetHexMapComponent(gameArea);
             pathFinder.SetStartPoint(tank->GetComponent<PositionComponent>()->GetPosition());
 
             auto     it = componentManager->begin<BaseIdComponent>();
@@ -213,10 +215,20 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                                    path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
                                    CellState::FRIEND);
             // TODO: add event body
-            ecs::ecsEngine->SendEvent<MoveRequestEvent>();
+            ecs::ecsEngine->SendEvent<MoveRequestEvent>(
+                MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
+                           path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1] });
             //            tank->Move(path[std::min((int)path.size(),
             //            tank->GetSpeed()) - 1]);
         }
+    }
+}
+
+void GameplaySystem::OnGameFinishedEvent(const GameFinishedResponseEvent* event)
+{
+    if (!event->isFinished)
+    {
+        ecs::ecsEngine->SendEvent<PlayEvent>();
     }
 }
 
@@ -251,9 +263,11 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
 void GameplaySystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&GameplaySystem::OnPlayEvent);
+    RegisterEventCallback(&GameplaySystem::OnGameFinishedEvent);
 }
 
 void GameplaySystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&GameplaySystem::OnPlayEvent);
+    UnregisterEventCallback(&GameplaySystem::OnGameFinishedEvent);
 }

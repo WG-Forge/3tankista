@@ -1,5 +1,7 @@
 #pragma once
 
+#include "components/capture_points_component.h"
+#include "components/kill_points_component.h"
 #include "components/player_id_component.h"
 #include "game/game_object.h"
 
@@ -11,5 +13,7 @@ public:
     ~Player() override = default;
 
 private:
-    PlayerIdComponent* playerIdComponent;
+    PlayerIdComponent*      playerIdComponent;
+    KillPointsComponent*    killPointsComponent;
+    CapturePointsComponent* capturePointsComponent;
 };

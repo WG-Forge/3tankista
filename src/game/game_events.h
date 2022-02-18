@@ -10,12 +10,12 @@
 
 struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 {
-    Action         action;
-    nlohmann::json json;
+    Action      action;
+    std::string data;
 
-    SendActionEvent(const Action action, const nlohmann::json& json)
+    SendActionEvent(const Action action, std::string data)
         : action(action)
-        , json(json)
+        , data(std::move(data))
     {
     }
 };
@@ -23,18 +23,15 @@ struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
 {
     Action         action;
-    nlohmann::json sentJson;
+    std::string sentData;
     Result         result;
-    nlohmann::json json;
+    std::string data;
 
-    ReceiveActionEvent(const Action          action,
-                       const nlohmann::json& sentJson,
-                       const Result          result,
-                       const nlohmann::json& json)
+    ReceiveActionEvent(const Action action, std::string sentData, const Result result, std::string data)
         : action(action)
-        , sentJson(sentJson)
+        , sentData(std::move(sentData))
         , result(result)
-        , json(json)
+        , data(std::move(data))
     {
     }
 };
@@ -46,8 +43,8 @@ struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>
 {
     LoginRequestModel credentials;
 
-    LoginRequestEvent(const LoginRequestModel& credentials)
-        : credentials(credentials)
+    explicit LoginRequestEvent(LoginRequestModel credentials)
+        : credentials(std::move(credentials))
     {
     }
 };
@@ -56,8 +53,8 @@ struct LoginResponseEvent : public ecs::event::Event<LoginResponseEvent>
 {
     LoginResponseModel playerData;
 
-    LoginResponseEvent(const LoginResponseModel& playerData)
-        : playerData(playerData)
+    explicit LoginResponseEvent(LoginResponseModel playerData)
+        : playerData(std::move(playerData))
     {
     }
 };
@@ -91,8 +88,8 @@ struct GameStateResponseEvent : public ecs::event::Event<GameStateResponseEvent>
 {
     GameStateModel gameState;
 
-    explicit GameStateResponseEvent(const GameStateModel& model)
-        : gameState(model)
+    explicit GameStateResponseEvent(GameStateModel model)
+        : gameState(std::move(model))
     {
     }
 };
@@ -106,13 +103,31 @@ struct GameActionsResponseEvent : public ecs::event::Event<GameActionsResponseEv
 {
     GameActionsModel gameActionsModel;
 
-    explicit GameActionsResponseEvent(const GameActionsModel& model)
-        : gameActionsModel(model)
+    explicit GameActionsResponseEvent(GameActionsModel model)
+        : gameActionsModel(std::move(model))
     {
     }
 };
 
 struct TurnRequestEvent : public ecs::event::Event<TurnRequestEvent>
+{
+};
+
+struct GameFinishedRequestEvent : public ecs::event::Event<GameFinishedRequestEvent>
+{
+    // TODO: Add code (GameFinishedRequestEvent)
+};
+
+struct GameFinishedResponseEvent : public ecs::event::Event<GameFinishedResponseEvent>
+{
+    bool isFinished;
+    explicit GameFinishedResponseEvent(bool isFinished)
+        : isFinished(isFinished)
+    {
+    }
+};
+
+struct WorldCreateEvent : public ecs::event::Event<WorldCreateEvent>
 {
 };
 
@@ -128,16 +143,20 @@ struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
     int                    playerId;
     std::vector<ChatModel> actions;
 
-    explicit ChatResponseEvent(const int playerId, const std::vector<ChatModel>& actions)
+    explicit ChatResponseEvent(const int playerId, std::vector<ChatModel> actions)
         : playerId(playerId)
-        , actions(actions)
+        , actions(std::move(actions))
     {
     }
 };
 
 struct MoveRequestEvent : public ecs::event::Event<MoveRequestEvent>
 {
-    // TODO: add code (MoveResponseEvent)
+    MoveModel moveModel;
+    explicit MoveRequestEvent(MoveModel moveModel)
+        : moveModel(std::move(moveModel))
+    {
+    }
 };
 
 struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>
@@ -145,9 +164,9 @@ struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>
     int                    playerId;
     std::vector<MoveModel> actions;
 
-    explicit MoveResponseEvent(const int playerId, const std::vector<MoveModel>& actions)
+    explicit MoveResponseEvent(const int playerId, std::vector<MoveModel> actions)
         : playerId(playerId)
-        , actions(actions)
+        , actions(std::move(actions))
     {
     }
 };
@@ -162,9 +181,9 @@ struct ShootResponseEvent : public ecs::event::Event<ShootResponseEvent>
     int                     playerId;
     std::vector<ShootModel> actions;
 
-    explicit ShootResponseEvent(const int playerId, const std::vector<ShootModel>& actions)
+    explicit ShootResponseEvent(const int playerId, std::vector<ShootModel> actions)
         : playerId(playerId)
-        , actions(actions)
+        , actions(std::move(actions))
     {
     }
 };
@@ -206,7 +225,7 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
 {
     GameObjectId entityId;
 
-    TankDestroyedEvent(GameObjectId id)
+    explicit TankDestroyedEvent(GameObjectId id)
         : entityId(id)
     {
     }
