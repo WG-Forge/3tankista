@@ -68,6 +68,15 @@ public:
         return this->shapeImpl->GetColors();
     }
 
+    auto GetRenderingMode() { return this->shapeImpl->GetRenderingMode(); }
+    const auto GetRenderingMode() const
+    {
+        return this->shapeImpl->GetRenderingMode();
+    }
+
+private:
+    void SetRenderingMode(const unsigned int) = delete;
+
 private:
     const IShape* shapeImpl;
 };

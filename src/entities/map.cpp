@@ -11,11 +11,11 @@
 Map::Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager)
     : GameObject<Map>(entityId, componentManager)
 {
-    Shape shape = ShapeGenerator::CreateShape<HexShape>(11);
+    Shape shape = ShapeGenerator::CreateShape<HexShape>(11, GL_LINES);
 
     this->AddComponent<ShapeComponent>(shape);
 
-    this->position = this->AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });
+    this->transform = this->AddComponent<TransformComponent>();
 
     this->material = this->AddComponent<MaterialComponent>(
         MaterialGenerator::CreateMaterial<LineMaterial>(),

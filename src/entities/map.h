@@ -3,7 +3,7 @@
 #include "game/game_object.h"
 
 #include "components/material_component.h"
-#include "components/position_component.h"
+#include "components/transform_component.h"
 
 #include "ecs.h"
 
@@ -15,6 +15,6 @@ public:
     virtual ~Map() = default;
 
 private:
-    PositionComponent* position;
-    MaterialComponent* material;
+    TransformComponent* transform;
+    MaterialComponent*  material;
 };

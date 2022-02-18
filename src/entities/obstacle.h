@@ -1,7 +1,7 @@
 #pragma once
 
 #include "components/material_component.h"
-#include "components/position_component.h"
+#include "components/transform_component.h"
 
 #include "game/game_object.h"
 
@@ -11,10 +11,11 @@ class Obstacle : public GameObject<Obstacle>
 {
 public:
     Obstacle(const ecs::EntityId&   entityId,
-             ecs::ComponentManager* componentManager);
+             ecs::ComponentManager* componentManager,
+             const Vector3i&        position);
     ~Obstacle() override = default;
 
 private:
-    PositionComponent* position;
-    MaterialComponent* material;
+    TransformComponent* transform;
+    MaterialComponent*  material;
 };

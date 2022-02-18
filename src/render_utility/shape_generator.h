@@ -11,28 +11,31 @@
 class ShapeGenerator
 {
     // NOTE: think about it
+
     using ShapeRegistry = std::vector<std::pair<IShape*, std::size_t>>;
 
 public:
     ~ShapeGenerator();
 
     template <typename S>
-    static Shape CreateShape(const std::size_t size = 0)
+    static Shape CreateShape(const std::size_t   size          = 0,
+                             const RenderingMode renderingMode = GL_TRIANGLES)
     {
         ShapeGenerator& instance = ShapeGenerator::GetInstance();
 
         // check that shape not registered
         // for hex need check by type and size
         // for another only type
-        auto it =
-            std::find_if(instance.shapeRegistry.begin(),
-                         instance.shapeRegistry.end(),
-                         [&](const std::pair<IShape*, std::size_t>& shape)
-                         {
-                             return shape.first->GetShapeID() ==
-                                        static_cast<ShapeID>(S::SHAPE_TYPE) &&
-                                    shape.second == size;
-                         });
+        auto it = std::find_if(
+            instance.shapeRegistry.begin(),
+            instance.shapeRegistry.end(),
+            [&](const std::pair<IShape*, std::size_t>& shape)
+            {
+                return shape.first->GetShapeID() ==
+                           static_cast<ShapeID>(S::SHAPE_TYPE) &&
+                       shape.first->GetRenderingMode() == renderingMode &&
+                       shape.second == size;
+            });
 
         if (it != instance.shapeRegistry.cend())
         {
@@ -42,11 +45,11 @@ public:
         IShape* shape = nullptr;
         if (size != 0)
         {
-            shape = new S(size);
+            shape = new S(size, renderingMode);
         }
         else
         {
-            shape = new S;
+            shape = new S(renderingMode);
         }
 
         bool isInitalized = shape->Initialize();

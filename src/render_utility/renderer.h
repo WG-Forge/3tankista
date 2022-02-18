@@ -8,8 +8,8 @@
 
 #include "ecs.h"
 
-#include "components/position_component.h"
 #include "components/shape_component.h"
+#include "components/transform_component.h"
 
 class Renderer
 {
@@ -172,7 +172,7 @@ public:
         shapeComponent->SetShapeBufferIndex(*bufferIndex);
     }
 
-    void RegisterRenderable(ecs::IEntity* entity, PositionComponent* position)
+    void RegisterRenderable(ecs::IEntity* entity, TransformComponent* position)
     {
         /*
         const RenderableGroupID RGID = CreateRenderableGroupID(material, shape);

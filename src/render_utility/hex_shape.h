@@ -12,14 +12,9 @@
 
 class HexShape : public IShape
 {
-    inline static constexpr std::size_t hexSize = 32 * 1.75;
-    inline static constexpr std::size_t longDiagonal =
-        hexSize * std::sqrt(3) / 2.0; // 1/2 from short hex diagonal
-    inline static const std::size_t shortDiagonal =
-        hexSize / 2.0; // 1/4 from long hex diagonal
 
-    Matrix2f hexBasis;
-    Matrix2f gridBasis;
+    inline static constexpr std::size_t COUNT_OF_TRIANGLES_IN_HEX{ 6 };
+    inline static constexpr std::size_t COUNT_OF_LINES_IN_HEX{ 6 };
 
     Vector2f hexMapSize;
     Vector2f gridMapSize;
@@ -28,18 +23,12 @@ public:
     static constexpr Type SHAPE_TYPE{ Type::HEX };
 
 public:
-    HexShape(const std::size_t size = 1)
-        : hexesCount(size)
+    HexShape(const std::size_t   size          = 1,
+             const RenderingMode renderingMode = GL_TRIANGLES)
+        : IShape(renderingMode)
+        , hexesCount(size)
         , hexMapSize(size, size)
     {
-        // init gridBasis
-        gridBasis.replaceCol(0, Vector2f(shortDiagonal, 0));
-        gridBasis.replaceCol(1, Vector2f(0, longDiagonal));
-
-        // init hexBasis
-        hexBasis.replaceCol(0, gridBasis.getCol(0) * 3 + gridBasis.getCol(1));
-        hexBasis.replaceCol(1, gridBasis.getCol(1) * 2);
-
         const auto& diagonal = hexMapSize.x() * 2 - 1;
         gridMapSize.x()      = diagonal * 3 + 1;
         gridMapSize.y()      = diagonal * 2;
@@ -49,478 +38,76 @@ public:
 public:
     virtual inline ShapeID GetShapeID() const override
     {
-        return static_cast<ShapeID>(SHAPE_TYPE);
+        std::size_t seed = hexMapSize.x();
+
+        seed ^= (std::size_t)(static_cast<ShapeID>(SHAPE_TYPE) + 0x9e3779b9 +
+                              (seed << 6) + (seed >> 2));
+
+        seed ^= (std::size_t)(this->hexMapSize.x() + 0x9e3779b9 + (seed << 6) +
+                              (seed >> 2));
+
+        seed ^= (std::size_t)(this->GetRenderingMode() + 0x9e3779b9 +
+                              (seed << 6) + (seed >> 2));
+
+        return seed;
     }
 
     virtual bool Initialize() override
     {
-        // для каждого гекса из мапы:
-        // 1) получить все его вершины;
-        // 2) добавить их в set при этом создавая
-        //    набор индексов для треугольников/линий
 
         vertexPositionData.clear();
         vertexNormalData.clear();
         vertexIndexData.clear();
 
+        // для каждого гекса из мапы:
+        // 1) получить все его вершины;
+        // 2) добавить их в set при этом создавая
+        //    набор индексов для треугольников/линий
         std::vector<Vector3f> tmp;
-        std::vector<Vector2f> hexVertexes;
+        std::vector<Vector3f> hexVertexes;
         for (int i = -hexMapSize.x() + 1; i < hexMapSize.x(); ++i)
         {
             for (int j = -hexMapSize.x() - (i > 0 ? -1 : i - 1);
                  j < (i > 0 ? hexMapSize.x() - i : hexMapSize.x());
                  ++j)
             {
-                std::cout << "[ " << i << " , " << j << " ]" << std::endl;
-                hexVertexes = this->getVertHexVertices(Vector2f{ i, j });
+                hexVertexes = this->GetVertHexVertices(Vector3f{ i, j, 0.0f });
                 for (auto& vert : hexVertexes)
                 {
-                    vert = Vector2f{ vert.x() / GAME_WINDOW_WIDTH,
-                                     vert.y() / GAME_WINDOW_HEIGHT };
+                    vert = Vector3f{ vert.x() / GAME_WINDOW_WIDTH,
+                                     vert.y() / GAME_WINDOW_HEIGHT,
+                                     0.0f };
                 }
-                vectorOfVertexes.push_back(hexVertexes);
-                vertexesSet.insert(hexVertexes.begin(), hexVertexes.end());
+                this->vectorOfVertexes.push_back(hexVertexes);
+                this->vertexesSet.insert(hexVertexes.begin(),
+                                         hexVertexes.end());
             }
         }
 
-        std::vector<Vector2f> vector;
+        std::vector<Vector3f> vector;
         vector.reserve(vertexesSet.size());
         for (auto it = vertexesSet.begin(); it != vertexesSet.end();)
         {
             vector.push_back(std::move(vertexesSet.extract(it++).value()));
-            vertexPositionData.push_back(vector.back().x());
-            vertexPositionData.push_back(vector.back().y());
-            vertexPositionData.push_back(0);
+            this->vertexPositionData.push_back(vector.back().x());
+            this->vertexPositionData.push_back(vector.back().y());
+            this->vertexPositionData.push_back(
+                this->GetRenderingMode() == GL_LINES ? -0.1 : 0.0);
         }
 
         // для каждого гекса взять вершины и создать индексы
         for (const auto& vertexes : vectorOfVertexes)
         {
-            auto        zeroVertex = std::find_if(vector.begin(),
-                                           vector.end(),
-                                           [&](const Vector2f& vertex)
-                                           { return vertex == vertexes[0]; });
-            std::size_t zeroIndex  = std::distance(vector.begin(), zeroVertex);
-            if (zeroIndex == vector.size())
-            {
-                // invalid
-                return false;
-            }
-            auto        firstVertex = std::find_if(vector.begin(),
-                                            vector.end(),
-                                            [&](const Vector2f& vertex)
-                                            { return vertex == vertexes[1]; });
-            std::size_t firstIndex = std::distance(vector.begin(), firstVertex);
-            if (firstIndex == vector.size())
-            {
-                // invalid
-                return false;
-            }
-            auto        secondVertex = std::find_if(vector.begin(),
-                                             vector.end(),
-                                             [&](const Vector2f& vertex)
-                                             { return vertex == vertexes[2]; });
-            std::size_t secondIndex =
-                std::distance(vector.begin(), secondVertex);
-            if (secondIndex == vector.size())
-            {
-                // invalid
-                return false;
-            }
-            auto        thirdVertex = std::find_if(vector.begin(),
-                                            vector.end(),
-                                            [&](const Vector2f& vertex)
-                                            { return vertex == vertexes[3]; });
-            std::size_t thirdIndex = std::distance(vector.begin(), thirdVertex);
-            if (thirdIndex == vector.size())
-            {
-                // invalid
-                return false;
-            }
-            auto        fourthVertex = std::find_if(vector.begin(),
-                                             vector.end(),
-                                             [&](const Vector2f& vertex)
-                                             { return vertex == vertexes[4]; });
-            std::size_t fourthIndex =
-                std::distance(vector.begin(), fourthVertex);
-            if (fourthIndex == vector.size())
-            {
-                // invalid
-                return false;
-            }
-            auto        fivthVertex = std::find_if(vector.begin(),
-                                            vector.end(),
-                                            [&](const Vector2f& vertex)
-                                            { return vertex == vertexes[5]; });
-            std::size_t fivthIndex = std::distance(vector.begin(), fivthVertex);
-            if (fivthIndex == vector.size())
-            {
-                // invalid
-                return false;
-            }
-            auto        sixthVertex = std::find_if(vector.begin(),
-                                            vector.end(),
-                                            [&](const Vector2f& vertex)
-                                            { return vertex == vertexes[6]; });
-            std::size_t sixthIndex = std::distance(vector.begin(), sixthVertex);
-            if (sixthIndex == vector.size())
-            {
-                // invalid
-                return false;
-            }
 
-            vertexIndexData.push_back(zeroIndex);
-            vertexIndexData.push_back(firstIndex);
-            vertexIndexData.push_back(secondIndex);
+            const auto& indexes = GetVertexesIndexes(vertexes, vector);
 
-            vertexIndexData.push_back(zeroIndex);
-            vertexIndexData.push_back(secondIndex);
-            vertexIndexData.push_back(thirdIndex);
-
-            vertexIndexData.push_back(zeroIndex);
-            vertexIndexData.push_back(thirdIndex);
-            vertexIndexData.push_back(fourthIndex);
-
-            vertexIndexData.push_back(zeroIndex);
-            vertexIndexData.push_back(fourthIndex);
-            vertexIndexData.push_back(fivthIndex);
-
-            vertexIndexData.push_back(zeroIndex);
-            vertexIndexData.push_back(fivthIndex);
-            vertexIndexData.push_back(sixthIndex);
-
-            vertexIndexData.push_back(zeroIndex);
-            vertexIndexData.push_back(sixthIndex);
-            vertexIndexData.push_back(firstIndex);
+            this->GetRenderingMode() == GL_TRIANGLES
+                ? GetTrianglesIndexes(indexes)
+                : GetLinesIndexes(indexes);
         }
 
-        /*
-        vertexPositionData.clear();
-        vertexNormalData.clear();
-        vertexIndexData.clear();
-
-                // initialize with size;
-                const auto  parity   = this->hexesCount % 2;
-                const auto& diagonal = this->hexesCount * 2 - 1;
-                const auto  offset =
-                    Vector2f(diagonal * longDiagonal,
-                             (2 + 3 * (this->hexesCount - 1)) * shortDiagonal);
-
-                Vector2f gridMapSize;
-                gridMapSize.x() = diagonal * 2;
-                gridMapSize.y() = diagonal * 3 + 1;
-
-                //
-
-                        int start = 0;
-                        for (int i = 0; i < gridMapSize.y() / 2; i += 3)
-                        {
-                            start = this->hexesCount - i / 3 - 1;
-                            for (int j = start; j < gridMapSize.x() / 2; ++j)
-                            {
-                                if (std::abs(i % 2 - j % 2) != parity)
-                                {
-                                    const auto& firstPoint = gridBasis.getCol(0)
-           * j + gridBasis.getCol(1) * (i + 1) - offset;
-           vertexPositionData.push_back(firstPoint.x() / GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(firstPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0);
-
-                                    const auto& secondPoint =
-           gridBasis.getCol(0) * (j + 1) + gridBasis.getCol(1) * i - offset;
-                                    vertexPositionData.push_back(secondPoint.x()
-           / GAME_WINDOW_WIDTH); vertexPositionData.push_back(secondPoint.y() /
-                                                                 GAME_WINDOW_HEIGHT);
-                                    vertexPositionData.push_back(0.0);
-
-                                    const auto& thirdPoint =
-                                        gridBasis.getCol(0) * (gridMapSize.x() -
-           j) + gridBasis.getCol(1) * (i + 1) - offset;
-                                    vertexPositionData.push_back(thirdPoint.x()
-           / GAME_WINDOW_WIDTH); vertexPositionData.push_back(thirdPoint.y() /
-                                                                 GAME_WINDOW_HEIGHT);
-                                    vertexPositionData.push_back(0.0);
-                                    const auto& fourthPoint =
-                                        gridBasis.getCol(0) * (gridMapSize.x() -
-           j - 1)
-                   + gridBasis.getCol(1) * i - offset;
-                                    vertexPositionData.push_back(fourthPoint.x()
-           / GAME_WINDOW_WIDTH); vertexPositionData.push_back(fourthPoint.y() /
-                                                                 GAME_WINDOW_HEIGHT);
-                                    vertexPositionData.push_back(0.0);
-
-                                    const auto& fivethPoint =
-                                        gridBasis.getCol(0) * (j) +
-                                        gridBasis.getCol(1) * (gridMapSize.y() -
-           i - 1)
-                   - offset; vertexPositionData.push_back(fivethPoint.x() /
-                                                                 GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(fivethPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0); const auto&
-           sixthPoint = gridBasis.getCol(0) * (j + 1) + gridBasis.getCol(1) *
-           (gridMapSize.y() - i) - offset;
-           vertexPositionData.push_back(sixthPoint.x() / GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(sixthPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0);
-
-                                    const auto& seventhPoint =
-                                        gridBasis.getCol(0) * (gridMapSize.x() -
-           j) + gridBasis.getCol(1) * (gridMapSize.y() - i - 1)
-                   - offset; vertexPositionData.push_back(seventhPoint.x() /
-                                                                 GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(seventhPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0); const auto&
-           eightthPoint = gridBasis.getCol(0) * (gridMapSize.x() - j - 1)
-                   + gridBasis.getCol(1) * (gridMapSize.y() - i) - offset;
-                                    vertexPositionData.push_back(eightthPoint.x()
-           / GAME_WINDOW_WIDTH); vertexPositionData.push_back(eightthPoint.y() /
-                                                                 GAME_WINDOW_HEIGHT);
-                                    vertexPositionData.push_back(0.0);
-
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           firstPoint.x() /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // firstPoint.y() /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           secondPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // secondPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           thirdPoint.x() /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // thirdPoint.y() /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           fourthPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // fourthPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           fivethPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // fivethPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           sixthPoint.x() /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // sixthPoint.y() /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           seventhPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // seventhPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           eightthPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // eightthPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                }
-                                else
-                                {
-                                    const auto& firstPoint = gridBasis.getCol(0)
-           * j + gridBasis.getCol(1) * i - offset;
-           vertexPositionData.push_back(firstPoint.x() / GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(firstPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0); const auto&
-           secondPoint = gridBasis.getCol(0) * (j + 1) + gridBasis.getCol(1) *
-           (i + 1) - offset; vertexPositionData.push_back(secondPoint.x() /
-                                                                 GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(secondPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0);
-
-                                    const auto& thirdPoint =
-                                        gridBasis.getCol(0) * (gridMapSize.x() -
-           j) + gridBasis.getCol(1) * i - offset;
-                                    vertexPositionData.push_back(thirdPoint.x()
-           / GAME_WINDOW_WIDTH); vertexPositionData.push_back(thirdPoint.y() /
-                                                                 GAME_WINDOW_HEIGHT);
-                                    vertexPositionData.push_back(0.0);
-                                    const auto& fourthPoint =
-                                        gridBasis.getCol(0) * (gridMapSize.x() -
-           j - 1)
-                   + gridBasis.getCol(1) * (i + 1) - offset;
-                                    vertexPositionData.push_back(fourthPoint.x()
-           / GAME_WINDOW_WIDTH); vertexPositionData.push_back(fourthPoint.y() /
-                                                                 GAME_WINDOW_HEIGHT);
-                                    vertexPositionData.push_back(0.0);
-
-                                    const auto& fivethPoint =
-                                        gridBasis.getCol(0) * j +
-                                        gridBasis.getCol(1) * (gridMapSize.y() -
-           i) - offset; vertexPositionData.push_back(fivethPoint.x() /
-                                                                 GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(fivethPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0); const auto&
-           sixthPoint = gridBasis.getCol(0) * (j + 1) + gridBasis.getCol(1) *
-           (gridMapSize.y() - i - 1)
-                   - offset; vertexPositionData.push_back(sixthPoint.x() /
-                                                                 GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(sixthPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0);
-
-                                    const auto& seventhPoint =
-                                        gridBasis.getCol(0) * (gridMapSize.x() -
-           j) + gridBasis.getCol(1) * (gridMapSize.y() - i) - offset;
-           vertexPositionData.push_back(seventhPoint.x() / GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back(seventhPoint.y()
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0); const auto&
-           eightthPoint = gridBasis.getCol(0) * (gridMapSize.x() - j - 1)
-                   + gridBasis.getCol(1) * (gridMapSize.y() - i - 1) - offset;
-                                    vertexPositionData.push_back(eightthPoint.x()
-           / GAME_WINDOW_WIDTH); vertexPositionData.push_back(eightthPoint.y() /
-                                                                 GAME_WINDOW_HEIGHT);
-                                    vertexPositionData.push_back(0.0);
-
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           firstPoint.x() /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // firstPoint.y() /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           secondPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // secondPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           thirdPoint.x() /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // thirdPoint.y() /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           fourthPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // fourthPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           fivethPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // fivethPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           sixthPoint.x() /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // sixthPoint.y() /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           seventhPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // seventhPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                    //                    vertexesSet.insert(
-                                    //                        Vector3f{
-           eightthPoint.x()
-                   /
-                                    //                        GAME_WINDOW_WIDTH,
-                                    // eightthPoint.y()
-                   /
-                                    // GAME_WINDOW_HEIGHT, 0.0f
-                                    //                                  });
-                                }
-                            }
-                        }
-
-                        for (int i = 1; i < gridMapSize.y(); i += 3)
-                        {
-                            if (i <= gridMapSize.y() / 2)
-                            {
-                                start = this->hexesCount - 1 - i / 3;
-                            }
-                            else
-                            {
-                                start = (i - gridMapSize.y() / 2) / 3;
-                            }
-
-                            for (int j = parity - i % 2; j < gridMapSize.x() +
-           1; j += 2)
-                            {
-                                if (j >= start && j <= gridMapSize.x() - start)
-                                {
-                                    const auto& firstPoint = gridBasis.getCol(0)
-           * j + gridBasis.getCol(1) * i - offset;
-           vertexPositionData.push_back((firstPoint.x()) / GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back((firstPoint.y())
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0); const auto&
-           secondPoint = gridBasis.getCol(0) * j + gridBasis.getCol(1) * (i + 2)
-           - offset; vertexPositionData.push_back((secondPoint.x()) /
-                                                                 GAME_WINDOW_WIDTH);
-                                    vertexPositionData.push_back((secondPoint.y())
-           / GAME_WINDOW_HEIGHT); vertexPositionData.push_back(0.0);
-
-                                    vertexesSet.insert(
-                                        Vector2f{ firstPoint.x() /
-           GAME_WINDOW_WIDTH, firstPoint.y() / GAME_WINDOW_HEIGHT
-                   }); vertexesSet.insert(Vector2f{ secondPoint.x() /
-           GAME_WINDOW_WIDTH, secondPoint.y() / GAME_WINDOW_HEIGHT,
-                                    });
-                                }
-                            }
-                        }
-
-                        for (int i = 0; i < vertexPositionData.size() / 3; ++i)
-                        {
-                            this->vertexNormalData.push_back(0.0f);
-                            this->vertexNormalData.push_back(1.0f);
-                            this->vertexNormalData.push_back(0.0f);
-                        }
-
-                        for (int i = 0; i < vertexPositionData.size() / 3; ++i)
-                        {
-                            vertexIndexData.push_back(i);
-                        }
-                */
-        indexesCount  = vertexIndexData.size();
-        vertexesCount = vertexPositionData.size() / 3;
+        this->indexesCount  = vertexIndexData.size();
+        this->vertexesCount = vertexPositionData.size() / 3;
 
         return true;
     }
@@ -573,51 +160,138 @@ public:
     }
 
 private:
-    void insertVertex(const Vector2f& vertex)
+    std::vector<std::size_t> GetVertexesIndexes(
+        const std::vector<Vector3f>& vertexes,
+        const std::vector<Vector3f>& vector)
     {
-        //        const auto& result =
-        //            vertexesSet.insert(Vector3f{ vertex.x(), vertex.y(), 0 });
-
-        //        if (result.second == true)
-        //        {
-        // if vertex was inserted successfully
-        //        }
-        //        else
-        //        {
-        // if vertex was inserted before
-        //        }
+        std::vector<std::size_t> vertexesIndexes;
+        vertexesIndexes.reserve(vertexes.size());
+        for (const auto& v : vertexes)
+        {
+            auto        vertex = std::find_if(vector.begin(),
+                                       vector.end(),
+                                       [&](const Vector3f& vertex)
+                                       { return vertex == v; });
+            std::size_t index  = std::distance(vector.begin(), vertex);
+            if (index == vector.size())
+            {
+                // invalid
+                continue;
+            }
+            vertexesIndexes.emplace_back(std::move(index));
+        }
+        return vertexesIndexes;
     }
 
-    Vector2f hex2pixel(const Vector2f& hex)
+    void GetLinesIndexes(const std::vector<std::size_t>& indexes)
+    {
+        if (indexes.size() < 7)
+        {
+            return;
+        }
+
+        for (int i = 0; i < COUNT_OF_LINES_IN_HEX - 1; ++i)
+        {
+            vertexIndexData.push_back(indexes[i + 1]);
+            vertexIndexData.push_back(indexes[i + 2]);
+        }
+
+        vertexIndexData.push_back(indexes[COUNT_OF_LINES_IN_HEX]);
+        vertexIndexData.push_back(indexes[1]);
+    }
+
+    void GetTrianglesIndexes(const std::vector<std::size_t>& indexes)
+    {
+        if (indexes.size() < 7)
+        {
+            return;
+        }
+
+        for (int i = 0; i < COUNT_OF_TRIANGLES_IN_HEX - 1; ++i)
+        {
+
+            vertexIndexData.push_back(indexes[0]);
+            vertexIndexData.push_back(indexes[i + 1]);
+            vertexIndexData.push_back(indexes[i + 2]);
+        }
+
+        vertexIndexData.push_back(indexes[0]);
+        vertexIndexData.push_back(indexes[COUNT_OF_TRIANGLES_IN_HEX]);
+        vertexIndexData.push_back(indexes[1]);
+    }
+
+    Vector3f Hex2Pixel(const Vector3f& hex)
     {
         const auto& pixel =
-            hex.x() * hexBasis.getCol(0) + hex.y() * hexBasis.getCol(1);
-        return pixel;
+            hex.x() * HEX_BASIS.getCol(0) + hex.y() * HEX_BASIS.getCol(1);
+        return { pixel.x(), pixel.y(), -pixel.x() - pixel.y() };
     }
 
-    std::vector<Vector2f> getVertHexVertices(const Vector2f& hex)
+    std::vector<Vector3f> GetVertHexVertices(const Vector3f& hex)
     {
-        const auto& pixel = hex2pixel(hex);
-        return { pixel,
-                 pixel + 2 * gridBasis.getCol(0),
-                 pixel + gridBasis.getCol(0) + gridBasis.getCol(1),
-                 pixel - gridBasis.getCol(0) + gridBasis.getCol(1),
-                 pixel - 2 * gridBasis.getCol(0),
-                 pixel - gridBasis.getCol(0) - gridBasis.getCol(1),
-                 pixel + gridBasis.getCol(0) - gridBasis.getCol(1) };
-    }
-
-    std::vector<Vector2f> getHorHexVertices(const Vector2f& hex)
-    {
-        const auto& pixel = hex2pixel(hex);
+        const auto& pixel = Hex2Pixel(hex);
         return {
             pixel,
-            pixel + gridBasis.getCol(0) - gridBasis.getCol(1),
-            pixel + gridBasis.getCol(0) + gridBasis.getCol(1),
-            pixel + 2 * gridBasis.getCol(1),
-            pixel - gridBasis.getCol(0) + gridBasis.getCol(1),
-            pixel - gridBasis.getCol(0) - gridBasis.getCol(1),
-            pixel - 2 * gridBasis.getCol(1),
+            pixel + 2 * Vector3f{ GRID_BASIS.getCol(0).x(),
+                                  GRID_BASIS.getCol(0).y(),
+                                  0.0 },
+            pixel +
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } +
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 },
+            pixel -
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } +
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 },
+            pixel - 2 * Vector3f{ GRID_BASIS.getCol(0).x(),
+                                  GRID_BASIS.getCol(0).y(),
+                                  0.0 },
+            pixel -
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } -
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 },
+            pixel +
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } -
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 }
+        };
+    }
+
+    std::vector<Vector3f> GetHorHexVertices(const Vector3f& hex)
+    {
+        const auto& pixel = Hex2Pixel(hex);
+        return {
+            pixel,
+            pixel +
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } -
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 },
+            pixel +
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } +
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 },
+            pixel + 2 * Vector3f{ GRID_BASIS.getCol(1).x(),
+                                  GRID_BASIS.getCol(1).y(),
+                                  0.0 },
+            pixel -
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } +
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 },
+            pixel -
+                Vector3f{
+                    GRID_BASIS.getCol(0).x(), GRID_BASIS.getCol(0).y(), 0.0 } -
+                Vector3f{
+                    GRID_BASIS.getCol(1).x(), GRID_BASIS.getCol(1).y(), 0.0 },
+            pixel - 2 * Vector3f{ GRID_BASIS.getCol(1).x(),
+                                  GRID_BASIS.getCol(1).y(),
+                                  0.0 },
         };
     }
 
@@ -661,6 +335,6 @@ private:
         0, 6, 1  // tr5
     };
 
-    std::unordered_set<Vector2f>       vertexesSet;
-    std::vector<std::vector<Vector2f>> vectorOfVertexes;
+    std::unordered_set<Vector3f>       vertexesSet;
+    std::vector<std::vector<Vector3f>> vectorOfVertexes;
 };

@@ -118,6 +118,7 @@ private:
     void Terminate();
 
     void RegisterEventCallbacks();
+
     void UnregisterEventCallbacks();
 
 private:

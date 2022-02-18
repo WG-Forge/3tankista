@@ -9,14 +9,15 @@
 #include "components/shape_component.h"
 
 Obstacle::Obstacle(const ecs::EntityId&   entityId,
-                   ecs::ComponentManager* componentManager)
+                   ecs::ComponentManager* componentManager,
+                   const Vector3i&        position)
     : GameObject<Obstacle>(entityId, componentManager)
 {
-    Shape shape = ShapeGenerator::CreateShape<HexShape>(11);
+    Shape shape = ShapeGenerator::CreateShape<HexShape>(1);
 
     this->AddComponent<ShapeComponent>(shape);
 
-    this->position = this->AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });
+    this->transform = this->AddComponent<TransformComponent>(position);
 
     this->material = this->AddComponent<MaterialComponent>(
         MaterialGenerator::CreateMaterial<DefaultMaterial>(),

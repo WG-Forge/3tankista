@@ -46,10 +46,10 @@ private:
 
     void SetShapeBufferIndex(ShapeComponent* shapeComponent);
 
-    void RegisterRenderable(ecs::IEntity*      entity,
-                            PositionComponent* position,
-                            MaterialComponent* material,
-                            ShapeComponent*    shape);
+    void RegisterRenderable(ecs::IEntity*       entity,
+                            TransformComponent* transform,
+                            MaterialComponent*  material,
+                            ShapeComponent*     shape);
     void UnregisterRenderable(GameObjectId gameObjectId);
 
     void OnWindowResized(const WindowResizedEvent* event);

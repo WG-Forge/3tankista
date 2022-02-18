@@ -4,7 +4,8 @@
 
 #include <cstdint>
 
-using ShapeID = uint16_t;
+using ShapeID       = uint16_t;
+using RenderingMode = unsigned int;
 
 static constexpr ShapeID INVALID_SHAPE_ID{ 0xffff };
 
@@ -21,7 +22,10 @@ public:
     };
 
 public:
-    IShape()          = default;
+    IShape(const RenderingMode renderingMode = GL_TRIANGLES)
+        : renderingMode(renderingMode)
+    {
+    }
     virtual ~IShape() = default;
 
     virtual inline ShapeID GetShapeID() const
@@ -50,4 +54,14 @@ public:
     virtual const VertexTexCoordData* GetTexCoords() const = 0;
 
     virtual const VertexColorData* GetColors() const = 0;
+
+    auto GetRenderingMode() { return this->renderingMode; }
+
+    const auto GetRenderingMode() const { return this->renderingMode; }
+
+private:
+    void SetRenderingMode(const unsigned int) = delete;
+
+private:
+    RenderingMode renderingMode;
 };

@@ -5,7 +5,7 @@
 
 #include "utility/matrix.hpp"
 
-#define SHADER_UNIFORM_MODEL_TRANSFORM "uModelTransform"
+#define SHADER_UNIFORM_MODEL_TRANSFORM "aModelTransform"
 
 using MaterialID                 = uint16_t;
 using MaterialVertexAttributeLoc = uint32_t;
@@ -31,7 +31,7 @@ public:
     {
         INVALID_MATERIAL = INVALID_MATERIAL_ID,
         DEFAULT_MATERIAL = 0,
-        LINE_MATERIAL,
+        LINE_MATERIAL    = 1,
         MAX_MATERIALS
     };
 

@@ -29,13 +29,10 @@ public:
 
     virtual void SetModelTransform(const Matrix4f& model) override
     {
-        //        if (this->shader != nullptr)
-        //        {
-        //            glUniformMatrix4fv((*this->shader)(SHADER_UNIFORM_MODEL_TRANSFORM),
-        //                               1,
-        //                               GL_FALSE,
-        //                               (const GLfloat*)model);
-        //        }
+        if (this->shader != nullptr)
+        {
+            shader->SetMat4("aModelTransform", model);
+        }
     }
 
     virtual void SetViewProjectionTransform(const Matrix4f& view,
