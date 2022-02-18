@@ -97,7 +97,7 @@ void to_json(nlohmann::json& json, const GameStateModel& gameStateModel)
 
 void from_json(const nlohmann::json& json, GameStateModel& gameStateModel)
 {
-    json.at("number_players").get_to(gameStateModel.numberPlayers);
+    json.at("num_players").get_to(gameStateModel.numberPlayers);
     json.at("num_turns").get_to(gameStateModel.numberTurns);
     json.at("current_turn").get_to(gameStateModel.currentTurn);
     json.at("players").get_to(gameStateModel.players);

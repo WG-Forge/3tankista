@@ -1,17 +1,20 @@
 #include "game.h"
 #include "game_object.h"
-#include "systems/map_system.h"
-#include "systems/menu_system.h"
-#include "systems/server_system.h"
+#include "ecs.h"
 
 void Game::GS_RESTARTED()
+
 {
-    ecs::ecsEngine->SendEvent<MapRequestEvent>();
+    // this->PushState(GameState::STARTED);
+
+    ChangeState(GameState::STARTED);
 }
 
 void Game::GS_RESTARTED_ENTER()
 {
+    ecs::ecsEngine->SendEvent<WorldCreateEvent>();
     ecs::ecsEngine->SendEvent<GameLoginEvent>();
+
 }
 
 void Game::GS_INITIALIZED_LEAVE() {}

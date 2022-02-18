@@ -16,7 +16,7 @@ private:
 public:
     ServerSystem(const std::string& host, const std::string& port);
     ~ServerSystem();
-    
+
     void OnSendActionEvent(const SendActionEvent* event);
 
 private:

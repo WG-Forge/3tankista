@@ -11,7 +11,6 @@ ServerSystem::~ServerSystem()
     this->UnregisterEventCallbacks();
 }
 
-
 void ServerSystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&ServerSystem::OnSendActionEvent);
@@ -55,7 +54,15 @@ nlohmann::json ServerSystem::ReceiveResult(Result& result)
 
 void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
 {
-    auto sent = SendAction(event->action, event->json.dump());
+    bool sent;
+    if (event->action == Action::LOGIN)
+    {
+        sent = SendAction(event->action, event->json.dump());
+    }
+    else
+    {
+        sent = SendAction(event->action, event->json);
+    }
     if (!sent)
     {
         LogError("Data wasn't sent");
@@ -67,5 +74,7 @@ void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
     {
         LogWarning("Result status is not OKEY " + static_cast<int>(this->GetResult()));
     }
+    std::cout << response.dump() << "\n";
+
     ecs::ecsEngine->SendEvent<ReceiveActionEvent>(event->action, event->json, result, response);
 }

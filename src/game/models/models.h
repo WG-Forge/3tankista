@@ -119,7 +119,6 @@ void from_json(const nlohmann::json& json, ChatModel& chatModel);
 struct ActionModel
 {
     int playerIndex;
-    // TODO: Remove from ServerSystem enum Action
     Action                                         actionType;
     std::variant<ShootModel, MoveModel, ChatModel> data;
 };

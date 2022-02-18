@@ -10,6 +10,8 @@ public:
     ~GameStateSystem() override;
 
     void OnGameStateResponseEvent(const GameStateResponseEvent* event);
+    void OnGameFinishedRequestEvent(const GameFinishedRequestEvent* event);
+    void OnWorldCreateEvent(const WorldCreateEvent* event);
 
 private:
     void RegisterEventCallbacks();

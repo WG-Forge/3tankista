@@ -220,6 +220,14 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     }
 }
 
+void GameplaySystem::OnGameFinishedEvent(const GameFinishedResponseEvent* event)
+{
+    if (!event->isFinished)
+    {
+        ecs::ecsEngine->SendEvent<PlayEvent>();
+    }
+}
+
 bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
 {
     auto attackMatrixComponent = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>();
@@ -251,9 +259,11 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
 void GameplaySystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&GameplaySystem::OnPlayEvent);
+    RegisterEventCallback(&GameplaySystem::OnGameFinishedEvent);
 }
 
 void GameplaySystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&GameplaySystem::OnPlayEvent);
+    UnregisterEventCallback(&GameplaySystem::OnGameFinishedEvent);
 }

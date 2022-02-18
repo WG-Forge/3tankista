@@ -5,12 +5,14 @@
 #include "components/attack_matrix_component.h"
 #include "components/current_player_component.h"
 #include "components/hex_map_component.h"
+#include "components/turn_component.h"
 #include "ecs.h"
+#include "game/game_object.h"
 
-class World : public ecs::Entity<World>
+class World : public GameObject<World>
 {
 public:
-    World();
+    World(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager);
     ~World() override = default;
 
 private:
@@ -19,4 +21,5 @@ private:
     HexMapComponent*           hexMapComponent;
     CurrentPlayerComponent*    currentPlayerComponent;
     AttackMatrixComponent*     attackMatrixComponent;
+    TurnComponent*             turnComponent;
 };

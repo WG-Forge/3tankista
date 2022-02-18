@@ -1,5 +1,7 @@
 #include "map_system.h"
 
+#include "components/hex_map_component.h"
+#include "components/turn_component.h"
 #include "ecs.h"
 #include "entities/map/map.h"
 #include "game/game_events.h"
@@ -17,7 +19,6 @@ MapSystem::~MapSystem()
 
 void MapSystem::OnMapResponse(const MapResponseEvent* event)
 {
-    ecs::ecsEngine->GetEntityManager()->
     auto mapEntityId = ecs::ecsEngine->GetEntityManager()->CreateEntity<Map>();
     auto mapIEntity  = ecs::ecsEngine->GetEntityManager()->GetEntity(mapEntityId);
 
@@ -60,6 +61,10 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     }
 
     map->SetSpawnPoints(spawnPoints);
+
+    auto world = ecs::ecsEngine->GetEntityManager()->GetEntity(
+        ecs::ecsEngine->GetComponentManager()->begin<TurnComponent>()->GetOwner());
+    world->GetComponent<HexMapComponent>()->SetSize(map->GetComponent<SizeComponent>()->GetSize());
 }
 
 void MapSystem::RegisterEventCallbacks()
