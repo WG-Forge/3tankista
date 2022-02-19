@@ -1,8 +1,9 @@
 #include "gameplay_system.h"
 #include "components/attack_matrix_component.h"
 #include "components/base_id_component.h"
-#include "components/current_player_component.h"
+#include "components/main_player_component.h"
 #include "components/obstacle_id_component.h"
+#include "components/order_component.h"
 #include "components/turn_component.h"
 #include "entities/tank.h"
 #include <queue>
@@ -129,107 +130,110 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto gameArea         = componentManager->begin<HexMapComponent>().operator->();
-    auto currentPlayerId  = componentManager->begin<CurrentPlayerComponent>()->GetCurrentPlayerId();
+    auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetCurrentPlayerId();
 
-    gameArea->ClearMap();
-    std::vector<Tank*> currentPlayerTanks;
-    std::vector<Tank*> enemies;
-    for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
-         ++it)
+    auto turnComponent = componentManager->begin<TurnComponent>().operator->();
+    if (entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() ==
+        turnComponent->GetCurrentTurn() % turnComponent->GetPlayersNumber())
     {
-        auto tank = (Tank*)entityManager->GetEntity(it->GetVehicleId());
-        if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == currentPlayerId)
+
+        gameArea->ClearMap();
+        std::vector<Tank*> currentPlayerTanks;
+        std::vector<Tank*> enemies;
+        for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
+             ++it)
         {
-            currentPlayerTanks.push_back(tank);
-            SetHexMapComponentCell(gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::FRIEND);
-        }
-        else
-        {
-            enemies.push_back(tank);
-            SetHexMapComponentCell(gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::ENEMY);
-        }
-    }
-    for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
-         ++it)
-    {
-        SetHexMapComponentCell(
-            gameArea,
-            entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
-            CellState::OBSTACLE);
-    }
-    std::sort(currentPlayerTanks.begin(),
-              currentPlayerTanks.end(),
-              [](Tank* lhs, Tank* rhs)
-              {
-                  return lhs->GetComponent<TankTypeComponent>()->GetTankType() <
-                         rhs->GetComponent<TankTypeComponent>()->GetTankType();
-              });
-    for (auto tank : currentPlayerTanks)
-    {
-        // Can attack someone?
-        Tank* target = nullptr;
-        for (auto& enemy : enemies)
-        {
-            if (CanShoot(tank, enemy) && CheckNeutrality(tank, enemy))
+            auto tank = (Tank*)entityManager->GetEntity(it->GetVehicleId());
+            if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
             {
-                if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
-                                             enemy->GetComponent<HealthComponent>()->GetHealth())
-                {
-                    target = enemy;
-                }
+                currentPlayerTanks.push_back(tank);
+                SetHexMapComponentCell(
+                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::FRIEND);
+            }
+            else
+            {
+                enemies.push_back(tank);
+                SetHexMapComponentCell(
+                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::ENEMY);
             }
         }
-        if (target != nullptr)
+        for (auto it = componentManager->begin<ObstacleIdComponent>();
+             componentManager->end<ObstacleIdComponent>() != it;
+             ++it)
         {
-            ecs::ecsEngine->SendEvent<ShootRequestEvent>(
-                ShootModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
-                            target->GetComponent<PositionComponent>()->GetPosition() });
+            SetHexMapComponentCell(
+                gameArea,
+                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
+                CellState::OBSTACLE);
         }
-        else
+        std::sort(currentPlayerTanks.begin(),
+                  currentPlayerTanks.end(),
+                  [](Tank* lhs, Tank* rhs)
+                  {
+                      return lhs->GetComponent<TankTypeComponent>()->GetTankType() <
+                             rhs->GetComponent<TankTypeComponent>()->GetTankType();
+                  });
+        for (auto tank : currentPlayerTanks)
         {
-            // Move to the nearest base
-            pathFinder.SetHexMapComponent(gameArea);
-            pathFinder.SetStartPoint(tank->GetComponent<PositionComponent>()->GetPosition());
-
-            auto     it = componentManager->begin<BaseIdComponent>();
-            Vector3i nearestBasePos =
-                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition();
-            ++it;
-            for (; componentManager->end<BaseIdComponent>() != it; ++it)
+            // Can attack someone?
+            Tank* target = nullptr;
+            for (auto& enemy : enemies) 
             {
-                auto basePosition =
+                if (CanShoot(tank, enemy) && IsCorrectShootPosition(tank, enemy) && CheckNeutrality(tank, enemy))
+                {
+                    if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
+                                                 enemy->GetComponent<HealthComponent>()->GetHealth())
+                    {
+                        target = enemy;
+                    }
+                }
+            }
+
+            if (target != nullptr)
+            {
+                ecs::ecsEngine->SendEvent<ShootRequestEvent>(
+                    ShootModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
+            }
+            else
+            {
+                // Move to the nearest base
+                pathFinder.SetHexMapComponent(gameArea);
+                pathFinder.SetStartPoint(tank->GetComponent<PositionComponent>()->GetPosition());
+
+                auto     it = componentManager->begin<BaseIdComponent>();
+                Vector3i nearestBasePos =
                     entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition();
-                if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
-                    (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
-                     pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
+                ++it;
+                for (; componentManager->end<BaseIdComponent>() != it; ++it)
                 {
-                    nearestBasePos = basePosition;
+                    auto basePosition =
+                        entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition();
+                    if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
+                        (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
+                         pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
+                    {
+                        nearestBasePos = basePosition;
+                    }
                 }
+                if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH)
+                    continue; // STAY
+                auto path = pathFinder.GetShortestPath(nearestBasePos);
+                if (path.empty())
+                    continue; // STAY
+                SetHexMapComponentCell(
+                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::EMPTY);
+                SetHexMapComponentCell(
+                    gameArea,
+                    path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
+                    CellState::FRIEND);
+                ecs::ecsEngine->SendEvent<MoveRequestEvent>(
+                    MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
+                               path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1] });
             }
-            if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH)
-                continue; // STAY
-            auto path = pathFinder.GetShortestPath(nearestBasePos);
-            if (path.empty())
-                continue; // STAY
-            SetHexMapComponentCell(gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::EMPTY);
-            SetHexMapComponentCell(gameArea,
-                                   path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
-                                   CellState::FRIEND);
-            ecs::ecsEngine->SendEvent<MoveRequestEvent>(
-                MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
-                           path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1] });
         }
     }
     ecs::ecsEngine->SendEvent<TurnRequestEvent>();
     ecs::ecsEngine->SendEvent<GameActionsRequestEvent>();
-}
-
-void GameplaySystem::OnGameFinishedEvent(const GameFinishedResponseEvent* event)
-{
-    if (!event->isFinished)
-    {
-        ecs::ecsEngine->SendEvent<PlayEvent>();
-    }
 }
 
 bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
@@ -256,18 +260,103 @@ bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
 
 bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
 {
-    // TODO: Implement CanShootMethod
-    return false;
+    bool shoot    = false;
+    auto distance = GameplaySystem::GetDistance(playerTank->GetComponent<PositionComponent>()->GetPosition(),
+                                                enemyTank->GetComponent<PositionComponent>()->GetPosition());
+    switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
+    {
+
+        case TankType::MEDIUM:
+        {
+            shoot = distance == MEDIUM_TANK_DAMAGE_DISTANCE;
+            break;
+        }
+        case TankType::AT_SPG:
+        {
+            auto tankPosition = playerTank->GetComponent<PositionComponent>()->GetPosition();
+            auto point        = enemyTank->GetComponent<PositionComponent>()->GetPosition();
+            shoot             = distance <= AT_SPG_TANK_DAMAGE_DISTANCE &&
+                    (point.x() == tankPosition.x() || point.y() == tankPosition.y() || point.z() == tankPosition.z());
+
+            break;
+        }
+        case TankType::HEAVY:
+        {
+            shoot = distance <= HEAVY_TANK_DAMAGE_DISTANCE && distance > 0;
+            break;
+        }
+        case TankType::LIGHT:
+        {
+            shoot = distance == LIGHT_TANK_DAMAGE_DISTANCE;
+            break;
+        }
+        case TankType::SPG:
+        {
+            shoot = GameplaySystem::GetDistance(enemyTank->GetComponent<PositionComponent>()->GetPosition(),
+                                                playerTank->GetComponent<PositionComponent>()->GetPosition()) ==
+                    MEDIUM_TANK_DAMAGE_DISTANCE;
+            break;
+        }
+        default:
+            break;
+    }
+
+    return shoot;
+}
+
+Vector3i GameplaySystem::GetShootPosition(Tank* tank, Tank* enemyTank)
+{
+
+    auto enemyPosition = enemyTank->GetComponent<PositionComponent>()->GetPosition();
+    auto tankPosition  = tank->GetComponent<PositionComponent>()->GetPosition();
+    switch (tank->GetComponent<TankTypeComponent>()->GetTankType())
+    {
+
+        case TankType::AT_SPG:
+        {
+            int      distance = GameplaySystem::GetDistance(enemyPosition, tankPosition);
+            Vector3i delta    = enemyPosition - tankPosition;
+            enemyPosition     = tankPosition + delta / distance;
+
+            break;
+        }
+        default:
+
+            break;
+    }
+
+    return enemyPosition;
+}
+
+bool GameplaySystem::IsCorrectShootPosition(Tank* tank, Tank* enemy)
+{
+
+    bool result   = false;
+    auto position = enemy->GetComponent<PositionComponent>()->GetPosition();
+    if (tank->GetComponent<TankTypeComponent>()->GetTankType() == TankType::AT_SPG)
+    {
+        if (pathFinder.GetDistance(position) != -1 &&
+            pathFinder.GetDistance(position) ==
+                GameplaySystem::GetDistance(tank->GetComponent<PositionComponent>()->GetPosition(), position))
+        {
+            result = true;
+        }
+    }
+    else
+    {
+        result = GameplaySystem::GetHexMapComponentCell(
+                     ecs::ecsEngine->GetComponentManager()->begin<HexMapComponent>().operator->(), position) !=
+                 CellState::OBSTACLE;
+    }
+    return result;
 }
 
 void GameplaySystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&GameplaySystem::OnPlayEvent);
-    RegisterEventCallback(&GameplaySystem::OnGameFinishedEvent);
 }
 
 void GameplaySystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&GameplaySystem::OnPlayEvent);
-    UnregisterEventCallback(&GameplaySystem::OnGameFinishedEvent);
 }

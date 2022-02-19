@@ -1,6 +1,7 @@
 #include "adapter_system.h"
 #include "components/adapter_player_id_component.h"
 #include "components/adapter_vehicle_id_component.h"
+#include "components/turn_component.h"
 
 AdapterSystem::AdapterSystem()
 {
@@ -16,9 +17,11 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
 {
     if (event->result == Result::OKEY)
     {
-        auto playerAdapter  = ecs::ecsEngine->GetComponentManager()->begin<AdapterPlayerIdComponent>();
-        auto vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
-        auto json           = (event->data.empty() ? nlohmann::json({}) : nlohmann::json::parse(event->data));
+        auto entityManager    = ecs::ecsEngine->GetEntityManager();
+        auto componentManager = ecs::ecsEngine->GetComponentManager();
+        auto playerAdapter    = componentManager->begin<AdapterPlayerIdComponent>();
+        auto vehicleAdapter   = componentManager->begin<AdapterVehicleIdComponent>();
+        auto json             = (event->data.empty() ? nlohmann::json({}) : nlohmann::json::parse(event->data));
         switch (event->action)
         {
             case Action::LOGIN:
@@ -107,7 +110,8 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::TURN:
             {
-                // No model for turn
+                componentManager->begin<TurnComponent>()->SetCurrentTurn(
+                    componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1);
                 break;
             }
             case Action::CHAT:
@@ -117,7 +121,9 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::MOVE:
             {
-                // No model for move
+                auto sentJson = nlohmann::json::parse(event->sentData).get<MoveModel>();
+                std::cerr << "MOVE: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
+                          << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
                 break;
             }
             case Action::SHOOT:
@@ -170,18 +176,18 @@ void AdapterSystem::OnChatRequestEvent(const ChatRequestEvent* event)
 
 void AdapterSystem::OnMoveRequestEvent(const MoveRequestEvent* event)
 {
-    auto vehicleAdapter    = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
-    auto adaptedModel      = event->moveModel;
-    adaptedModel.vehicleId = vehicleAdapter->GetServerId(adaptedModel.vehicleId);
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::MOVE, nlohmann::json(adaptedModel).dump());
+    auto vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
+    ecs::ecsEngine->SendEvent<SendActionEvent>(
+        Action::MOVE,
+        nlohmann::json(MoveModel{ vehicleAdapter->GetServerId(event->model.vehicleId), event->model.target }).dump());
 }
 
 void AdapterSystem::OnShootRequestEvent(const ShootRequestEvent* event)
 {
-    auto vehicleAdapter    = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
-    auto adaptedModel      = event->shootModel;
-    adaptedModel.vehicleId = vehicleAdapter->GetServerId(adaptedModel.vehicleId);
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::SHOOT, nlohmann::json(adaptedModel).dump());
+    auto vehicleAdapter = ecs::ecsEngine->GetComponentManager()->begin<AdapterVehicleIdComponent>();
+    ecs::ecsEngine->SendEvent<SendActionEvent>(
+        Action::SHOOT,
+        nlohmann::json(ShootModel{ vehicleAdapter->GetServerId(event->model.vehicleId), event->model.target }).dump());
 }
 
 void AdapterSystem::RegisterEventCallbacks()

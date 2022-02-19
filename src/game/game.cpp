@@ -32,3 +32,17 @@ void Game::OnLoginGame(const GameLoginEvent* event)
 {
     this->PushState(GameState::RESTARTED);
 }
+
+void Game::OnQuitGame(const QuitGameEvent* event)
+{
+    this->ChangeState(GameState::TERMINATED);
+}
+
+void Game::Terminate()
+{
+    // Unregister
+    UnregisterAllEventCallbacks();
+
+    // Terminate ECS
+    ecs::Terminate();
+}

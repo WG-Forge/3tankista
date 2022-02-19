@@ -111,16 +111,13 @@ struct TurnRequestEvent : public ecs::event::Event<TurnRequestEvent>
 {
 };
 
-struct GameFinishedRequestEvent : public ecs::event::Event<GameFinishedRequestEvent>
+struct GameOverEvent : public ecs::event::Event<GameOverEvent>
 {
-    // TODO: Add code (GameFinishedRequestEvent)
-};
-
-struct GameFinishedResponseEvent : public ecs::event::Event<GameFinishedResponseEvent>
-{
-    bool isFinished;
-    explicit GameFinishedResponseEvent(bool isFinished)
-        : isFinished(isFinished)
+    bool     isDraw;
+    uint64_t winner;
+    GameOverEvent(const bool isDraw, const uint64_t winner)
+        : isDraw(isDraw)
+        , winner(winner)
     {
     }
 };
@@ -155,20 +152,20 @@ struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
 
 struct MoveRequestEvent : public ecs::event::Event<MoveRequestEvent>
 {
-    MoveModel moveModel;
+    MoveModel model;
 
-    explicit MoveRequestEvent(MoveModel moveModel)
-        : moveModel(std::move(moveModel))
+    explicit MoveRequestEvent(MoveModel model)
+        : model(std::move(model))
     {
     }
 };
 
 struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>
 {
-    int                    playerId;
+    uint64_t               playerId;
     std::vector<MoveModel> actions;
 
-    explicit MoveResponseEvent(const int playerId, std::vector<MoveModel> actions)
+    explicit MoveResponseEvent(const uint64_t playerId, std::vector<MoveModel> actions)
         : playerId(playerId)
         , actions(std::move(actions))
     {
@@ -177,10 +174,10 @@ struct MoveResponseEvent : public ecs::event::Event<MoveResponseEvent>
 
 struct ShootRequestEvent : public ecs::event::Event<ShootRequestEvent>
 {
-    ShootModel shootModel;
+    ShootModel model;
 
     explicit ShootRequestEvent(ShootModel model)
-        : shootModel(std::move(model))
+        : model(std::move(model))
     {
     }
 };
@@ -241,5 +238,9 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
 };
 
 struct PlayEvent : public ecs::event::Event<PlayEvent>
+{
+};
+
+struct QuitGameEvent : public ecs::event::Event<QuitGameEvent>
 {
 };
