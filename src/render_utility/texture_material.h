@@ -1,22 +1,33 @@
-#pragma once
+#ifndef TEXTUREMATERIAL_H
+#define TEXTUREMATERIAL_H
 
 #include <memory>
+//#include <unordered_map>
 
 #include "imaterial.h"
 #include "shader.hpp"
 
-class DefaultMaterial : public IMaterial
+using TextureID = unsigned int;
+
+class TextureMaterial : public IMaterial
 {
 public:
-    DefaultMaterial(const std::string& textureFileName);
-    virtual ~DefaultMaterial() = default;
+    TextureMaterial(const std::string& textureFileName);
+    virtual ~TextureMaterial() = default;
 
 public:
-    static constexpr Type MATERIAL_TYPE{ Type::DEFAULT_MATERIAL };
+    static constexpr Type MATERIAL_TYPE{ Type::TEXTURE_MATERIAL };
 
     virtual inline const MaterialID GetMaterialID() const override
     {
-        return static_cast<MaterialID>(MATERIAL_TYPE);
+        std::size_t seed = static_cast<MaterialID>(MATERIAL_TYPE);
+
+        std::hash<std::string> hasher;
+
+        seed ^= (std::size_t)(hasher(textureFileName) + 0x9e3779b9 +
+                              (seed << 6) + (seed >> 2));
+
+        return seed;
     }
 
     virtual void Use() const override;
@@ -31,26 +42,13 @@ public:
     {
         if (this->shader != nullptr)
         {
-            shader->SetMat4("aModelTransform", model);
+            this->shader->SetMat4("aModelTransform", model);
         }
     }
 
     virtual void SetViewProjectionTransform(const Matrix4f& view,
                                             const Matrix4f& proj) override
     {
-        //        if (this->shader != nullptr)
-        //        {
-        //            glUniformMatrix4fv(
-        //                (*this->m_ShaderProgram)(SHADER_UNIFORM_VIEW_TRANSFORM),
-        //                1,
-        //                GL_FALSE,
-        //                (const GLfloat*)view);
-        //            glUniformMatrix4fv(
-        //                (*this->m_ShaderProgram)(SHADER_UNIFORM_PROJECTION_TRANSFORM),
-        //                1,
-        //                GL_FALSE,
-        //                (const GLfloat*)proj);
-        //        }
     }
 
     virtual const MaterialVertexAttributeLoc
@@ -68,13 +66,13 @@ public:
     virtual const MaterialVertexAttributeLoc
     GetTexCoordVertexAttributeLocation() const override
     {
-        return -1 /*TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC*/;
+        return TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC;
     }
 
     virtual const MaterialVertexAttributeLoc GetColorVertexAttributeLocation()
         const override
     {
-        return COLOR_MATERIAL_VERTEX_ATTRIBUTE_LOC;
+        return -1 /*COLOR_MATERIAL_VERTEX_ATTRIBUTE_LOC*/;
     }
 
     virtual void SetUniform4fv(const std::string& uniformName,
@@ -82,7 +80,7 @@ public:
     {
         if (this->shader != nullptr)
         {
-            shader->SetVec4(uniformName, vec4);
+            this->shader->SetVec4(uniformName, vec4);
         }
     }
 
@@ -99,5 +97,11 @@ public:
     }
 
 private:
+    std::string textureFileName;
+
+    TextureID texture;
+
     std::unique_ptr<Shader> shader;
 };
+
+#endif // TEXTUREMATERIAL_H

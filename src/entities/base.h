@@ -9,7 +9,10 @@ class Base : public GameObject<Base>
 {
 public:
     Base(const ecs::EntityId&   entityId,
-         ecs::ComponentManager* componentManager);
+         ecs::ComponentManager* componentManager,
+         const std::size_t      size,
+         const Vector3i&        position,
+         const Color&           color);
     ~Base() override = default;
 
 private:

@@ -18,6 +18,7 @@ public:
         TRIANGLE      = 0,
         QUAD          = 1,
         HEX           = 2,
+        CIRCLE        = 3,
         MAX_SHAPES
     };
 

@@ -11,7 +11,7 @@ class MaterialComponent : public Material,
 {
 
 public:
-    inline static const Color DEFAULT_COLOR0{ 0.8f, 0.8f, 8.0f, 1.0f };
+    inline static const Color DEFAULT_COLOR0{ 0.8f, 0.8f, 0.8f, 1.0f };
 
 public:
     MaterialComponent(const Material& material,

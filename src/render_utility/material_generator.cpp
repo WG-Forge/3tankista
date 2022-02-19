@@ -1,8 +1,7 @@
 #include "material_generator.h"
 
 MaterialGenerator::MaterialGenerator()
-    : materialRegistry(static_cast<MaterialID>(IMaterial::Type::MAX_MATERIALS),
-                       nullptr)
+    : materialRegistry()
 {
 }
 
@@ -10,11 +9,11 @@ MaterialGenerator::~MaterialGenerator()
 {
     for (int i = 0; i < this->materialRegistry.size(); ++i)
     {
-        if (this->materialRegistry[i] != nullptr)
+        if (this->materialRegistry[i].first != nullptr)
         {
-            this->materialRegistry[i]->Release();
-            delete this->materialRegistry[i];
-            this->materialRegistry[i] = nullptr;
+            this->materialRegistry[i].first->Release();
+            delete this->materialRegistry[i].first;
+            this->materialRegistry[i].first = nullptr;
         }
     }
 }

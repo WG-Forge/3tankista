@@ -6,36 +6,41 @@
 
 class MaterialGenerator
 {
-    using MaterialRegistry = std::vector<IMaterial*>;
+    using MaterialRegistry = std::vector<std::pair<IMaterial*, std::string>>;
 
 public:
     ~MaterialGenerator();
 
-    template <typename M>
-    static Material CreateMaterial()
+    template <typename M, typename... Args>
+    static Material CreateMaterial(const std::string& textureFileName = "",
+                                   Args&&... args)
     {
         MaterialGenerator& instance = MaterialGenerator::GetInstance();
 
-        IMaterial* material = nullptr;
+        auto it = std::find_if(
+            instance.materialRegistry.begin(),
+            instance.materialRegistry.end(),
+            [&](const std::pair<IMaterial*, std::string>& material)
+            {
+                return material.first->GetMaterialID() ==
+                           static_cast<MaterialID>(M::MATERIAL_TYPE) &&
+                       material.first->GetTextureFileName() == textureFileName;
+            });
 
-        material =
-            instance
-                .materialRegistry[static_cast<MaterialID>(M::MATERIAL_TYPE)];
-
-        if (material != nullptr)
+        if (it != instance.materialRegistry.cend())
         {
-            return Material(material);
+            return Material(it->first);
         }
 
-        material = new M;
+        IMaterial* material = nullptr;
+        material = new M(textureFileName, std::forward<Args>(args)...);
 
         bool isInitialized = material->Initialize();
 
         assert((isInitialized == true) && "Failed to initialize material!");
 
-        instance.materialRegistry[static_cast<MaterialID>(M::MATERIAL_TYPE)] =
-            material;
-
+        instance.materialRegistry.push_back(
+            std::make_pair(material, textureFileName));
         return Material(material);
     }
 

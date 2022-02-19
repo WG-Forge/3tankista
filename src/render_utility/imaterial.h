@@ -17,9 +17,9 @@ static constexpr MaterialVertexAttributeLoc
 static constexpr MaterialVertexAttributeLoc
     POSITION_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 0 };
 static constexpr MaterialVertexAttributeLoc
-    NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 1 };
+    NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 2 };
 static constexpr MaterialVertexAttributeLoc
-    TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 2 };
+    TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 1 };
 static constexpr MaterialVertexAttributeLoc COLOR_MATERIAL_VERTEX_ATTRIBUTE_LOC{
     3
 };
@@ -32,10 +32,14 @@ public:
         INVALID_MATERIAL = INVALID_MATERIAL_ID,
         DEFAULT_MATERIAL = 0,
         LINE_MATERIAL    = 1,
+        TEXTURE_MATERIAL = 2,
         MAX_MATERIALS
     };
 
-    IMaterial()          = default;
+    IMaterial(const std::string& textureFileName = "")
+        : textureFileName(textureFileName)
+    {
+    }
     virtual ~IMaterial() = default;
 
     virtual inline const MaterialID GetMaterialID() const
@@ -72,4 +76,14 @@ public:
                                const Vector4f&    vec4)       = 0;
     virtual void SetUniformMatrix4fv(const std::string& uniformName,
                                      const Matrix4f&    mat4) = 0;
+
+    auto GetTextureFileName() { return this->textureFileName; }
+
+    const auto GetTextureFileName() const { return this->textureFileName; }
+
+private:
+    void SetTextureFileName(const unsigned int) = delete;
+
+private:
+    std::string textureFileName;
 };

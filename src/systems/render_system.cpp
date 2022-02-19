@@ -294,13 +294,13 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
                "Material of a renderable does not provide a position vertex "
                "attribute!");
 
-        glEnableVertexAttribArray(positionVertexAttribute);
         glVertexAttribPointer(positionVertexAttribute,
                               VERTEX_POSITION_DATA_ELEMENT_LEN,
                               VERTEX_POSITION_DATA_TYPE,
                               GL_FALSE,
-                              3 * sizeof(float),
+                              0 /*3 * sizeof(float)*/,
                               (const GLvoid*)(shape->GetPositionDataIndex()));
+        glEnableVertexAttribArray(positionVertexAttribute);
 
         // buffer vertex index data
         if (shape->GetIndexesCount() > 0 && shape->GetIndexes() != nullptr)
@@ -314,13 +314,13 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         if (shape->GetNormals() != nullptr &&
             normalVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
         {
-            glEnableVertexAttribArray(normalVertexAttribute);
             glVertexAttribPointer(normalVertexAttribute,
                                   VERTEX_NORMAL_DATA_ELEMENT_LEN,
                                   VERTEX_NORMAL_DATA_TYPE,
                                   GL_FALSE,
                                   0,
                                   (const GLvoid*)(shape->GetNormalDataIndex()));
+            glEnableVertexAttribArray(normalVertexAttribute);
         }
 
         // buffer vertex uv data
@@ -329,7 +329,6 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         if (shape->GetTexCoords() != nullptr &&
             texCoordVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
         {
-            glEnableVertexAttribArray(texCoordVertexAttribute);
             glVertexAttribPointer(
                 texCoordVertexAttribute,
                 VERTEX_TEXCOORD_DATA_ELEMENT_LEN,
@@ -337,6 +336,7 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
                 GL_FALSE,
                 0,
                 (const GLvoid*)(shape->GetTexCoordDataIndex()));
+            glEnableVertexAttribArray(texCoordVertexAttribute);
         }
 
         // buffer vertex color data
@@ -345,13 +345,13 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         if (shape->GetColors() != nullptr &&
             colorVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
         {
-            glEnableVertexAttribArray(colorVertexAttribute);
             glVertexAttribPointer(colorVertexAttribute,
                                   VERTEX_COLOR_DATA_ELEMENT_LEN,
                                   VERTEX_COLOR_DATA_TYPE,
                                   GL_FALSE,
                                   0,
                                   (const GLvoid*)(shape->GetColorDataIndex()));
+            glEnableVertexAttribArray(colorVertexAttribute);
         }
     }
 

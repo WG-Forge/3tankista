@@ -9,7 +9,7 @@ class LineMaterial : public IMaterial
 public:
     static constexpr Type MATERIAL_TYPE{ Type::LINE_MATERIAL };
 
-    LineMaterial();
+    LineMaterial(const std::string& textureFileName);
     virtual ~LineMaterial();
 
     virtual inline const MaterialID GetMaterialID() const override

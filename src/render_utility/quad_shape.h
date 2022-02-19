@@ -2,10 +2,21 @@
 
 #include "ishape.h"
 
+#include "game/game_configuration.h"
+
+#include <vector>
+
 class QuadShape : public IShape
 {
 public:
-    QuadShape() {}
+    static constexpr Type SHAPE_TYPE{ Type::QUAD };
+
+public:
+    QuadShape(const std::size_t   size          = 0,
+              const RenderingMode renderingMode = GL_TRIANGLES)
+        : IShape(renderingMode)
+    {
+    }
     virtual ~QuadShape() {}
 
     virtual inline ShapeID GetShapeID() const override
@@ -13,28 +24,60 @@ public:
         return static_cast<ShapeID>(this->SHAPE_TYPE);
     }
 
-    virtual bool Initialize() const override { return true; }
+    virtual bool Initialize() override
+    {
+
+        const float scaleFactor = 1.5;
+        // x,	 y,	   z
+        vertexPositionData.push_back((float)SHORT_DIAGONAL /
+                                     GAME_WINDOW_HEIGHT / scaleFactor);
+        vertexPositionData.push_back((float)LONG_DIAGONAL / GAME_WINDOW_HEIGHT /
+                                     scaleFactor);
+        vertexPositionData.push_back(-0.3f); // v0
+        vertexPositionData.push_back((float)SHORT_DIAGONAL /
+                                     GAME_WINDOW_HEIGHT / scaleFactor);
+        vertexPositionData.push_back(-(float)LONG_DIAGONAL /
+                                     GAME_WINDOW_HEIGHT / scaleFactor);
+        vertexPositionData.push_back(-0.3f); // v1
+        vertexPositionData.push_back(-(float)SHORT_DIAGONAL /
+                                     GAME_WINDOW_HEIGHT / scaleFactor);
+        vertexPositionData.push_back(-(float)LONG_DIAGONAL /
+                                     GAME_WINDOW_HEIGHT / scaleFactor);
+        vertexPositionData.push_back(-0.3f); // v2
+        vertexPositionData.push_back(-(float)SHORT_DIAGONAL /
+                                     GAME_WINDOW_HEIGHT / scaleFactor);
+        vertexPositionData.push_back((float)LONG_DIAGONAL / GAME_WINDOW_HEIGHT /
+                                     scaleFactor);
+        vertexPositionData.push_back(-0.3f); // v3
+
+        return true;
+    }
 
     virtual void Release() const override {}
 
-    virtual const std::size_t GetVertexCount() const override
+    virtual const std::size_t GetVertexesCount() const override
     {
         return this->VERTEX_COUNT;
     }
 
-    virtual const std::size_t GetTriangleCount() const override
+    virtual const std::size_t GetTrianglesCount() const override
     {
         return this->TRIANGLE_COUNT;
     }
 
-    virtual const std::size_t GetIndexCount() const override
+    virtual const std::size_t GetIndexesCount() const override
     {
         return this->INDEX_COUNT;
     }
 
+    virtual const std::size_t GetLinesCount() const override
+    {
+        return this->LINES_COUNT;
+    }
+
     virtual const VertexPositionData* GetPositions() const override
     {
-        return this->VERTEX_POS_DATA;
+        return this->vertexPositionData.data();
     }
 
     virtual const VertexIndexData* GetIndexes() const override
@@ -49,7 +92,7 @@ public:
 
     virtual const VertexTexCoordData* GetTexCoords() const override
     {
-        return nullptr;
+        return this->VERTEX_TEX_COORD_DATA;
     }
 
     virtual const VertexColorData* GetColors() const override
@@ -64,14 +107,9 @@ private:
 
     static constexpr std::size_t INDEX_COUNT{ 6 };
 
-    static constexpr VertexPositionData
-        VERTEX_POS_DATA[VERTEX_COUNT * VERTEX_POSITION_DATA_ELEMENT_LEN]{
-            // x,	 y,	   z
-            -1.0f, -1.0f, 0.0f, // v0
-            -1.0f, 1.0f,  0.0f, // v1
-            1.0f,  1.0f,  0.0f, // v2
-            1.0f,  -1.0f, 0.0f  // v3
-        };
+    static constexpr std::size_t LINES_COUNT{ 6 };
+
+    std::vector<VertexPositionData> vertexPositionData;
 
     static constexpr VertexNormalData
         VERTEX_NORM_DATA[VERTEX_COUNT * VERTEX_NORMAL_DATA_ELEMENT_LEN]{
@@ -82,10 +120,13 @@ private:
             0.0f, 1.0f, 0.0f  // n3
         };
 
-    static constexpr VertexIndexData VERTEX_IDX_DATA[INDEX_COUNT]{
-        0, 1, 2, // t1
-        0, 2, 3  // t2
-    };
+    static constexpr VertexTexCoordData
+        VERTEX_TEX_COORD_DATA[VERTEX_COUNT * VERTEX_TEXCOORD_DATA_ELEMENT_LEN]{
+            1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+        };
 
-    static constexpr Type SHAPE_TYPE{ Type::QUAD };
+    static constexpr VertexIndexData VERTEX_IDX_DATA[INDEX_COUNT]{
+        0, 1, 3, // t1
+        1, 2, 3  // t2
+    };
 };

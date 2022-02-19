@@ -1,7 +1,8 @@
 #include "line_material.h"
 
-LineMaterial::LineMaterial()
-    : shader(nullptr)
+LineMaterial::LineMaterial(const std::string& textureFileName)
+    : IMaterial(textureFileName)
+    , shader(nullptr)
 {
 }
 

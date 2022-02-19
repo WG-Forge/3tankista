@@ -6,72 +6,84 @@ class Material
 {
 public:
     Material(IMaterial* material)
-        : materialData(material)
+        : materialImpl(material)
     {
     }
-    ~Material() { this->materialData = nullptr; }
+    ~Material() { this->materialImpl = nullptr; }
 
     inline const MaterialID GetMaterialID() const
     {
-        return this->materialData->GetMaterialID();
+        return this->materialImpl->GetMaterialID();
     }
 
     inline void Use() const
     {
-        const_cast<IMaterial*>(this->materialData)->Use();
+        const_cast<IMaterial*>(this->materialImpl)->Use();
     }
 
     inline void Unuse() const
     {
-        const_cast<IMaterial*>(this->materialData)->Unuse();
+        const_cast<IMaterial*>(this->materialImpl)->Unuse();
     }
 
     inline void SetModelTransform(const Matrix4f& model)
     {
-        this->materialData->SetModelTransform(model);
+        this->materialImpl->SetModelTransform(model);
     }
 
     inline void SetViewProjectionTransform(const Matrix4f& view,
                                            const Matrix4f& proj)
     {
-        this->materialData->SetViewProjectionTransform(view, proj);
+        this->materialImpl->SetViewProjectionTransform(view, proj);
     };
 
     inline const MaterialVertexAttributeLoc GetPositionVertexAttributeLocation()
         const
     {
-        return this->materialData->GetPositionVertexAttributeLocation();
+        return this->materialImpl->GetPositionVertexAttributeLocation();
     }
 
     inline const MaterialVertexAttributeLoc GetNormalVertexAttributeLocation()
         const
     {
-        return this->materialData->GetNormalVertexAttributeLocation();
+        return this->materialImpl->GetNormalVertexAttributeLocation();
     }
 
     inline const MaterialVertexAttributeLoc GetTexCoordVertexAttributeLocation()
         const
     {
-        return this->materialData->GetTexCoordVertexAttributeLocation();
+        return this->materialImpl->GetTexCoordVertexAttributeLocation();
     }
 
     inline const MaterialVertexAttributeLoc GetColorVertexAttributeLocation()
         const
     {
-        return this->materialData->GetColorVertexAttributeLocation();
+        return this->materialImpl->GetColorVertexAttributeLocation();
     }
 
     inline void SetUniform4fv(const std::string& uniformName,
                               const Vector4f&    vec4)
     {
-        this->materialData->SetUniform4fv(uniformName, vec4);
+        this->materialImpl->SetUniform4fv(uniformName, vec4);
     }
     inline void SetUniformMatrix4fv(const std::string& uniformName,
                                     const Matrix4f&    mat4)
     {
-        this->materialData->SetUniformMatrix4fv(uniformName, mat4);
+        this->materialImpl->SetUniformMatrix4fv(uniformName, mat4);
+    }
+
+    auto GetTextureFileName()
+    {
+        return this->materialImpl->GetTextureFileName();
+    }
+    const auto GetTextureFileName() const
+    {
+        return this->materialImpl->GetTextureFileName();
     }
 
 private:
-    IMaterial* materialData;
+    void SetTextureFileName(const unsigned int) = delete;
+
+private:
+    IMaterial* materialImpl;
 };
