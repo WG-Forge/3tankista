@@ -3,6 +3,7 @@
 #include "components/capture_points_component.h"
 #include "components/kill_points_component.h"
 #include "components/name_component.h"
+#include "components/order_component.h"
 #include "components/player_id_component.h"
 #include "game/game_object.h"
 
@@ -21,4 +22,5 @@ private:
     NameComponent*          nameComponent;
     KillPointsComponent*    killPointsComponent;
     CapturePointsComponent* capturePointsComponent;
+    OrderComponent*         orderComponent;
 };

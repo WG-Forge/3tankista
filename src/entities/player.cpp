@@ -7,6 +7,7 @@ Player::Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentMa
     this->nameComponent          = AddComponent<NameComponent>(std::string{});
     this->killPointsComponent    = AddComponent<KillPointsComponent>(0);
     this->capturePointsComponent = AddComponent<CapturePointsComponent>(0);
+    this->orderComponent         = AddComponent<OrderComponent>(0);
 }
 
 Player::Player(const ecs::EntityId&   entityId,
@@ -19,4 +20,5 @@ Player::Player(const ecs::EntityId&   entityId,
     this->nameComponent          = AddComponent<NameComponent>(std::move(name));
     this->killPointsComponent    = AddComponent<KillPointsComponent>(0);
     this->capturePointsComponent = AddComponent<CapturePointsComponent>(0);
+    this->orderComponent         = AddComponent<OrderComponent>(0);
 }

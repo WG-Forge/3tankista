@@ -3,7 +3,7 @@
 #include "components/adapter_player_id_component.h"
 #include "components/adapter_vehicle_id_component.h"
 #include "components/attack_matrix_component.h"
-#include "components/current_player_component.h"
+#include "components/main_player_component.h"
 #include "components/hex_map_component.h"
 #include "components/turn_component.h"
 #include "ecs.h"
@@ -19,7 +19,7 @@ private:
     AdapterPlayerIdComponent*  adapterPlayerIdComponent;
     AdapterVehicleIdComponent* adapterVehicleIdComponent;
     HexMapComponent*           hexMapComponent;
-    CurrentPlayerComponent*    currentPlayerComponent;
+    MainPlayerComponent*       mainPlayerComponent;
     AttackMatrixComponent*     attackMatrixComponent;
     TurnComponent*             turnComponent;
 };

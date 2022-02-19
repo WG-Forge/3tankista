@@ -4,9 +4,10 @@
 class TurnComponent : public ecs::Component<TurnComponent>
 {
 public:
-    explicit TurnComponent(const int numOfTurns, const int currentTurn)
+    explicit TurnComponent(const int numOfTurns, const int currentTurn, const int playersNumber)
         : numOfTurns(numOfTurns)
         , currentTurn(currentTurn)
+        , playersNumber(playersNumber)
     {
     }
     ~TurnComponent() override = default;
@@ -20,7 +21,11 @@ public:
 
     bool isFinished() const { return currentTurn == numOfTurns; }
 
+    void SetPlayersNumber(const int playersNumber) { this->playersNumber = playersNumber; }
+    auto GetPlayersNumber() const { return this->playersNumber; }
+
 private:
+    int playersNumber;
     int numOfTurns;
     int currentTurn;
 };
