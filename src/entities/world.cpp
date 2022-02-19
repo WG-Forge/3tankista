@@ -6,7 +6,7 @@ World::World(const ecs::EntityId& entityId, ecs::ComponentManager* componentMana
     adapterPlayerIdComponent  = AddComponent<AdapterPlayerIdComponent>();
     adapterVehicleIdComponent = AddComponent<AdapterVehicleIdComponent>();
     hexMapComponent           = AddComponent<HexMapComponent>(0);
-    currentPlayerComponent    = AddComponent<CurrentPlayerComponent>(0);
+    mainPlayerComponent       = AddComponent<MainPlayerComponent>(0);
     attackMatrixComponent     = AddComponent<AttackMatrixComponent>();
-    turnComponent             = AddComponent<TurnComponent>(0, 1);
+    turnComponent             = AddComponent<TurnComponent>(0, 1, 0);
 }
