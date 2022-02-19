@@ -11,6 +11,7 @@
 #include "systems/move_system.h"
 #include "systems/respawn_system.h"
 #include "systems/server_system.h"
+#include "systems/win_system.h"
 
 void Game::GS_INITIALIZED()
 {
@@ -25,6 +26,7 @@ void Game::GS_INITIALIZED()
     auto* AcS = ecs::ecsEngine->GetSystemManager()->AddSystem<ActionSystem>();
     auto* AdS = ecs::ecsEngine->GetSystemManager()->AddSystem<AdapterSystem>();
     auto* ReS = ecs::ecsEngine->GetSystemManager()->AddSystem<RespawnSystem>();
+    auto* WiS = ecs::ecsEngine->GetSystemManager()->AddSystem<WinSystem>();
 
     ecs::ecsEngine->GetSystemManager()->UpdateSystemWorkOrder();
     ChangeState(GameState::RESTARTED);

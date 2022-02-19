@@ -232,6 +232,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             }
         }
     }
+    ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
     ecs::ecsEngine->SendEvent<TurnRequestEvent>();
     ecs::ecsEngine->SendEvent<GameActionsRequestEvent>();
 }
