@@ -31,7 +31,7 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
                 health->SetHealth(std::max(0, health->GetHealth() - damage));
                 if (health->GetHealth() == 0)
                 {
-                    ecs::ecsEngine->SendEvent<TankDestroyedEvent>(currentEntity->GetEntityID());
+                    ecs::ecsEngine->SendEvent<TankDestroyedEvent>(action.vehicleId, currentEntity->GetEntityID());
                 }
             }
         }

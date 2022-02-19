@@ -220,6 +220,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                            path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1] });
         }
     }
+    ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
     ecs::ecsEngine->SendEvent<TurnRequestEvent>();
     ecs::ecsEngine->SendEvent<GameActionsRequestEvent>();
 }

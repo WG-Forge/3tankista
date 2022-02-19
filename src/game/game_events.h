@@ -232,14 +232,20 @@ struct GameObjectDestroyed : public ecs::event::Event<GameObjectDestroyed>
 
 struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
 {
+    GameObjectId killerEntityId;
     GameObjectId entityId;
 
-    explicit TankDestroyedEvent(GameObjectId id)
-        : entityId(id)
+    explicit TankDestroyedEvent(GameObjectId killer, GameObjectId id)
+        : killerEntityId(killer)
+        , entityId(id)
     {
     }
 };
 
 struct PlayEvent : public ecs::event::Event<PlayEvent>
+{
+};
+
+struct UpdateCapturePointsEvent : public ecs::event::Event<UpdateCapturePointsEvent>
 {
 };
