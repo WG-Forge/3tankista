@@ -21,8 +21,8 @@ void LoginSystem::UnregisterEventCallbacks()
     UnregisterEventCallback(&LoginSystem::OnLoginResponseEvent);
 }
 
-void LoginSystem::OnLoginResponseEvent(const LoginResponseEvent* event) {
+void LoginSystem::OnLoginResponseEvent(const LoginResponseEvent* event)
+{
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     componentManager->begin<MainPlayerComponent>()->SetCurrentPlayerId(event->playerData.index);
-
 }

@@ -86,7 +86,11 @@ public:
         Game::GS_RUNNING, Game::GS_GAMEOVER, Game::GS_GAMEOVER_ENTER, Game::GS_RUNNING_LEAVE, GameState::GAMEOVER)
 
     // Transitions to 'TERMINATED'
-    TRANSITION_ENTRY(Game::GS_GAMEOVER		, Game::GS_TERMINATED	, Game::GS_TERMINATED_ENTER	, Game::GS_GAMEOVER_LEAVE	, GameState::TERMINATED)
+    TRANSITION_ENTRY(Game::GS_GAMEOVER,
+                     Game::GS_TERMINATED,
+                     Game::GS_TERMINATED_ENTER,
+                     Game::GS_GAMEOVER_LEAVE,
+                     GameState::TERMINATED)
 
     END_TRANSITION_TABLE
 
@@ -114,7 +118,6 @@ public:
     void GS_GAMEOVER_ENTER();
     void GS_RUNNING_LEAVE();
 
-
     // 'TERMINATED' gamestate
     void GS_TERMINATED();
     void GS_TERMINATED_ENTER();
@@ -122,11 +125,13 @@ public:
 
     void OnLoginGame(const GameLoginEvent* event);
     void OnQuitGame(const QuitGameEvent* event);
+
 public:
     inline GameState GetActiveGameState() const { return (GameState)this->GetActiveState(); }
     inline bool      IsInitialized() const { return (this->GetActiveState() > GameState::INITIALIZED); }
     inline bool      IsRestarted() const { return (this->GetActiveState() == GameState::RESTARTED); }
-    void Terminate();
+    void             Terminate();
+
 private:
     void InitializeECS();
 

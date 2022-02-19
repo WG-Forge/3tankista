@@ -177,7 +177,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
         {
             // Can attack someone?
             Tank* target = nullptr;
-            for (auto& enemy : enemies) 
+            for (auto& enemy : enemies)
             {
                 if (CanShoot(tank, enemy) && IsCorrectShootPosition(tank, enemy) && CheckNeutrality(tank, enemy))
                 {
@@ -191,8 +191,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 
             if (target != nullptr)
             {
-                ecs::ecsEngine->SendEvent<ShootRequestEvent>(
-                    ShootModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
+                ecs::ecsEngine->SendEvent<ShootRequestEvent>(ShootModel{
+                    tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
             }
             else
             {

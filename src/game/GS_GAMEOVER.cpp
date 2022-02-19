@@ -4,7 +4,7 @@
 void Game::GS_GAMEOVER()
 {
     ecs::ecsEngine->SendEvent<QuitGameEvent>();
-    //ChangeState(GameState::TERMINATED);
+    // ChangeState(GameState::TERMINATED);
 }
 
 void Game::GS_GAMEOVER_ENTER()
@@ -14,6 +14,7 @@ void Game::GS_GAMEOVER_ENTER()
               << "\n";
 }
 
-void Game::GS_RUNNING_LEAVE() {
+void Game::GS_RUNNING_LEAVE()
+{
     UnregisterEventCallback(&Game::OnQuitGame);
 }
