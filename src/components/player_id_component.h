@@ -4,16 +4,16 @@
 class PlayerIdComponent : public ecs::Component<PlayerIdComponent>
 {
 public:
-    explicit PlayerIdComponent(const int playerId)
+    explicit PlayerIdComponent(const uint64_t playerId)
         : playerId(playerId)
     {
     }
     ~PlayerIdComponent() override = default;
 
 public:
-    void SetPlayerId(const int playerId) { this->playerId = playerId; }
+    void SetPlayerId(const uint64_t playerId) { this->playerId = playerId; }
     auto GetPlayerId() const { return this->playerId; }
 
 private:
-    int playerId;
+    uint64_t playerId;
 };

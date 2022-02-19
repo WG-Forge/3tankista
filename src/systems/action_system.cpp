@@ -14,9 +14,9 @@ ActionSystem::~ActionSystem()
 
 void ActionSystem::OnGameActionsResponseEvent(const GameActionsResponseEvent* event)
 {
-    std::unordered_map<int, std::vector<ChatModel>>  chatActions;
-    std::unordered_map<int, std::vector<MoveModel>>  moveActions;
-    std::unordered_map<int, std::vector<ShootModel>> shootActions;
+    std::unordered_map<uint64_t, std::vector<ChatModel>>  chatActions;
+    std::unordered_map<uint64_t, std::vector<MoveModel>>  moveActions;
+    std::unordered_map<uint64_t, std::vector<ShootModel>> shootActions;
     for (const auto& action : event->gameActionsModel.actions)
     {
         switch (action.actionType)

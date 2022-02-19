@@ -8,7 +8,7 @@ Player::Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentMa
     this->capturePointsComponent = AddComponent<CapturePointsComponent>(0);
 }
 
-Player::Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int playerId)
+Player::Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const uint64_t playerId)
     : GameObject<Player>(entityId, componentManager)
 {
     this->playerIdComponent      = AddComponent<PlayerIdComponent>(playerId);

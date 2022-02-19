@@ -230,6 +230,10 @@ void GameplaySystem::OnGameFinishedEvent(const GameFinishedResponseEvent* event)
     {
         ecs::ecsEngine->SendEvent<PlayEvent>();
     }
+    else
+    {
+        ecs::ecsEngine->SendEvent<GameOverEvent>();
+    }
 }
 
 bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)

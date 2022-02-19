@@ -32,3 +32,8 @@ void Game::OnLoginGame(const GameLoginEvent* event)
 {
     this->PushState(GameState::RESTARTED);
 }
+
+void Game::OnGameOverState(const GameOverEvent* event)
+{
+    this->ChangeState(GameState::GAMEOVER);
+}

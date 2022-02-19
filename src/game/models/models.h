@@ -3,10 +3,14 @@
 #include <string>
 #include <variant>
 
+#include "ecs.h"
 #include "enums/action.h"
 #include "enums/tank_types.h"
 #include "nlohmann/json.hpp"
 #include "utility/matrix.hpp"
+
+using GameObjectId     = ecs::EntityId;
+using GameObjectTypeId = ecs::EntityTypeId;
 
 struct LoginRequestModel
 {
@@ -89,7 +93,7 @@ void from_json(const nlohmann::json& json, GameStateModel& gameStateModel);
 
 struct ShootModel
 {
-    int      vehicleId;
+    uint64_t vehicleId;
     Vector3i target;
 };
 
@@ -99,7 +103,7 @@ void from_json(const nlohmann::json& json, ShootModel& shootModel);
 
 struct MoveModel
 {
-    int      vehicleId;
+    uint64_t vehicleId;
     Vector3i target;
 };
 
@@ -118,7 +122,7 @@ void from_json(const nlohmann::json& json, ChatModel& chatModel);
 
 struct ActionModel
 {
-    int                                            playerIndex;
+    uint64_t                                       playerIndex;
     Action                                         actionType;
     std::variant<ShootModel, MoveModel, ChatModel> data;
 };

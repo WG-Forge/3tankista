@@ -45,12 +45,19 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
     ecs::ecsEngine->SendEvent<LoginRequestEvent>(credentials);
 }
 
+void MenuSystem::OnGameOverRequest(const GameOverEvent* event)
+{
+    std::cout << "end\n";
+}
+
 void MenuSystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&MenuSystem::OnLoginRequest);
+    RegisterEventCallback(&MenuSystem::OnGameOverRequest);
 }
 
 void MenuSystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&MenuSystem::OnLoginRequest);
+    UnregisterEventCallback(&MenuSystem::OnGameOverRequest);
 }

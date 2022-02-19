@@ -9,7 +9,7 @@ class Player : public GameObject<Player>
 {
 public:
     Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager);
-    explicit Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, int playerId);
+    explicit Player(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const uint64_t playerId);
     ~Player() override = default;
 
 private:

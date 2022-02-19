@@ -61,7 +61,6 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     }
 
     map->SetSpawnPoints(spawnPoints);
-
     auto world = ecs::ecsEngine->GetEntityManager()->GetEntity(
         ecs::ecsEngine->GetComponentManager()->begin<TurnComponent>()->GetOwner());
     world->GetComponent<HexMapComponent>()->SetSize(map->GetComponent<SizeComponent>()->GetSize());

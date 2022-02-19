@@ -1,10 +1,13 @@
 #include "game_state_system.h"
 #include "components//turn_component.h"
 #include "components/adapter_player_id_component.h"
+#include "components/name_component.h"
 #include "components/ttc_factories/ttc_component_factory.h"
+#include "entities/map/map.h"
 #include "entities/player.h"
 #include "entities/tank.h"
 #include "entities/world.h"
+#include <algorithm>
 
 GameStateSystem::GameStateSystem()
 {
@@ -34,7 +37,8 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         adapterId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
-    world->GetComponent<CurrentPlayerComponent>()->SetCurrentPlayerId(adapterId->Get(event->gameState.currentPlayerIndex));
+    world->GetComponent<CurrentPlayerComponent>()->SetCurrentPlayerId(
+        adapterId->Get(event->gameState.currentPlayerIndex));
 
     // Create observers
     for (auto& now : event->gameState.observers)
@@ -64,25 +68,28 @@ void GameStateSystem::OnGameFinishedRequestEvent(const GameFinishedRequestEvent*
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto end              = componentManager->end<KillPointsComponent>();
     auto begin            = componentManager->begin<KillPointsComponent>();
+    bool isFinished       = false;
     if (!componentManager->begin<TurnComponent>()->isFinished())
     {
         for (auto it = componentManager->begin<KillPointsComponent>();
              componentManager->end<KillPointsComponent>() != it;
              ++it)
         {
+            auto a = entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>();
+            std::cout << a->GetCapturePoints() << "\n";
             if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
                 5)
             {
-                ecs::ecsEngine->SendEvent<GameFinishedResponseEvent>(true);
+                isFinished = true;
                 break;
             }
         }
-        ecs::ecsEngine->SendEvent<GameFinishedResponseEvent>(false);
     }
     else
     {
-        ecs::ecsEngine->SendEvent<GameFinishedResponseEvent>(true);
+        isFinished = true;
     }
+    ecs::ecsEngine->SendEvent<GameFinishedResponseEvent>(isFinished);
 }
 
 void GameStateSystem::OnWorldCreateEvent(const WorldCreateEvent* event)
