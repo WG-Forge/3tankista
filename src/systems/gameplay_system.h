@@ -3,6 +3,7 @@
 #include "components/hex_map_component.h"
 #include "ecs.h"
 #include "entities/tank.h"
+#include "game/game_configuration.h"
 #include "game/game_events.h"
 #include "utility/matrix.hpp"
 
@@ -106,8 +107,10 @@ private:
         std::vector<std::vector<int>>         distance;
     };
 
-    bool CheckNeutrality(Tank* playerTank, Tank* enemyTank);
-    bool CanShoot(Tank* playerTank, Tank* enemyTank);
+    bool     CheckNeutrality(Tank* playerTank, Tank* enemyTank);
+    bool     CanShoot(Tank* playerTank, Tank* enemyTank);
+    bool     IsCorrectShootPosition(Tank* tank, Tank* enemy);
+    Vector3i GetShootPosition(Tank* tank, Tank* enemyTank);
 
 private:
     void RegisterEventCallbacks();

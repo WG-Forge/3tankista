@@ -240,3 +240,7 @@ struct TankDestroyedEvent : public ecs::event::Event<TankDestroyedEvent>
 struct PlayEvent : public ecs::event::Event<PlayEvent>
 {
 };
+
+struct QuitGameEvent : public ecs::event::Event<QuitGameEvent>
+{
+};
