@@ -5,6 +5,7 @@
 #include "systems/game_state_system.h"
 #include "systems/gameplay_system.h"
 #include "systems/health_system.h"
+#include "systems/login_system.h"
 #include "systems/map_system.h"
 #include "systems/menu_system.h"
 #include "systems/move_system.h"
@@ -14,6 +15,7 @@
 
 void Game::GS_INITIALIZED()
 {
+    auto* LoS = ecs::ecsEngine->GetSystemManager()->AddSystem<LoginSystem>();
     auto* MeS = ecs::ecsEngine->GetSystemManager()->AddSystem<MenuSystem>();
     auto* SeS = ecs::ecsEngine->GetSystemManager()->AddSystem<ServerSystem>("wgforge-srv.wargaming.net", "443");
     auto* MaS = ecs::ecsEngine->GetSystemManager()->AddSystem<MapSystem>();

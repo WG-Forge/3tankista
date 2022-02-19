@@ -14,7 +14,7 @@ public:
     auto&       GetBase() { return this->base; }
     const auto& GetBase() const { return this->base; }
 
-    void        SetObstacle(std::vector<GameObjectId> obstacle) { this->base = std::move(base); }
+    void        SetObstacle(std::vector<GameObjectId> obstacle) { this->obstacle = std::move(obstacle); }
     auto&       GetObstacle() { return this->obstacle; }
     const auto& GetObstacle() const { return this->obstacle; }
 

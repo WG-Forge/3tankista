@@ -2,9 +2,13 @@
 
 #include <iostream>
 
-#include "game/game_events.h"
-
+#include "components/adapter_player_id_component.h"
+#include "components/capture_points_component.h"
+#include "components/kill_points_component.h"
+#include "components/name_component.h"
+#include "components/turn_component.h"
 #include "ecs.h"
+#include "game/game_events.h"
 
 MenuSystem::MenuSystem()
 {
@@ -45,12 +49,32 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
     ecs::ecsEngine->SendEvent<LoginRequestEvent>(credentials);
 }
 
+void MenuSystem::OnGameOver(const GameOverEvent* event)
+{
+    if (event->isDraw)
+    {
+        std::cout << "It is draw. All players lost\n";
+    }
+    else
+    {
+        auto componentManager = ecs::ecsEngine->GetComponentManager();
+        auto playerAdapter    = componentManager->begin<AdapterPlayerIdComponent>();
+        auto winner           = ecs::ecsEngine->GetEntityManager()->GetEntity(event->winner);
+        std::cout << "Winner:\n"
+                  << winner->GetComponent<NameComponent>()->GetName() << "\n"
+                  << "Capture points: " << winner->GetComponent<CapturePointsComponent>()->GetCapturePoints() << "\n"
+                  << "Kill points: " << winner->GetComponent<KillPointsComponent>()->GetKillPoints() << "\n";
+    }
+}
+
 void MenuSystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&MenuSystem::OnLoginRequest);
+    RegisterEventCallback(&MenuSystem::OnGameOver);
 }
 
 void MenuSystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&MenuSystem::OnLoginRequest);
+    UnregisterEventCallback(&MenuSystem::OnGameOver);
 }
