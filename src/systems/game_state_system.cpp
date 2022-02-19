@@ -21,6 +21,12 @@ GameStateSystem::~GameStateSystem()
 
 void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* event)
 {
+    if (event->gameState.players.size() < event->gameState.numberPlayers)
+    {
+        // TODO: Check if this crutch works...
+        ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
+        return;
+    }
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto world            = ecs::ecsEngine->GetEntityManager()->GetEntity(
@@ -110,16 +116,19 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         index++;
     }
     auto turn            = event->gameState.currentTurn;
-    auto playersNum = event->gameState.numberPlayers;
+    auto playersNum      = event->gameState.numberPlayers;
     auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetCurrentPlayerId();
     componentManager->begin<MainPlayerComponent>()->SetCurrentPlayerId(adapterPlayerId->Get(mainPlayerIndex));
     for (int i = index; i < playerHexPos.size(); i++)
     {
-        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))->SetOrder(turn % playersNum);
+        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+            ->SetOrder(turn % playersNum);
         turn++;
     }
-    for (int i = 0; i < index; i++) {
-        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))->SetOrder(turn % playersNum);
+    for (int i = 0; i < index; i++)
+    {
+        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+            ->SetOrder(turn % playersNum);
         turn++;
     }
 }

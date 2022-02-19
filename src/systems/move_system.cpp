@@ -27,34 +27,6 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
         auto positionComponent = entity->GetComponent<PositionComponent>();
         positionComponent->SetPosition(action.target);
     }
-
-    // updating capture points
-    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
-    auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
-    auto baseVector = content->GetBase();
-    std::vector<Vector3i> basePositionVector;
-    basePositionVector.reserve(baseVector.size());
-    for (auto baseId : baseVector)
-    {
-        basePositionVector.push_back(
-            entityManager->GetEntity(baseId)->GetComponent<PositionComponent>()->GetPosition());
-    }
-    for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
-         ++it)
-    {
-        auto playerId = entityManager->GetEntity(it->GetOwner())->GetComponent<PlayerIdComponent>()->GetPlayerId();
-        auto tank     = entityManager->GetEntity(it->GetOwner());
-        auto position = tank->GetComponent<PositionComponent>()->GetPosition();
-        if (std::find(basePositionVector.begin(), basePositionVector.end(), position) != basePositionVector.end())
-        {
-            auto newCapturePointsOfTank = tank->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
-            tank->GetComponent<CapturePointsComponent>()->SetCapturePoints(newCapturePointsOfTank);
-            auto newCapturePointsOfPlayer =
-                entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
-            entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->SetCapturePoints(
-                newCapturePointsOfPlayer);
-        }
-    }
 }
 
 void MoveSystem::RegisterEventCallbacks()

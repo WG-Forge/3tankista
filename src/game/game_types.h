@@ -7,7 +7,6 @@ enum GameState
     RESTARTED,
     STARTED,
     RUNNING,
-    PROCESSING,
     GAMEOVER,
     TERMINATED,
     MAX_GAMESTATES
