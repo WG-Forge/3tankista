@@ -111,16 +111,13 @@ struct TurnRequestEvent : public ecs::event::Event<TurnRequestEvent>
 {
 };
 
-struct GameFinishedRequestEvent : public ecs::event::Event<GameFinishedRequestEvent>
+struct GameOverEvent : public ecs::event::Event<GameOverEvent>
 {
-    // TODO: Add code (GameFinishedRequestEvent)
-};
-
-struct GameFinishedResponseEvent : public ecs::event::Event<GameFinishedResponseEvent>
-{
-    bool isFinished;
-    explicit GameFinishedResponseEvent(bool isFinished)
-        : isFinished(isFinished)
+    bool     isDraw;
+    uint64_t winner;
+    GameOverEvent(const bool isDraw, const uint64_t winner)
+        : isDraw(isDraw)
+        , winner(winner)
     {
     }
 };
@@ -152,8 +149,6 @@ struct ChatResponseEvent : public ecs::event::Event<ChatResponseEvent>
     {
     }
 };
-using GameObjectId     = ecs::EntityId;
-using GameObjectTypeId = ecs::EntityTypeId;
 
 struct MoveRequestEvent : public ecs::event::Event<MoveRequestEvent>
 {
@@ -205,9 +200,8 @@ struct GameLoginEvent : public ecs::event::Event<GameLoginEvent>
 {
 };
 
-struct GameOverEvent : public ecs::event::Event<GameOverEvent>
-{
-};
+using GameObjectId     = ecs::EntityId;
+using GameObjectTypeId = ecs::EntityTypeId;
 
 struct GameObjectCreated : public ecs::event::Event<GameObjectCreated>
 {

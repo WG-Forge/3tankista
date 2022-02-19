@@ -33,7 +33,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     // Create players
     for (auto& now : event->gameState.players)
     {
-        auto entity = entityManager->CreateEntity<Player>(now.idx);
+        auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
         adapterId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
@@ -43,7 +43,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     // Create observers
     for (auto& now : event->gameState.observers)
     {
-        auto entity = entityManager->CreateEntity<Player>(now.idx);
+        auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
         adapterId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
@@ -62,36 +62,6 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     }
 }
 
-void GameStateSystem::OnGameFinishedRequestEvent(const GameFinishedRequestEvent* event)
-{
-    auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto entityManager    = ecs::ecsEngine->GetEntityManager();
-    auto end              = componentManager->end<KillPointsComponent>();
-    auto begin            = componentManager->begin<KillPointsComponent>();
-    bool isFinished       = false;
-    if (!componentManager->begin<TurnComponent>()->isFinished())
-    {
-        for (auto it = componentManager->begin<KillPointsComponent>();
-             componentManager->end<KillPointsComponent>() != it;
-             ++it)
-        {
-            auto a = entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>();
-            std::cout << a->GetCapturePoints() << "\n";
-            if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
-                5)
-            {
-                isFinished = true;
-                break;
-            }
-        }
-    }
-    else
-    {
-        isFinished = true;
-    }
-    ecs::ecsEngine->SendEvent<GameFinishedResponseEvent>(isFinished);
-}
-
 void GameStateSystem::OnWorldCreateEvent(const WorldCreateEvent* event)
 {
     ecs::ecsEngine->GetEntityManager()->CreateEntity<World>();
@@ -101,12 +71,10 @@ void GameStateSystem::RegisterEventCallbacks()
 {
     RegisterEventCallback(&GameStateSystem::OnGameStateResponseEvent);
     RegisterEventCallback(&GameStateSystem::OnWorldCreateEvent);
-    RegisterEventCallback(&GameStateSystem::OnGameFinishedRequestEvent);
 }
 
 void GameStateSystem::UnregisterEventCallbacks()
 {
     UnregisterEventCallback(&GameStateSystem::OnGameStateResponseEvent);
     UnregisterEventCallback(&GameStateSystem::OnWorldCreateEvent);
-    UnregisterEventCallback(&GameStateSystem::OnGameFinishedRequestEvent);
 }

@@ -3,13 +3,13 @@
 
 void Game::GS_GAMEOVER()
 {
-    std::cout << "end of game"
-              << "\n";
+
 }
 
 void Game::GS_GAMEOVER_ENTER()
 {
-
+    std::cout << "end of game"
+              << "\n";
 }
 
 void Game::GS_RUNNING_LEAVE() {}

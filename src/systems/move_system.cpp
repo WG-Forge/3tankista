@@ -29,7 +29,7 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
     }
 
     // updating capture points
-    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<NameComponent>()->GetOwner()));
+    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
     auto baseVector = content->GetBase();
     std::vector<Vector3i> basePositionVector;

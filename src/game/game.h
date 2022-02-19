@@ -112,7 +112,6 @@ public:
     void GS_RUNNING_LEAVE();
 
     void OnLoginGame(const GameLoginEvent* event);
-    void OnGameOverState(const GameOverEvent* event);
 
 public:
     inline GameState GetActiveGameState() const { return (GameState)this->GetActiveState(); }

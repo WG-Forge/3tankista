@@ -13,7 +13,6 @@ public:
     ~GameplaySystem() override;
 
     void OnPlayEvent(const PlayEvent* event);
-    void OnGameFinishedEvent(const GameFinishedResponseEvent* event);
 
 private:
     /**
