@@ -1,12 +1,12 @@
 #include "base.h"
 
-#include "render_utility/default_material.h"
-#include "render_utility/hex_shape.h"
-#include "render_utility/line_material.h"
-#include "render_utility/material_generator.h"
-#include "render_utility/shape_generator.h"
-
 #include "components/shape_component.h"
+
+#include "render/materials/default_material.h"
+#include "render/materials/material_generator.h"
+
+#include "render/shapes/hex_shape.h"
+#include "render/shapes/shape_generator.h"
 
 Base::Base(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,

@@ -146,7 +146,7 @@ public:
 
     virtual const VertexNormalData* GetNormals() const override
     {
-        return vertexNormalData.data();
+        return nullptr; /*vertexNormalData.data();*/
     }
 
     virtual const VertexTexCoordData* GetTexCoords() const override

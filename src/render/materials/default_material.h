@@ -1,16 +1,18 @@
-#ifndef LINEMATERIAL_H
-#define LINEMATERIAL_H
+#pragma once
 
-#include "imaterial.h"
-#include "shader.hpp"
+#include <memory>
 
-class LineMaterial : public IMaterial
+#include "render/materials/imaterial.h"
+#include "render/utility/shader.hpp"
+
+class DefaultMaterial : public IMaterial
 {
 public:
-    static constexpr Type MATERIAL_TYPE{ Type::LINE_MATERIAL };
+    DefaultMaterial();
+    virtual ~DefaultMaterial() = default;
 
-    LineMaterial(const std::string& textureFileName);
-    virtual ~LineMaterial();
+public:
+    static constexpr Type MATERIAL_TYPE{ Type::DEFAULT_MATERIAL };
 
     virtual inline const MaterialID GetMaterialID() const override
     {
@@ -25,19 +27,18 @@ public:
 
     virtual void Release() override;
 
-    virtual void SetModelTransform(const Matrix4f& model) override {}
+    virtual void SetModelTransform(const Matrix4f& model) override
+    {
+        if (this->shader != nullptr)
+        {
+            shader->SetMat4(MODEL_TRANSFORM_UNIFORM_NAME, model);
+        }
+    }
 
     virtual void SetViewProjectionTransform(const Matrix4f& view,
                                             const Matrix4f& proj) override
     {
-        //        if (this->shader != nullptr)
-        //        {
-        //            glUniformMatrix4fv(
-        //                (*this->shader)(SHADER_UNIFORM_PROJECTION_TRANSFORM),
-        //                1,
-        //                GL_FALSE,
-        //                (const GLfloat*)proj);
-        //        }
+        // TODO: add camera and view-projection matrixes
     }
 
     virtual const MaterialVertexAttributeLoc
@@ -49,13 +50,13 @@ public:
     virtual const MaterialVertexAttributeLoc GetNormalVertexAttributeLocation()
         const override
     {
-        return -1;
+        return NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC;
     }
 
     virtual const MaterialVertexAttributeLoc
     GetTexCoordVertexAttributeLocation() const override
     {
-        return -1;
+        return TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC;
     }
 
     virtual const MaterialVertexAttributeLoc GetColorVertexAttributeLocation()
@@ -76,17 +77,23 @@ public:
     virtual void SetUniformMatrix4fv(const std::string& uniformName,
                                      const Matrix4f&    mat4) override
     {
-        //        if (this->shader != nullptr)
-        //        {
-        //            glUniformMatrix4fv((*this->shader)(uniformName),
-        //                               1,
-        //                               GL_FALSE,
-        //                               (const GLfloat*)mat4);
-        //        }
+        if (this->shader != nullptr)
+        {
+            //            glUniformMatrix4fv((*this->m_ShaderProgram)(uniformName),
+            //                               1,
+            //                               GL_FALSE,
+            //                               (const GLfloat*)mat4);
+        }
+    }
+
+    inline void SetUniform1f(const std::string& uniformName, const float value)
+    {
+        if (this->shader != nullptr)
+        {
+            shader->SetFloat(uniformName, value);
+        }
     }
 
 private:
     std::unique_ptr<Shader> shader;
 };
-
-#endif // LINEMATERIAL_H

@@ -218,8 +218,6 @@ public:
     // ------------------------------------------------------------------------
     void SetMat4(const std::string& name, const Matrix4f& mat) const
     {
-        unsigned int transformLocation =
-            glGetUniformLocation(this->GetID(), "aModelTransform");
         std::vector<float> m{ mat.getCol(0)[0], mat.getCol(0)[1],
                               mat.getCol(0)[2], mat.getCol(0)[3],
 
@@ -231,8 +229,10 @@ public:
 
                               mat.getCol(3)[0], mat.getCol(3)[1],
                               mat.getCol(3)[2], mat.getCol(3)[3] };
-        glUniformMatrix4fv(
-            transformLocation, 1, GL_FALSE, const_cast<float*>(m.data()));
+        glUniformMatrix4fv(glGetUniformLocation(this->GetID(), name.c_str()),
+                           1,
+                           GL_FALSE,
+                           const_cast<float*>(m.data()));
     }
 
     void SetSampler2D(const std::string& name,

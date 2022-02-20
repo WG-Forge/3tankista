@@ -2,7 +2,7 @@
 
 #include "ecs.h"
 
-#include "render_utility/material.h"
+#include "render/materials/material.h"
 
 using Color = Vector4f;
 

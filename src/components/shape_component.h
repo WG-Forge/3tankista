@@ -2,8 +2,8 @@
 
 #include <ecs.h>
 
-#include "render_utility/shape.h"
-#include "render_utility/shape_buffer_index.h"
+#include "render/shapes/shape.h"
+#include "render/shapes/shape_buffer_index.h"
 
 class ShapeComponent : public Shape,
                        public ShapeBufferIndex,

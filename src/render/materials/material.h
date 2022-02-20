@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imaterial.h"
+#include "render/materials/imaterial.h"
 
 class Material
 {
@@ -70,6 +70,11 @@ public:
                                     const Matrix4f&    mat4)
     {
         this->materialImpl->SetUniformMatrix4fv(uniformName, mat4);
+    }
+
+    inline void SetUniform1f(const std::string& uniformName, const float value)
+    {
+        this->materialImpl->SetUniform1f(uniformName, value);
     }
 
     auto GetTextureFileName()

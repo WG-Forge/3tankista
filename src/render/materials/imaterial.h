@@ -5,8 +5,6 @@
 
 #include "utility/matrix.hpp"
 
-#define SHADER_UNIFORM_MODEL_TRANSFORM "aModelTransform"
-
 using MaterialID                 = uint16_t;
 using MaterialVertexAttributeLoc = uint32_t;
 
@@ -17,12 +15,18 @@ static constexpr MaterialVertexAttributeLoc
 static constexpr MaterialVertexAttributeLoc
     POSITION_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 0 };
 static constexpr MaterialVertexAttributeLoc
-    NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 2 };
-static constexpr MaterialVertexAttributeLoc
-    TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 1 };
+    NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 1 };
 static constexpr MaterialVertexAttributeLoc COLOR_MATERIAL_VERTEX_ATTRIBUTE_LOC{
-    3
+    2
 };
+static constexpr MaterialVertexAttributeLoc
+    TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 3 };
+
+inline static const std::string MODEL_TRANSFORM_UNIFORM_NAME{
+    "uModelTransform"
+};
+inline static const std::string COLOR_UNIFORM_NAME{ "uColor" };
+inline static const std::string MIX_VALUE_UNIFORM_NAME{ "uMixValue" };
 
 class IMaterial
 {
@@ -76,6 +80,9 @@ public:
                                const Vector4f&    vec4)       = 0;
     virtual void SetUniformMatrix4fv(const std::string& uniformName,
                                      const Matrix4f&    mat4) = 0;
+
+    virtual void SetUniform1f(const std::string& uniformName,
+                              const float        value) = 0;
 
     auto GetTextureFileName() { return this->textureFileName; }
 

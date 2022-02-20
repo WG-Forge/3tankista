@@ -1,7 +1,7 @@
 #include "default_material.h"
 
-DefaultMaterial::DefaultMaterial(const std::string& textureFileName)
-    : IMaterial(textureFileName)
+DefaultMaterial::DefaultMaterial()
+    : IMaterial()
     , shader(nullptr)
 {
 }

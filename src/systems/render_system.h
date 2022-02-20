@@ -3,7 +3,7 @@
 #include "game/game_events.h"
 #include "game/game_types.h"
 
-#include "render_utility/renderable.h"
+#include "render/utility/renderable.h"
 
 #include "ecs.h"
 
@@ -11,10 +11,6 @@
 
 #include "GLFW/glfw3.h"
 
-// TODO: 1) draw line using render
-//       2) draw triangle from lines
-//       3) draw hex from lines
-//       4) draw hex field
 class RenderSystem : public ecs::System<RenderSystem>,
                      public ecs::event::IEventListener
 {
@@ -49,7 +45,8 @@ private:
     void RegisterRenderable(ecs::IEntity*       entity,
                             TransformComponent* transform,
                             MaterialComponent*  material,
-                            ShapeComponent*     shape);
+                            ShapeComponent*     shape,
+                            TextureComponent*   texture);
     void UnregisterRenderable(GameObjectId gameObjectId);
 
     void OnWindowResized(const WindowResizedEvent* event);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ishape.h"
+#include "render/shapes/ishape.h"
 
 class Shape
 {

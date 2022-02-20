@@ -5,7 +5,7 @@
 #include "game_events.h"
 #include "game_types.h"
 
-#include "render_utility/opengl.h"
+#include "render/utility/opengl.h"
 
 #include "ecs.h"
 

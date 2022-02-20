@@ -4,6 +4,8 @@
 
 #include "GLFW/glfw3.h"
 
+#include <string>
+
 using VertexPositionData = GLfloat;
 using VertexIndexData    = GLushort;
 using VertexNormalData   = GLfloat;

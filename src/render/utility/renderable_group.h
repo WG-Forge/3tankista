@@ -2,7 +2,7 @@
 
 #include "buffers.h"
 
-#include "material.h"
+#include "render/materials/material.h"
 
 #include <cstdint>
 #include <functional>

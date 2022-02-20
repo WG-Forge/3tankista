@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shape.h"
+#include "render/shapes/shape.h"
 
 //#include "log/logger.h"
 
@@ -17,6 +17,7 @@ class ShapeGenerator
 public:
     ~ShapeGenerator();
 
+    // TODO: refactor this shit
     template <typename S>
     static Shape CreateShape(const std::size_t   size          = 0,
                              const RenderingMode renderingMode = GL_TRIANGLES)

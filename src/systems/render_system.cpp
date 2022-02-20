@@ -88,7 +88,19 @@ void RenderSystem::Update(float dt)
             if (renderable.gameObject->IsActive() == false &&
                 renderable.material->GetIsActive() == true &&
                 renderable.shape->GetIsActive() == true)
+            {
                 continue;
+            }
+
+            if (renderable.texture != nullptr)
+            {
+                renderable.texture->Apply();
+                renderable.material->SetUniform1f(MIX_VALUE_UNIFORM_NAME, 0.0);
+            }
+            else
+            {
+                renderable.material->SetUniform1f(MIX_VALUE_UNIFORM_NAME, 1.0);
+            }
 
             // apply material
             renderable.material->Apply();
@@ -117,6 +129,11 @@ void RenderSystem::Update(float dt)
                                  ? renderable.shape->GetTrianglesCount()
                                  : renderable.shape->GetLinesCount());
             }
+
+            if (renderable.texture != nullptr)
+            {
+                renderable.texture->Misapply();
+            }
         }
 
         // Check for errors
@@ -137,8 +154,6 @@ void RenderSystem::InitializeOpenGL()
 {
 
     glfwMakeContextCurrent(this->window);
-    //    glfwSetFramebufferSizeCallback(this->window,
-    //    &RenderSystem::OnWindowResized);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         LogError("Failed to initialize GLAD");
@@ -146,10 +161,6 @@ void RenderSystem::InitializeOpenGL()
     }
 
     glEnable(GL_DEPTH_TEST);
-
-    // transparency
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
 }
@@ -261,7 +272,8 @@ void RenderSystem::SetShapeBufferIndex(ShapeComponent* shapeComponent)
 void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
                                       TransformComponent* transform,
                                       MaterialComponent*  material,
-                                      ShapeComponent*     shape)
+                                      ShapeComponent*     shape,
+                                      TextureComponent*   texture)
 {
     const RenderableGroupID RGID =
         this->CreateRenderableGroupID(material, shape);
@@ -273,7 +285,7 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         {
             // place renderable in this group
             this->renderableGroups[RGID].push_back(
-                Renderable(entity, transform, material, shape));
+                Renderable(entity, transform, material, shape, texture));
             return;
         }
     }
@@ -361,7 +373,7 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
     this->indexBuffer->Unbind();
 
     this->renderableGroups[renderableGroup].push_back(
-        Renderable(entity, transform, material, shape));
+        Renderable(entity, transform, material, shape, texture));
 }
 
 void RenderSystem::UnregisterRenderable(GameObjectId gameObjectId)
@@ -400,7 +412,9 @@ void RenderSystem::OnGameObjectCreated(const GameObjectCreated* event)
         entity->GetComponent<TransformComponent>();
     MaterialComponent* materialComponent =
         entity->GetComponent<MaterialComponent>();
-    ShapeComponent* shapeComponent = entity->GetComponent<ShapeComponent>();
+    ShapeComponent*   shapeComponent = entity->GetComponent<ShapeComponent>();
+    TextureComponent* textureComponent =
+        entity->GetComponent<TextureComponent>();
 
     if (transformComponent == nullptr || materialComponent == nullptr ||
         shapeComponent == nullptr)
@@ -409,8 +423,11 @@ void RenderSystem::OnGameObjectCreated(const GameObjectCreated* event)
     }
 
     this->SetShapeBufferIndex(shapeComponent);
-    this->RegisterRenderable(
-        entity, transformComponent, materialComponent, shapeComponent);
+    this->RegisterRenderable(entity,
+                             transformComponent,
+                             materialComponent,
+                             shapeComponent,
+                             textureComponent);
 }
 
 void RenderSystem::OnGameObjectDestroyed(const GameObjectDestroyed* event)

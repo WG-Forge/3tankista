@@ -1,11 +1,12 @@
 #include "spawn.h"
 
-#include "render_utility/default_material.h"
-#include "render_utility/material_generator.h"
-#include "render_utility/round_shape.h"
-#include "render_utility/shape_generator.h"
-
 #include "components/shape_component.h"
+
+#include "render/materials/default_material.h"
+#include "render/materials/material_generator.h"
+
+#include "render/shapes/round_shape.h"
+#include "render/shapes/shape_generator.h"
 
 Spawn::Spawn(const ecs::EntityId&   entityId,
              ecs::ComponentManager* componentManager,

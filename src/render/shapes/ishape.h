@@ -1,6 +1,6 @@
 #pragma once
 
-#include "opengl.h"
+#include "render/utility/opengl.h"
 
 #include <cstdint>
 

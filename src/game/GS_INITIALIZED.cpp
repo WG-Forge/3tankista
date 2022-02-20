@@ -23,11 +23,10 @@ void Game::GS_INITIALIZED()
         ecs::ecsEngine->GetSystemManager()->AddSystem<RenderSystem>(
             this->window);
 
-    GameObjectId baseId =
-        ecs::ecsEngine->GetEntityManager()->CreateEntity<Base>(
-            2, Vector3i{ 0, 0, 0 }, Color(0.55f, 0.84f, 0.56f, 1.0f));
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<Map>();
 
-    ecs::IEntity* base = ecs::ecsEngine->GetEntityManager()->GetEntity(baseId);
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<Base>(
+        2, Vector3i{ 0, 0, 0 }, Color(0.55f, 0.84f, 0.56f, 1.0f));
 
     for (int i = 2; i < 11; ++i)
     {
@@ -36,12 +35,8 @@ void Game::GS_INITIALIZED()
             continue;
         }
 
-        GameObjectId obstacleId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
-                Vector3i(0, i, 0));
-
-        ecs::IEntity* obstacle =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(obstacleId);
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
+            Vector3i(0, i, 0));
     }
 
     for (int i = 2; i < 11; ++i)
@@ -51,12 +46,8 @@ void Game::GS_INITIALIZED()
             continue;
         }
 
-        GameObjectId obstacleId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
-                Vector3i(0, -i, 0));
-
-        ecs::IEntity* obstacle =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(obstacleId);
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
+            Vector3i(0, -i, 0));
     }
 
     for (int i = 2; i < 11; ++i)
@@ -66,12 +57,8 @@ void Game::GS_INITIALIZED()
             continue;
         }
 
-        GameObjectId obstacleId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
-                Vector3i(i, 0, 0));
-
-        ecs::IEntity* obstacle =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(obstacleId);
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
+            Vector3i(i, 0, 0));
     }
 
     for (int i = 2; i < 11; ++i)
@@ -81,12 +68,8 @@ void Game::GS_INITIALIZED()
             continue;
         }
 
-        GameObjectId obstacleId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
-                Vector3i(-i, 0, 0));
-
-        ecs::IEntity* obstacle =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(obstacleId);
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
+            Vector3i(-i, 0, 0));
     }
 
     for (int i = 2; i < 11; ++i)
@@ -96,12 +79,8 @@ void Game::GS_INITIALIZED()
             continue;
         }
 
-        GameObjectId obstacleId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
-                Vector3i(i, -i, 0));
-
-        ecs::IEntity* obstacle =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(obstacleId);
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
+            Vector3i(i, -i, 0));
     }
 
     for (int i = 2; i < 11; ++i)
@@ -111,47 +90,26 @@ void Game::GS_INITIALIZED()
             continue;
         }
 
-        GameObjectId obstacleId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
-                Vector3i(-i, i, 0));
-
-        ecs::IEntity* obstacle =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(obstacleId);
-    }
-
-    GameObjectId mapId =
-        ecs::ecsEngine->GetEntityManager()->CreateEntity<Map>();
-
-    ecs::IEntity* map = ecs::ecsEngine->GetEntityManager()->GetEntity(mapId);
-
-    for (int i = 0; i < 5; ++i)
-    {
-        GameObjectId spawnId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
-                Vector3i{ 10, -3 - i, 0 }, Color(0.88f, 0.44f, 0.86f, 1.0f));
-
-        ecs::IEntity* spawn =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(spawnId);
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Obstacle>(
+            Vector3i(-i, i, 0));
     }
 
     for (int i = 0; i < 5; ++i)
     {
-        GameObjectId spawnId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
-                Vector3i{ -7 + i, -3 - i, 0 }, Color(1.0f, 0.55f, 0.26f, 1.0f));
-
-        ecs::IEntity* spawn =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(spawnId);
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+            Vector3i{ 10, -3 - i, 0 }, Color(0.88f, 0.44f, 0.86f, 1.0f));
     }
 
     for (int i = 0; i < 5; ++i)
     {
-        GameObjectId spawnId =
-            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
-                Vector3i{ -7 + i, 10, 0 }, Color(0.31f, 0.75f, 0.89f, 1.0f));
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+            Vector3i{ -7 + i, -3 - i, 0 }, Color(1.0f, 0.55f, 0.26f, 1.0f));
+    }
 
-        ecs::IEntity* spawn =
-            ecs::ecsEngine->GetEntityManager()->GetEntity(spawnId);
+    for (int i = 0; i < 5; ++i)
+    {
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+            Vector3i{ -7 + i, 10, 0 }, Color(0.31f, 0.75f, 0.89f, 1.0f));
     }
 
     ecs::ecsEngine->GetEntityManager()->CreateEntity<Tank>(

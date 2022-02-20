@@ -6,6 +6,7 @@
 
 #include "components/material_component.h"
 #include "components/shape_component.h"
+#include "components/texturecomponent.h"
 #include "components/transform_component.h"
 
 #include "ecs.h"
@@ -21,16 +22,19 @@ struct Renderable
     TransformComponent* transform;
     MaterialComponent*  material;
     ShapeComponent*     shape;
+    TextureComponent*   texture;
 
     Renderable(ecs::IEntity*       entity,
                TransformComponent* position,
                MaterialComponent*  material,
-               ShapeComponent*     shape)
+               ShapeComponent*     shape,
+               TextureComponent*   texture)
         : gameObjectId(entity->GetEntityID())
         , gameObject(entity)
         , transform(position)
         , material(material)
         , shape(shape)
+        , texture(texture)
     {
     }
 
@@ -41,6 +45,7 @@ struct Renderable
         this->transform    = nullptr;
         this->material     = nullptr;
         this->shape        = nullptr;
+        this->texture      = nullptr;
     }
 };
 
