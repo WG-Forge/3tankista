@@ -5,6 +5,8 @@
 #include "systems/server_system.h"
 
 #include "entities/base.h"
+#include "entities/health.h"
+#include "entities/health_bar.h"
 #include "entities/map.h"
 #include "entities/obstacle.h"
 #include "entities/spawn.h"
@@ -156,6 +158,156 @@ void Game::GS_INITIALIZED()
 
     ecs::ecsEngine->GetEntityManager()->CreateEntity<Tank>(Vector3i(-3, 10, 0),
                                                            "textures/spg.png");
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.2f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/friend_hp.png",
+        "1 / 1",
+        "textures/at_spg.png",
+        Color(0.88f, 0.44f, 0.86f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.1f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/friend_hp.png",
+        "1 / 1",
+        "textures/light.png",
+        Color(0.88f, 0.44f, 0.86f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.0f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/friend_hp.png",
+        "3 / 3",
+        "textures/heavy.png",
+        Color(0.88f, 0.44f, 0.86f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
+                  { 0.0f, 1.0f, 0.0f, -0.1f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/friend_hp.png",
+        "2 / 2",
+        "textures/medium.png",
+        Color(0.88f, 0.44f, 0.86f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
+                  { 0.0f, 1.0f, 0.0f, -0.2f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/friend_hp.png",
+        "2 / 2",
+        "textures/spg.png",
+        Color(0.88f, 0.44f, 0.86f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, -0.51f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/enemy_hp.png",
+        "1 / 1",
+        "textures/at_spg.png",
+        Color(1.0f, 0.55f, 0.26f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, -0.61f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/enemy_hp.png",
+        "1 / 1",
+        "textures/light.png",
+        Color(1.0f, 0.55f, 0.26f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, -0.71f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/enemy_hp.png",
+        "3 / 3",
+        "textures/heavy.png",
+        Color(1.0f, 0.55f, 0.26f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, -0.81f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/enemy_hp.png",
+        "2 / 2",
+        "textures/medium.png",
+        Color(1.0f, 0.55f, 0.26f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, -0.91f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/enemy_hp.png",
+        "2 / 2",
+        "textures/spg.png",
+        Color(1.0f, 0.55f, 0.26f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.51f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/neutral_hp.png",
+        "1 / 1",
+        "textures/at_spg.png",
+        Color(0.31f, 0.75f, 0.89f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.61f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/neutral_hp.png",
+        "1 / 1",
+        "textures/light.png",
+        Color(0.31f, 0.75f, 0.89f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.71f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/neutral_hp.png",
+        "3 / 3",
+        "textures/heavy.png",
+        Color(0.31f, 0.75f, 0.89f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.81f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/neutral_hp.png",
+        "2 / 2",
+        "textures/medium.png",
+        Color(0.31f, 0.75f, 0.89f, 1.0f));
+
+    ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
+        Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
+                  { 0.0f, 1.0f, 0.0f, 0.91f },
+                  { 0.0f, 0.0f, 1.0f, 0.0f },
+                  { 0.0f, 0.0f, 0.0f, 1.0f } },
+        "textures/neutral_hp.png",
+        "2 / 2",
+        "textures/spg.png",
+        Color(0.31f, 0.75f, 0.89f, 1.0f));
 
     ecs::ecsEngine->GetSystemManager()->UpdateSystemWorkOrder();
 

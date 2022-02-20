@@ -4,6 +4,7 @@
 
 #include "render/materials/default_material.h"
 #include "render/materials/material_generator.h"
+
 #include "render/shapes/quad_shape.h"
 #include "render/shapes/shape_generator.h"
 

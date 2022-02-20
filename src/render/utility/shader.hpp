@@ -158,7 +158,7 @@ public:
                     (int)value);
     }
     // ------------------------------------------------------------------------
-    void setInt(const std::string& name, int value) const
+    void SetInt(const std::string& name, int value) const
     {
         glUniform1i(glGetUniformLocation(this->GetID(), name.c_str()), value);
     }
@@ -241,7 +241,7 @@ public:
     {
         glActiveTexture(GL_TEXTURE0 + id);
         glBindTexture(GL_TEXTURE_2D, texture);
-        this->setInt(name, id);
+        this->SetInt(name, id);
     }
     void SetSampler3D(const std::string& name,
                       std::size_t        texture,
@@ -249,7 +249,7 @@ public:
     {
         glActiveTexture(GL_TEXTURE0 + id);
         glBindTexture(GL_TEXTURE_3D, texture);
-        this->setInt(name, id);
+        this->SetInt(name, id);
     }
 
 private:

@@ -10,6 +10,9 @@ RenderSystem::RenderSystem(GLFWwindow* window)
 {
     this->InitializeOpenGL();
 
+    this->textRenderer = std::make_unique<TextRenderer>();
+    this->textRenderer->Load("fonts/Antonio-Bold.ttf", 24);
+
     this->vertexBuffer = new VertexBuffer(GLOBAL_VERTEX_BUFFER_SIZE);
     this->indexBuffer  = new IndexBuffer(GLOBAL_INDEX_BUFFER_SIZE);
 
@@ -33,6 +36,9 @@ RenderSystem::~RenderSystem()
         it.first.Delete();
         it.second.clear();
     }
+
+    this->textRenderer.release();
+    this->textRenderer = nullptr;
 
     // free global vertex and index buffer
     delete this->vertexBuffer;
@@ -142,12 +148,22 @@ void RenderSystem::Update(float dt)
 
     glBindVertexArray(0);
     glUseProgram(0);
+
+    this->textRenderer->RenderText();
 }
 
 void RenderSystem::PostUpdate(float dt)
 {
     glfwSwapBuffers(this->window);
     glfwPollEvents();
+}
+
+void RenderSystem::DrawText(const std::string& text,
+                            const Vector2f&    position,
+                            const float        scale,
+                            const Color        color)
+{
+    this->textRenderer->AddText(text, position, scale, color);
 }
 
 void RenderSystem::InitializeOpenGL()
@@ -161,8 +177,10 @@ void RenderSystem::InitializeOpenGL()
     }
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+    glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 }
 
 void RenderSystem::TerminateOpenGL()

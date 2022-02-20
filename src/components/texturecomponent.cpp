@@ -10,6 +10,21 @@ TextureComponent::TextureComponent(const std::string& textureFileName)
     : textureFileName(textureFileName)
     , textureId(-1)
 {
+    this->Initialize();
+}
+
+void TextureComponent::Apply()
+{
+    glBindTexture(GL_TEXTURE_2D, this->textureId);
+}
+
+void TextureComponent::Misapply()
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void TextureComponent::Initialize()
+{
     glGenTextures(1, &textureId);
     glBindTexture(
         GL_TEXTURE_2D,
@@ -26,8 +41,9 @@ TextureComponent::TextureComponent(const std::string& textureFileName)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
-    // The FileSystem::getPath(...) is part of the GitHub repository so we can
-    // find files on any IDE/platform; replace it with your own image path.
+    // The FileSystem::getPath(...) is part of the GitHub repository so we
+    // can find files on any IDE/platform; replace it with your own image
+    // path.
     unsigned char* data = stbi_load(
         this->textureFileName.c_str(), &width, &height, &nrChannels, 0);
     if (data)
@@ -48,14 +64,4 @@ TextureComponent::TextureComponent(const std::string& textureFileName)
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
-}
-
-void TextureComponent::Apply()
-{
-    glBindTexture(GL_TEXTURE_2D, this->textureId);
-}
-
-void TextureComponent::Misapply()
-{
-    glBindTexture(GL_TEXTURE_2D, 0);
 }

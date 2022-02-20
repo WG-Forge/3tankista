@@ -25,9 +25,17 @@ public:
     inline auto&       GetTextureID() { return this->textureId; }
     inline const auto& GetTextureID() const { return this->textureId; }
 
+    void SetTextureFileName(const std::string& textureFileName)
+    {
+        this->textureFileName = textureFileName;
+        this->Initialize();
+    }
+
 private:
-    void SetTextureFileName(const std::string&) = delete;
-    void SetTextureID(const TextureID)          = delete;
+    void SetTextureID(const TextureID) = delete;
+
+private:
+    void Initialize();
 
 private:
     std::string textureFileName;

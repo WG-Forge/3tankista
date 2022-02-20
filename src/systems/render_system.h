@@ -3,6 +3,7 @@
 #include "game/game_events.h"
 #include "game/game_types.h"
 
+#include "render/text_renderer.hpp"
 #include "render/utility/renderable.h"
 
 #include "ecs.h"
@@ -32,6 +33,11 @@ public:
     virtual void PreUpdate(float dt) override;
     virtual void Update(float dt) override;
     virtual void PostUpdate(float dt) override;
+
+    void DrawText(const std::string& text,
+                  const Vector2f&    position,
+                  const float        scale,
+                  const Color        color = Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 private:
     void InitializeOpenGL();
@@ -67,4 +73,6 @@ private:
 
     // A set of all currently registered randerable entities
     RenderableGroups renderableGroups;
+
+    std::unique_ptr<TextRenderer> textRenderer;
 };

@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "utility/matrix.hpp"
+
 #include "nlohmann/json.hpp"
 
 struct LoginRequestModel

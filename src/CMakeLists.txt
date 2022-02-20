@@ -16,7 +16,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE asio
                                               glm
                                               glad
                                               glfw
-                                              stb_image)
+                                              stb_image
+                                              freetype)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -29,3 +30,6 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
                         ${CMAKE_CURRENT_SOURCE_DIR}/textures/ ${CMAKE_BINARY_DIR}/src/textures/)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_CURRENT_SOURCE_DIR}/render/fonts/ ${CMAKE_BINARY_DIR}/src/fonts/)
