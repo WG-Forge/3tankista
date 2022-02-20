@@ -13,8 +13,11 @@ Short description here.
 - [Team](#team)
 
 ## About
-
-Big description here. With some schemas and structure.
+This project is a turn-based game.\
+It is necessary with the help of your tanks to get victory in one of two ways: by destruction points, by capture points.\
+The game is a client-server application. The exchange with the server is carried out using asio.\
+All data( sent and received) is processed using nlohmann/json.\
+The application is written using the Entity-Component-System design pattern.\
 
 ## Install
 
