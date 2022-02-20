@@ -110,6 +110,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::TURN:
             {
+                std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1 << "\n";
                 componentManager->begin<TurnComponent>()->SetCurrentTurn(
                     componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1);
                 break;
@@ -128,14 +129,17 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::SHOOT:
             {
-                // No model for shoot
+                auto sentJson = nlohmann::json::parse(event->sentData).get<ShootModel>();
+                std::cerr << "SHOOT: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
+                          << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
                 break;
             }
         }
     }
-    else
+    else if (event->result == Result::TIMEOUT)
     {
-        // TODO: Error handling logic
+        ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
+        std::cout << "timeout\n";
     }
 }
 

@@ -184,10 +184,10 @@ struct ShootRequestEvent : public ecs::event::Event<ShootRequestEvent>
 
 struct ShootResponseEvent : public ecs::event::Event<ShootResponseEvent>
 {
-    int                     playerId;
+    uint64_t                playerId;
     std::vector<ShootModel> actions;
 
-    explicit ShootResponseEvent(const int playerId, std::vector<ShootModel> actions)
+    explicit ShootResponseEvent(const uint64_t playerId, std::vector<ShootModel> actions)
         : playerId(playerId)
         , actions(std::move(actions))
     {

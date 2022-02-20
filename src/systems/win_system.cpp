@@ -75,6 +75,7 @@ void WinSystem::OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event
                 entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
             entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->SetCapturePoints(
                 newCapturePointsOfPlayer);
+            //std::cout <<"up"<< newCapturePointsOfPlayer << "\n";
         }
     }
 }

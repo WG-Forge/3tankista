@@ -2,6 +2,7 @@
 
 #include "ecs.h"
 #include "game/game_events.h"
+#include "systems/gameplay_system.h"
 
 class GameStateSystem : public ecs::System<GameStateSystem>, public ecs::event::IEventListener
 {

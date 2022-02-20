@@ -70,7 +70,6 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         componentManager->GetComponent<PositionComponent>(entity)->SetPosition(tank.second.position);
         componentManager->GetComponent<CapturePointsComponent>(entity)->SetCapturePoints(tank.second.capturePoints);
         adapterVehicleId->Add(tank.first, entity);
-
         // Determine playerPosition;
         if (playerPosition.find(tank.second.playerId) == playerPosition.end())
         {
@@ -117,8 +116,8 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     }
     auto turn            = event->gameState.currentTurn;
     auto playersNum      = event->gameState.numberPlayers;
-    auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetCurrentPlayerId();
-    componentManager->begin<MainPlayerComponent>()->SetCurrentPlayerId(adapterPlayerId->Get(mainPlayerIndex));
+    auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
+    componentManager->begin<MainPlayerComponent>()->SetMainPlayerId(adapterPlayerId->Get(mainPlayerIndex));
     for (int i = index; i < playerHexPos.size(); i++)
     {
         componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
@@ -130,6 +129,24 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
             ->SetOrder(turn % playersNum);
         turn++;
+    }
+    auto mainPlayerId = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
+    for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
+         ++it)
+    {
+        auto tank = (Tank*)entityManager->GetEntity(it->GetVehicleId());
+        if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
+        {
+            GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+                                                   tank->GetComponent<PositionComponent>()->GetPosition(),
+                                                   CellState::FRIEND);
+        }
+        else
+        {
+            GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+                                                   tank->GetComponent<PositionComponent>()->GetPosition(),
+                                                   CellState::ENEMY);
+        }
     }
 }
 

@@ -15,7 +15,7 @@ public:
 
     void OnPlayEvent(const PlayEvent* event);
 
-private:
+public:
     /**
      * Convert point in cubic coordinates to hex.
      * @param point - point to convert
@@ -73,6 +73,7 @@ private:
      */
     static inline bool IsValid(const Vector2i& point, int size);
 
+private:
     class PathFinder
     {
     public:
@@ -106,7 +107,7 @@ private:
         std::vector<std::vector<signed char>> lastDirections;
         std::vector<std::vector<int>>         distance;
     };
-
+public:
     bool     CheckNeutrality(Tank* playerTank, Tank* enemyTank);
     bool     CanShoot(Tank* playerTank, Tank* enemyTank);
     bool     IsCorrectShootPosition(Tank* tank, Tank* enemy);

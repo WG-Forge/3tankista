@@ -130,14 +130,14 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto gameArea         = componentManager->begin<HexMapComponent>().operator->();
-    auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetCurrentPlayerId();
+    auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
 
     auto turnComponent = componentManager->begin<TurnComponent>().operator->();
     if (entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() ==
         turnComponent->GetCurrentTurn() % turnComponent->GetPlayersNumber())
     {
 
-        gameArea->ClearMap();
+        //gameArea->ClearMap();
         std::vector<Tank*> currentPlayerTanks;
         std::vector<Tank*> enemies;
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
@@ -147,25 +147,24 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
             {
                 currentPlayerTanks.push_back(tank);
-                SetHexMapComponentCell(
-                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::FRIEND);
+//                SetHexMapComponentCell(
+//                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::FRIEND);
             }
             else
             {
                 enemies.push_back(tank);
-                SetHexMapComponentCell(
-                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::ENEMY);
+//                SetHexMapComponentCell(
+//                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::ENEMY);
             }
         }
-        for (auto it = componentManager->begin<ObstacleIdComponent>();
-             componentManager->end<ObstacleIdComponent>() != it;
-             ++it)
-        {
-            SetHexMapComponentCell(
-                gameArea,
-                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
-                CellState::OBSTACLE);
-        }
+//        for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
+//             ++it)
+//        {
+//            GameplaySystem::SetHexMapComponentCell(
+//                gameArea,
+//                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
+//                CellState::OBSTACLE);
+//        }
         std::sort(currentPlayerTanks.begin(),
                   currentPlayerTanks.end(),
                   [](Tank* lhs, Tank* rhs)

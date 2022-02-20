@@ -6,6 +6,7 @@
 
 void Game::GS_RUNNING()
 {
+
     auto                         componentManager = ecs::ecsEngine->GetComponentManager();
     auto                         entityManager    = ecs::ecsEngine->GetEntityManager();
     bool                         isFinished       = false;
@@ -16,6 +17,9 @@ void Game::GS_RUNNING()
              componentManager->end<KillPointsComponent>() != it;
              ++it)
         {
+//            std::cout
+//                << entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
+//                << "\n";
             if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
                 5)
             {
