@@ -122,9 +122,8 @@ private:
     void UnregisterEventCallbacks();
 
 private:
-    void GLFWWindowCloseCallback(const WindowCloseEvent* event);
-
-    static void GLFWWindowCloseCallbackHelper(GLFWwindow* window);
+    static void KeyCallback(
+        GLFWwindow* window, int key, int scancode, int action, int mode);
 
 private:
     GLFWwindow* window;

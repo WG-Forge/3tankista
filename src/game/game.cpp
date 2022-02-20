@@ -1,6 +1,7 @@
 #include "game.h"
 
 #include "game_configuration.h"
+#include "systems/render_system.h"
 
 Game::Game(const std::string& title)
     : gameTitle(title)
@@ -31,7 +32,7 @@ void Game::Initialize(const int width, const int height, const bool fullscreen)
 
 void Game::Run()
 {
-    while (this->window != nullptr)
+    while (!glfwWindowShouldClose(this->window))
     {
         this->ProcessWindowEvent();
         if (this->window == nullptr)
@@ -43,6 +44,8 @@ void Game::Run()
 
         this->UpdateStateMachine();
     }
+
+    this->Terminate();
 }
 
 void Game::InitializeECS()
@@ -86,10 +89,7 @@ void Game::InitializeGLFW()
     glfwGetWindowPos(this->window, &this->windowPosX, &this->windowPosY);
     glfwGetWindowSize(this->window, &this->windowWidth, &this->windowHeight);
 
-    glfwSetWindowCloseCallback(
-        this->window,
-        [](GLFWwindow* window)
-        { ecs::ecsEngine->SendEvent<WindowCloseEvent>(); });
+    glfwSetKeyCallback(window, &Game::KeyCallback);
     glfwSetFramebufferSizeCallback(
         this->window,
         [](GLFWwindow* window, int width, int height)
@@ -103,15 +103,9 @@ void Game::Terminate()
 
     ecs::Terminate();
 
-    if (this->window)
-    {
-        glfwDestroyWindow(this->window);
-    }
+    this->window = nullptr;
 
     glfwTerminate();
-
-    // this will break the main game loop.
-    this->window = nullptr;
 }
 
 void Game::ProcessWindowEvent()
@@ -119,23 +113,17 @@ void Game::ProcessWindowEvent()
     glfwPollEvents();
 }
 
-void Game::GLFWWindowCloseCallback(const WindowCloseEvent* event)
-{
-    this->Terminate();
-}
+void Game::RegisterEventCallbacks() {}
 
-void Game::GLFWWindowCloseCallbackHelper(GLFWwindow* window)
-{
-    Game* app = (Game*)(glfwGetWindowUserPointer(window));
-    app->Terminate();
-}
+void Game::UnregisterEventCallbacks() {}
 
-void Game::RegisterEventCallbacks()
+void Game::KeyCallback(
+    GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-    this->RegisterEventCallback(&Game::GLFWWindowCloseCallback);
-}
-
-void Game::UnregisterEventCallbacks()
-{
-    this->UnregisterEventCallback(&Game::GLFWWindowCloseCallback);
+    // when a user presses the escape key, we set the WindowShouldClose property
+    // to true, closing the application
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
