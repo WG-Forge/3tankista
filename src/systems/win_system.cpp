@@ -47,7 +47,7 @@ void WinSystem::OnTankDestroyedEvent(const TankDestroyedEvent* event)
     targetOwner->GetComponent<CapturePointsComponent>()->SetCapturePoints(currentCapturePoints);
 }
 
-void WinSystem::OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event)
+void WinSystem::UpdateCapturePoints()
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
@@ -75,7 +75,12 @@ void WinSystem::OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event
                 entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
             entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->SetCapturePoints(
                 newCapturePointsOfPlayer);
-            //std::cout <<"up"<< newCapturePointsOfPlayer << "\n";
+            // std::cout <<"up"<< newCapturePointsOfPlayer << "\n";
         }
     }
+}
+
+void WinSystem::OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event)
+{
+    UpdateCapturePoints();
 }

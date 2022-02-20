@@ -3,10 +3,11 @@
 #include "components/turn_component.h"
 #include "game.h"
 #include "game_object.h"
+#include "systems/win_system.h"
 
 void Game::GS_RUNNING()
 {
-
+    WinSystem::UpdateCapturePoints();
     auto                         componentManager = ecs::ecsEngine->GetComponentManager();
     auto                         entityManager    = ecs::ecsEngine->GetEntityManager();
     bool                         isFinished       = false;
@@ -17,9 +18,10 @@ void Game::GS_RUNNING()
              componentManager->end<KillPointsComponent>() != it;
              ++it)
         {
-//            std::cout
-//                << entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
-//                << "\n";
+            //            std::cout
+            //                <<
+            //                entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
+            //                << "\n";
             if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
                 5)
             {
@@ -44,6 +46,7 @@ void Game::GS_RUNNING()
             isDraw = true;
         }
         ecs::ecsEngine->SendEvent<GameOverEvent>(isDraw, winnerId.second);
+        ecs::ecsEngine->SendEvent<LogoutRequestEvent>();
         ChangeState(GameState::GAMEOVER);
     }
 }

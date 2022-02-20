@@ -32,7 +32,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::LOGOUT:
             {
-                // No model for logout
+                std::cerr << "Logout is successful\n";
                 break;
             }
             case Action::MAP:

@@ -11,6 +11,7 @@ public:
 
     void OnTankDestroyedEvent(const TankDestroyedEvent* event);
     void OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event);
+    static void UpdateCapturePoints();
 
 private:
     void RegisterEventCallbacks();
