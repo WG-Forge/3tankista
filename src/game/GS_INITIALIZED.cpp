@@ -12,6 +12,7 @@
 #include "systems/move_system.h"
 #include "systems/respawn_system.h"
 #include "systems/server/server_system.h"
+#include "systems/turn_system.h"
 #include "systems/win_system.h"
 
 void Game::GS_INITIALIZED()
@@ -29,7 +30,8 @@ void Game::GS_INITIALIZED()
     auto* AdS           = systemManager->AddSystem<AdapterSystem>();
     auto* ReS           = systemManager->AddSystem<RespawnSystem>();
     auto* WiS           = systemManager->AddSystem<WinSystem>();
-    auto* Ams           = systemManager->AddSystem<AttackMatrixSystem>();
+    auto* AmS           = systemManager->AddSystem<AttackMatrixSystem>();
+    auto* TuS           = systemManager->AddSystem<TurnSystem>();
 
     systemManager->UpdateSystemWorkOrder();
     ChangeState(GameState::RESTARTED);
