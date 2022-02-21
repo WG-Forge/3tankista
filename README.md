@@ -30,6 +30,7 @@ git submodule update --init --recursive
 ```
 
 ### Cmake
+
 Build with cmake
 ```shell
 cmake commands ....
@@ -48,6 +49,10 @@ screenshots
 - [ecs](https://github.com/MedoviyKeksik/ECS)
 
 ## Team
+
+Our team photo: 
+
+![7373342587a464f37f1fe93490914339](https://user-images.githubusercontent.com/39442984/155014716-e425f434-ea06-40fc-9fa0-117fa5eeb2c5.png)
 
 - [<img src="https://github.com/Sjarozha.png" title="Sjarozha" width="50" align="center"/>](https://github.com/Sjarozha) - Sergey Titov
 - [<img src="https://github.com/MaXMoPKa.png" title="MaXMoPKa" width="50" align="center"/>](https://github.com/MaXMoPKa) - Vladislav Aleynikov
