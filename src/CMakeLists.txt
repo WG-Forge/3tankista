@@ -13,7 +13,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE asio
                                               nlohmann_json::nlohmann_json
                                               ecs
-                                              glm
                                               glad
                                               glfw
                                               stb_image
