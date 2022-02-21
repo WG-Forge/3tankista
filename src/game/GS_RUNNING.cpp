@@ -43,9 +43,52 @@ void Game::GS_RUNNING()
                 isFinished = true;
             }
         }
+        if (winnerId.first != 1)
+        {
+            int max = 0;
+            for (auto it = componentManager->begin<KillPointsComponent>();
+                 componentManager->end<KillPointsComponent>() != it;
+                 ++it)
+            {
+                if (max < it->GetKillPoints())
+                {
+                    max = it->GetKillPoints();
+                }
+            }
+            winnerId = {};
+            for (auto it = componentManager->begin<KillPointsComponent>();
+                 componentManager->end<KillPointsComponent>() != it;
+                 ++it)
+            {
+                if (max == it->GetKillPoints())
+                {
+                    winnerId = std::make_pair(winnerId.first + 1, it->GetOwner());
+                }
+            }
+        }
     }
     else
     {
+        int max = 0;
+        for (auto it = componentManager->begin<KillPointsComponent>();
+             componentManager->end<KillPointsComponent>() != it;
+             ++it)
+        {
+            if (max < it->GetKillPoints())
+            {
+                max = it->GetKillPoints();
+            }
+        }
+        for (auto it = componentManager->begin<KillPointsComponent>();
+             componentManager->end<KillPointsComponent>() != it;
+             ++it)
+        {
+            if (max == it->GetKillPoints())
+            {
+                winnerId = std::make_pair(winnerId.first + 1, it->GetOwner());
+            }
+        }
+
         isFinished = true;
     }
     if (!isFinished)
