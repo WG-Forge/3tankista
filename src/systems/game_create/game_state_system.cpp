@@ -24,7 +24,6 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
 {
     if (event->gameState.players.size() < event->gameState.numberPlayers)
     {
-        // TODO: Check if this crutch works...
         ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
         return;
     }
@@ -43,7 +42,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     // Create players
     for (auto& now : event->gameState.players)
     {
-        auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
+        auto entity = entityManager->CreateEntity<Player>(now.idx, now.name, now.isObserver);
         std::cout << now.idx << " " << entity << "\n";
         adapterPlayerId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
@@ -51,7 +50,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     // Create observers
     for (auto& now : event->gameState.observers)
     {
-        auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
+        auto entity = entityManager->CreateEntity<Player>(now.idx, now.name, now.isObserver);
         adapterPlayerId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }

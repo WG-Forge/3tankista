@@ -2,6 +2,7 @@
 #include "components/attack_matrix_component.h"
 #include "components/base_id_component.h"
 #include "components/main_player_component.h"
+#include "components/observer_component.h"
 #include "components/obstacle_id_component.h"
 #include "components/order_component.h"
 #include "components/turn_component.h"
@@ -149,7 +150,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
         }
     }
 
-    if (mainPlayerId == currentPlayerId)
+    if (mainPlayerId == currentPlayerId &&
+        !entityManager->GetEntity(mainPlayerId)->GetComponent<ObserverComponent>()->GetIsObserver())
     {
 
         // gameArea->ClearMap();

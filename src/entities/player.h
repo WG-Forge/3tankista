@@ -3,6 +3,7 @@
 #include "components/capture_points_component.h"
 #include "components/kill_points_component.h"
 #include "components/name_component.h"
+#include "components/observer_component.h"
 #include "components/order_component.h"
 #include "components/player_id_component.h"
 #include "game/game_object.h"
@@ -14,7 +15,8 @@ public:
     explicit Player(const ecs::EntityId&   entityId,
                     ecs::ComponentManager* componentManager,
                     uint64_t               playerId,
-                    std::string            name);
+                    std::string            name,
+                    bool                   isObserver);
     ~Player() override = default;
 
 private:
@@ -23,4 +25,5 @@ private:
     KillPointsComponent*    killPointsComponent;
     CapturePointsComponent* capturePointsComponent;
     OrderComponent*         orderComponent;
+    ObserverComponent*      observerComponent;
 };
