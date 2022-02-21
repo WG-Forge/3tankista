@@ -70,23 +70,43 @@ void Game::GS_RUNNING()
     }
     else
     {
-        int max = 0;
         for (auto it = componentManager->begin<KillPointsComponent>();
              componentManager->end<KillPointsComponent>() != it;
              ++it)
         {
-            if (max < it->GetKillPoints())
+            std::cout << "kp " << it->GetKillPoints() << "\n";
+            std::cout
+                << "cp "
+                << entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
+                << "\n"
+                << std::flush;
+            if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
+                5)
             {
-                max = it->GetKillPoints();
+                winnerId   = std::make_pair(winnerId.first + 1, it->GetOwner());
+                isFinished = true;
             }
         }
-        for (auto it = componentManager->begin<KillPointsComponent>();
-             componentManager->end<KillPointsComponent>() != it;
-             ++it)
+        if (!isFinished)
         {
-            if (max == it->GetKillPoints())
+            int max = 0;
+            for (auto it = componentManager->begin<KillPointsComponent>();
+                 componentManager->end<KillPointsComponent>() != it;
+                 ++it)
             {
-                winnerId = std::make_pair(winnerId.first + 1, it->GetOwner());
+                if (max < it->GetKillPoints())
+                {
+                    max = it->GetKillPoints();
+                }
+            }
+            for (auto it = componentManager->begin<KillPointsComponent>();
+                 componentManager->end<KillPointsComponent>() != it;
+                 ++it)
+            {
+                if (max == it->GetKillPoints())
+                {
+                    winnerId = std::make_pair(winnerId.first + 1, it->GetOwner());
+                }
             }
         }
 
