@@ -107,6 +107,7 @@ private:
         std::vector<std::vector<signed char>> lastDirections;
         std::vector<std::vector<int>>         distance;
     };
+
 public:
     bool     CheckNeutrality(Tank* playerTank, Tank* enemyTank);
     bool     CanShoot(Tank* playerTank, Tank* enemyTank);

@@ -1,13 +1,11 @@
 #pragma once
 
-#include "ecs.h"
-#include "game/game_events.h"
-#include "game/models/models.h"
 #include "components/hex_map_component.h"
 #include "components/turn_component.h"
 #include "ecs.h"
 #include "entities/map/map.h"
 #include "game/game_events.h"
+#include "game/models/models.h"
 #include "systems/gameplay_system.h"
 #include <iostream>
 

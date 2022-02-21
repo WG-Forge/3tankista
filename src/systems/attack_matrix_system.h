@@ -14,5 +14,4 @@ public:
 private:
     void RegisterEventCallbacks();
     void UnregisterEventCallbacks();
-
 };
