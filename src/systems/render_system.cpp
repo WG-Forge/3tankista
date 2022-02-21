@@ -6,7 +6,7 @@
 
 RenderSystem::RenderSystem(GLFWwindow* window)
     : window(window)
-    , bufferedShapes(static_cast<ShapeID>(IShape::Type::MAX_SHAPES), nullptr)
+    , bufferedShapes(/*static_cast<ShapeID>(IShape::Type::MAX_SHAPES), nullptr*/)
 {
     this->InitializeOpenGL();
 
@@ -50,12 +50,12 @@ RenderSystem::~RenderSystem()
     this->TerminateOpenGL();
 }
 
-void RenderSystem::PreUpdate(float dt)
+void RenderSystem::PreUpdate(ecs::f32 dt)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RenderSystem::Update(float dt)
+void RenderSystem::Update(ecs::f32 dt)
 {
     // call renderers
     MaterialID    lastUsedMaterial    = INVALID_MATERIAL_ID;
@@ -91,8 +91,7 @@ void RenderSystem::Update(float dt)
         for (const auto& renderable : renderableGroup.second)
         {
             // ignore disables renderables
-            if (renderable.gameObject->IsActive() == false &&
-                renderable.material->GetIsActive() == true &&
+            if (renderable.gameObject->IsActive() == false && renderable.material->GetIsActive() == true &&
                 renderable.shape->GetIsActive() == true)
             {
                 continue;
@@ -119,19 +118,17 @@ void RenderSystem::Update(float dt)
             if (renderable.shape->IsIndexed() == true)
             {
                 // draw with indices
-                glDrawElements(
-                    renderable.shape->GetRenderingMode(),
-                    renderable.shape->GetIndexesCount(),
-                    VERTEX_INDEX_DATA_TYPE,
-                    (const GLvoid*)(renderable.shape->GetIndexDataIndex()));
+                glDrawElements(renderable.shape->GetRenderingMode(),
+                               renderable.shape->GetIndexesCount(),
+                               VERTEX_INDEX_DATA_TYPE,
+                               (const GLvoid*)(renderable.shape->GetIndexDataIndex()));
             }
             else
             {
                 // draw without indices
                 glDrawArrays(renderable.shape->GetRenderingMode(),
                              0,
-                             renderable.shape->GetRenderingMode() ==
-                                     GL_TRIANGLES
+                             renderable.shape->GetRenderingMode() == GL_TRIANGLES
                                  ? renderable.shape->GetTrianglesCount()
                                  : renderable.shape->GetLinesCount());
             }
@@ -152,16 +149,13 @@ void RenderSystem::Update(float dt)
     this->textRenderer->RenderText();
 }
 
-void RenderSystem::PostUpdate(float dt)
+void RenderSystem::PostUpdate(ecs::f32 dt)
 {
     glfwSwapBuffers(this->window);
     glfwPollEvents();
 }
 
-void RenderSystem::DrawText(const std::string& text,
-                            const Vector2f&    position,
-                            const float        scale,
-                            const Color        color)
+void RenderSystem::DrawText(const std::string& text, const Vector2f& position, const float scale, const Color color)
 {
     this->textRenderer->AddText(text, position, scale, color);
 }
@@ -210,45 +204,41 @@ void RenderSystem::UnregisterEventCallbacks()
 
 void RenderSystem::SetShapeBufferIndex(ShapeComponent* shapeComponent)
 {
-    assert(shapeComponent->GetShapeID() !=
-               static_cast<ShapeID>(IShape::Type::INVALID_SHAPE) &&
+    assert(shapeComponent->GetShapeID() != static_cast<ShapeID>(IShape::Type::INVALID_SHAPE) &&
            "RenderSystem got Entity with invalid shape.");
-
-    if (this->bufferedShapes[shapeComponent->GetShapeID()] != nullptr)
+    // FIXME: Rework work buffered shapes
+    const auto it = std::find_if(this->bufferedShapes.begin(),
+                                 this->bufferedShapes.end(),
+                                 [&](const ShapeBufferIndex* bufferIndex)
+                                 { return bufferIndex->shapeId == shapeComponent->GetShapeID(); });
+    if (it != this->bufferedShapes.end())
     {
         // set indices
-        shapeComponent->SetShapeBufferIndex(
-            *this->bufferedShapes[shapeComponent->GetShapeID()]);
+        shapeComponent->SetShapeBufferIndex(**it);
         return;
     }
 
     // Shape is not buffered yet.
-    ShapeBufferIndex* bufferIndex                      = new ShapeBufferIndex;
-    this->bufferedShapes[shapeComponent->GetShapeID()] = bufferIndex;
+    ShapeBufferIndex* bufferIndex = new ShapeBufferIndex;
+    this->bufferedShapes.push_back(bufferIndex);
 
     // bind global vertex buffer
     this->vertexBuffer->Bind();
 
     // buffer vertex position data
     {
-        assert(shapeComponent->GetPositions() != nullptr &&
-               "Invalid shape. Shape has no vertex position data!");
+        assert(shapeComponent->GetPositions() != nullptr && "Invalid shape. Shape has no vertex position data!");
         bufferIndex->positionDataIndex = this->vertexBuffer->BufferVertexData(
-            shapeComponent->GetPositions(),
-            VERTEX_POSITION_DATA_ELEMENT_SIZE *
-                shapeComponent->GetVertexesCount());
+            shapeComponent->GetPositions(), VERTEX_POSITION_DATA_ELEMENT_SIZE * shapeComponent->GetVertexesCount());
     }
 
     // buffer vertex index data
-    if (shapeComponent->GetIndexesCount() > 0 &&
-        shapeComponent->GetIndexes() != nullptr)
+    if (shapeComponent->GetIndexesCount() > 0 && shapeComponent->GetIndexes() != nullptr)
     {
         this->indexBuffer->Bind();
         {
             bufferIndex->indexDataIndex = this->indexBuffer->BufferIndexData(
-                shapeComponent->GetIndexes(),
-                VERTEX_INDEX_DATA_ELEMENT_SIZE *
-                    shapeComponent->GetIndexesCount());
+                shapeComponent->GetIndexes(), VERTEX_INDEX_DATA_ELEMENT_SIZE * shapeComponent->GetIndexesCount());
         }
         this->indexBuffer->Unbind();
     }
@@ -257,27 +247,21 @@ void RenderSystem::SetShapeBufferIndex(ShapeComponent* shapeComponent)
     if (shapeComponent->GetNormals() != nullptr)
     {
         bufferIndex->normalDataIndex = this->vertexBuffer->BufferVertexData(
-            shapeComponent->GetNormals(),
-            VERTEX_NORMAL_DATA_ELEMENT_SIZE *
-                shapeComponent->GetVertexesCount());
+            shapeComponent->GetNormals(), VERTEX_NORMAL_DATA_ELEMENT_SIZE * shapeComponent->GetVertexesCount());
     }
 
     // buffer vertex uv data
     if (shapeComponent->GetTexCoords() != nullptr)
     {
         bufferIndex->texCoordDataIndex = this->vertexBuffer->BufferVertexData(
-            shapeComponent->GetTexCoords(),
-            VERTEX_TEXCOORD_DATA_ELEMENT_SIZE *
-                shapeComponent->GetVertexesCount());
+            shapeComponent->GetTexCoords(), VERTEX_TEXCOORD_DATA_ELEMENT_SIZE * shapeComponent->GetVertexesCount());
     }
 
     // buffer vertex color data
     if (shapeComponent->GetColors() != nullptr)
     {
         bufferIndex->colorDataIndex = this->vertexBuffer->BufferVertexData(
-            shapeComponent->GetColors(),
-            VERTEX_COLOR_DATA_ELEMENT_SIZE *
-                shapeComponent->GetVertexesCount());
+            shapeComponent->GetColors(), VERTEX_COLOR_DATA_ELEMENT_SIZE * shapeComponent->GetVertexesCount());
     }
 
     // unbind global vertex buffer
@@ -293,8 +277,7 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
                                       ShapeComponent*     shape,
                                       TextureComponent*   texture)
 {
-    const RenderableGroupID RGID =
-        this->CreateRenderableGroupID(material, shape);
+    const RenderableGroupID RGID = this->CreateRenderableGroupID(material, shape);
 
     // check if there is already a group for this renderable
     for (const auto& it : this->renderableGroups)
@@ -302,8 +285,7 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         if (it.first.groupID == RGID)
         {
             // place renderable in this group
-            this->renderableGroups[RGID].push_back(
-                Renderable(entity, transform, material, shape, texture));
+            this->renderableGroups[RGID].push_back(Renderable(entity, transform, material, shape, texture));
             return;
         }
     }
@@ -317,10 +299,8 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         this->vertexBuffer->Bind();
 
         // buffer vertex position data
-        MaterialVertexAttributeLoc positionVertexAttribute =
-            material->GetPositionVertexAttributeLocation();
-        assert(positionVertexAttribute !=
-                   INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC &&
+        MaterialVertexAttributeLoc positionVertexAttribute = material->GetPositionVertexAttributeLocation();
+        assert(positionVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC &&
                "Material of a renderable does not provide a position vertex "
                "attribute!");
 
@@ -339,10 +319,8 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         }
 
         // buffer vertex normal data
-        MaterialVertexAttributeLoc normalVertexAttribute =
-            material->GetNormalVertexAttributeLocation();
-        if (shape->GetNormals() != nullptr &&
-            normalVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
+        MaterialVertexAttributeLoc normalVertexAttribute = material->GetNormalVertexAttributeLocation();
+        if (shape->GetNormals() != nullptr && normalVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
         {
             glVertexAttribPointer(normalVertexAttribute,
                                   VERTEX_NORMAL_DATA_ELEMENT_LEN,
@@ -354,26 +332,21 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
         }
 
         // buffer vertex uv data
-        MaterialVertexAttributeLoc texCoordVertexAttribute =
-            material->GetTexCoordVertexAttributeLocation();
-        if (shape->GetTexCoords() != nullptr &&
-            texCoordVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
+        MaterialVertexAttributeLoc texCoordVertexAttribute = material->GetTexCoordVertexAttributeLocation();
+        if (shape->GetTexCoords() != nullptr && texCoordVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
         {
-            glVertexAttribPointer(
-                texCoordVertexAttribute,
-                VERTEX_TEXCOORD_DATA_ELEMENT_LEN,
-                VERTEX_TEXCOORD_DATA_TYPE,
-                GL_FALSE,
-                0,
-                (const GLvoid*)(shape->GetTexCoordDataIndex()));
+            glVertexAttribPointer(texCoordVertexAttribute,
+                                  VERTEX_TEXCOORD_DATA_ELEMENT_LEN,
+                                  VERTEX_TEXCOORD_DATA_TYPE,
+                                  GL_FALSE,
+                                  0,
+                                  (const GLvoid*)(shape->GetTexCoordDataIndex()));
             glEnableVertexAttribArray(texCoordVertexAttribute);
         }
 
         // buffer vertex color data
-        MaterialVertexAttributeLoc colorVertexAttribute =
-            material->GetColorVertexAttributeLocation();
-        if (shape->GetColors() != nullptr &&
-            colorVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
+        MaterialVertexAttributeLoc colorVertexAttribute = material->GetColorVertexAttributeLocation();
+        if (shape->GetColors() != nullptr && colorVertexAttribute != INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC)
         {
             glVertexAttribPointer(colorVertexAttribute,
                                   VERTEX_COLOR_DATA_ELEMENT_LEN,
@@ -390,17 +363,14 @@ void RenderSystem::RegisterRenderable(ecs::IEntity*       entity,
     this->vertexBuffer->Unbind();
     this->indexBuffer->Unbind();
 
-    this->renderableGroups[renderableGroup].push_back(
-        Renderable(entity, transform, material, shape, texture));
+    this->renderableGroups[renderableGroup].push_back(Renderable(entity, transform, material, shape, texture));
 }
 
 void RenderSystem::UnregisterRenderable(GameObjectId gameObjectId)
 {
     for (auto& RG : this->renderableGroups)
     {
-        for (RenderableList::iterator it = RG.second.begin();
-             it != RG.second.end();
-             ++it)
+        for (RenderableList::iterator it = RG.second.begin(); it != RG.second.end(); ++it)
         {
             if (it->gameObject->GetEntityID() == gameObjectId)
             {
@@ -422,30 +392,21 @@ void RenderSystem::OnWindowRestored(const WindowRestoredEvent* event) {}
 
 void RenderSystem::OnGameObjectCreated(const GameObjectCreated* event)
 {
-    ecs::IEntity* entity =
-        ecs::ecsEngine->GetEntityManager()->GetEntity(event->entityID);
+    ecs::IEntity* entity = ecs::ecsEngine->GetEntityManager()->GetEntity(event->entityID);
     assert(entity != nullptr && "Failed to retrive entity by id!");
 
-    TransformComponent* transformComponent =
-        entity->GetComponent<TransformComponent>();
-    MaterialComponent* materialComponent =
-        entity->GetComponent<MaterialComponent>();
-    ShapeComponent*   shapeComponent = entity->GetComponent<ShapeComponent>();
-    TextureComponent* textureComponent =
-        entity->GetComponent<TextureComponent>();
+    TransformComponent* transformComponent = entity->GetComponent<TransformComponent>();
+    MaterialComponent*  materialComponent  = entity->GetComponent<MaterialComponent>();
+    ShapeComponent*     shapeComponent     = entity->GetComponent<ShapeComponent>();
+    TextureComponent*   textureComponent   = entity->GetComponent<TextureComponent>();
 
-    if (transformComponent == nullptr || materialComponent == nullptr ||
-        shapeComponent == nullptr)
+    if (transformComponent == nullptr || materialComponent == nullptr || shapeComponent == nullptr)
     {
         return;
     }
-
+    const auto lolkek = shapeComponent->GetShapeID();
     this->SetShapeBufferIndex(shapeComponent);
-    this->RegisterRenderable(entity,
-                             transformComponent,
-                             materialComponent,
-                             shapeComponent,
-                             textureComponent);
+    this->RegisterRenderable(entity, transformComponent, materialComponent, shapeComponent, textureComponent);
 }
 
 void RenderSystem::OnGameObjectDestroyed(const GameObjectDestroyed* event)

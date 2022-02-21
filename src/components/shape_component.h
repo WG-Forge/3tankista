@@ -5,9 +5,7 @@
 #include "render/shapes/shape.h"
 #include "render/shapes/shape_buffer_index.h"
 
-class ShapeComponent : public Shape,
-                       public ShapeBufferIndex,
-                       public ecs::Component<ShapeComponent>
+class ShapeComponent : public Shape, public ShapeBufferIndex, public ecs::Component<ShapeComponent>
 {
     friend class RenderSystem;
 

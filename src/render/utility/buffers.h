@@ -40,10 +40,7 @@ struct VertexBuffer
         glGenBuffers(1, &this->id);
         glBindBuffer(GL_ARRAY_BUFFER, this->id);
 
-        glBufferData(GL_ARRAY_BUFFER,
-                     size,
-                     0,
-                     dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, size, 0, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
@@ -59,8 +56,7 @@ struct VertexBuffer
 
     GLintptr BufferVertexData(const void* data, GLsizeiptr size)
     {
-        assert(this->currentBufferIndex + size < (this->bufferCapacity + 1) &&
-               "VertexBuffer capacity exceeded.");
+        assert(this->currentBufferIndex + size < (this->bufferCapacity + 1) && "VertexBuffer capacity exceeded.");
 
         GLintptr dataBufferIndex = this->currentBufferIndex;
 
@@ -101,22 +97,17 @@ struct IndexBuffer
         glDeleteBuffers(1, &this->id);
     }
 
-    inline void Bind() const
-    {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);
-    }
+    inline void Bind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id); }
 
     inline void Unbind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
 
     GLintptr BufferIndexData(const void* data, GLsizeiptr size)
     {
-        assert(this->currentBufferIndex + size < (this->bufferCapacity + 1) &&
-               "IndexBuffer capacity exceeded.");
+        assert(this->currentBufferIndex + size < (this->bufferCapacity + 1) && "IndexBuffer capacity exceeded.");
 
         GLintptr dataBufferIndex = this->currentBufferIndex;
 
-        glBufferSubData(
-            GL_ELEMENT_ARRAY_BUFFER, this->currentBufferIndex, size, data);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, this->currentBufferIndex, size, data);
 
         this->currentBufferIndex += size;
 

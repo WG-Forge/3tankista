@@ -13,12 +13,10 @@ class Game : public ecs::event::IEventListener, public SimpleFSM
 {
 public:
     explicit Game(std::string title = "Game Name");
-    ~Game() = default;
+    ~Game();
 
 public:
-    void Initialize(const int  width,
-                    const int  height,
-                    const bool fullscreen = false);
+    void Initialize(const int width, const int height, const bool fullscreen = false);
 
     void Run();
 
@@ -135,7 +133,6 @@ public:
     inline GameState GetActiveGameState() const { return (GameState)this->GetActiveState(); }
     inline bool      IsInitialized() const { return (this->GetActiveState() > GameState::INITIALIZED); }
     inline bool      IsRestarted() const { return (this->GetActiveState() == GameState::RESTARTED); }
-    void             Terminate();
 
 private:
     void InitializeECS();
@@ -144,15 +141,14 @@ private:
 
     void ProcessWindowEvent();
 
-    void Terminate();
-
     void RegisterEventCallbacks();
 
     void UnregisterEventCallbacks();
 
+    void Terminate();
+
 private:
-    static void KeyCallback(
-        GLFWwindow* window, int key, int scancode, int action, int mode);
+    static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 private:
     GLFWwindow* window;

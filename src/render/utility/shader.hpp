@@ -20,9 +20,7 @@ public:
 public:
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
-    Shader(const std::string& vertexPath,
-           const std::string& fragmentPath,
-           const std::string& geometryPath = "")
+    Shader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath = "")
     {
         // 1. retrieve the vertex/fragment source code from filePath
         std::string   vertexCode;
@@ -62,8 +60,7 @@ public:
         }
         catch (std::ifstream::failure& e)
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ"
-                      << std::endl;
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
         }
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
@@ -122,8 +119,7 @@ public:
         }
         catch (std::ifstream::failure& e)
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ"
-                      << std::endl;
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
         }
         std::size_t compute;
 
@@ -154,8 +150,7 @@ public:
     // ------------------------------------------------------------------------
     void SetBool(const std::string& name, bool value) const
     {
-        glUniform1i(glGetUniformLocation(this->GetID(), name.c_str()),
-                    (int)value);
+        glUniform1i(glGetUniformLocation(this->GetID(), name.c_str()), (int)value);
     }
     // ------------------------------------------------------------------------
     void SetInt(const std::string& name, int value) const
@@ -170,8 +165,7 @@ public:
     // ------------------------------------------------------------------------
     void SetVec2(const std::string& name, const Vector2f& value) const
     {
-        glUniform2fv(
-            glGetUniformLocation(this->GetID(), name.c_str()), 1, value.data());
+        glUniform2fv(glGetUniformLocation(this->GetID(), name.c_str()), 1, value.data());
     }
     void SetVec2(const std::string& name, float x, float y) const
     {
@@ -180,8 +174,7 @@ public:
     // ------------------------------------------------------------------------
     void SetVec3(const std::string& name, const Vector3f& value) const
     {
-        glUniform3fv(
-            glGetUniformLocation(this->GetID(), name.c_str()), 1, value.data());
+        glUniform3fv(glGetUniformLocation(this->GetID(), name.c_str()), 1, value.data());
     }
     void SetVec3(const std::string& name, float x, float y, float z) const
     {
@@ -191,61 +184,43 @@ public:
     void SetVec4(const std::string& name, const Vector4f& value) const
     {
         const auto tmp = glGetUniformLocation(this->GetID(), name.c_str());
-        glUniform4fv(
-            glGetUniformLocation(this->GetID(), name.c_str()), 1, value.data());
+        glUniform4fv(glGetUniformLocation(this->GetID(), name.c_str()), 1, value.data());
     }
     void SetVec4(const std::string& name, float x, float y, float z, float w)
     {
-        glUniform4f(
-            glGetUniformLocation(this->GetID(), name.c_str()), x, y, z, w);
+        glUniform4f(glGetUniformLocation(this->GetID(), name.c_str()), x, y, z, w);
     }
     // ------------------------------------------------------------------------
     void SetMat2(const std::string& name, const Matrix2f& mat) const
     {
-        glUniformMatrix2fv(glGetUniformLocation(this->GetID(), name.c_str()),
-                           1,
-                           GL_FALSE,
-                           mat.data());
+        glUniformMatrix2fv(glGetUniformLocation(this->GetID(), name.c_str()), 1, GL_FALSE, mat.data());
     }
     // ------------------------------------------------------------------------
     void SetMat3(const std::string& name, const Matrix3f& mat) const
     {
-        glUniformMatrix3fv(glGetUniformLocation(this->GetID(), name.c_str()),
-                           1,
-                           GL_FALSE,
-                           mat.data());
+        glUniformMatrix3fv(glGetUniformLocation(this->GetID(), name.c_str()), 1, GL_FALSE, mat.data());
     }
     // ------------------------------------------------------------------------
     void SetMat4(const std::string& name, const Matrix4f& mat) const
     {
-        std::vector<float> m{ mat.getCol(0)[0], mat.getCol(0)[1],
-                              mat.getCol(0)[2], mat.getCol(0)[3],
+        std::vector<float> m{ mat.getCol(0)[0], mat.getCol(0)[1], mat.getCol(0)[2], mat.getCol(0)[3],
 
-                              mat.getCol(1)[0], mat.getCol(1)[1],
-                              mat.getCol(1)[2], mat.getCol(1)[3],
+                              mat.getCol(1)[0], mat.getCol(1)[1], mat.getCol(1)[2], mat.getCol(1)[3],
 
-                              mat.getCol(2)[0], mat.getCol(2)[1],
-                              mat.getCol(2)[2], mat.getCol(2)[3],
+                              mat.getCol(2)[0], mat.getCol(2)[1], mat.getCol(2)[2], mat.getCol(2)[3],
 
-                              mat.getCol(3)[0], mat.getCol(3)[1],
-                              mat.getCol(3)[2], mat.getCol(3)[3] };
-        glUniformMatrix4fv(glGetUniformLocation(this->GetID(), name.c_str()),
-                           1,
-                           GL_FALSE,
-                           const_cast<float*>(m.data()));
+                              mat.getCol(3)[0], mat.getCol(3)[1], mat.getCol(3)[2], mat.getCol(3)[3] };
+        glUniformMatrix4fv(
+            glGetUniformLocation(this->GetID(), name.c_str()), 1, GL_FALSE, const_cast<float*>(m.data()));
     }
 
-    void SetSampler2D(const std::string& name,
-                      std::size_t        texture,
-                      int                id) const
+    void SetSampler2D(const std::string& name, std::size_t texture, int id) const
     {
         glActiveTexture(GL_TEXTURE0 + id);
         glBindTexture(GL_TEXTURE_2D, texture);
         this->SetInt(name, id);
     }
-    void SetSampler3D(const std::string& name,
-                      std::size_t        texture,
-                      int                id) const
+    void SetSampler3D(const std::string& name, std::size_t texture, int id) const
     {
         glActiveTexture(GL_TEXTURE0 + id);
         glBindTexture(GL_TEXTURE_3D, texture);
@@ -265,14 +240,12 @@ private:
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                std::cout
-                    << "ERROR::SHADER_COMPILATION_ERROR of type: " << type
-                    << "\n"
-                    << infoLog
-                    << "\n -- "
-                       "---------------------------------------------------"
-                       " -- "
-                    << std::endl;
+                std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
+                          << infoLog
+                          << "\n -- "
+                             "---------------------------------------------------"
+                             " -- "
+                          << std::endl;
             }
         }
         else
@@ -281,13 +254,12 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                std::cout
-                    << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
-                    << infoLog
-                    << "\n -- "
-                       "---------------------------------------------------"
-                       " -- "
-                    << std::endl;
+                std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
+                          << infoLog
+                          << "\n -- "
+                             "---------------------------------------------------"
+                             " -- "
+                          << std::endl;
             }
         }
     }

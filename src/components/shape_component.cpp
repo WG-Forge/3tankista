@@ -5,12 +5,12 @@ ShapeComponent::ShapeComponent(const Shape& shape)
 {
 }
 
-void ShapeComponent::SetShapeBufferIndex(
-    const ShapeBufferIndex& shapeBufferIndex)
+void ShapeComponent::SetShapeBufferIndex(const ShapeBufferIndex& shapeBufferIndex)
 {
     this->positionDataIndex = shapeBufferIndex.GetPositionDataIndex();
     this->indexDataIndex    = shapeBufferIndex.GetIndexDataIndex();
     this->normalDataIndex   = shapeBufferIndex.GetNormalDataIndex();
     this->texCoordDataIndex = shapeBufferIndex.GetTexCoordDataIndex();
     this->colorDataIndex    = shapeBufferIndex.GetColorDataIndex();
+    this->shapeId           = shapeBufferIndex.GetShapeId();
 }

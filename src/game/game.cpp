@@ -5,8 +5,8 @@
 #include "game_configuration.h"
 #include "systems/render_system.h"
 
-Game::Game(const std::string& title)
-    : gameTitle(title)
+Game::Game(std::string title)
+    : gameTitle(std::move(title))
     , window(nullptr)
     , fullscreen(false)
     , windowPosX(-1)
@@ -75,11 +75,7 @@ void Game::InitializeGLFW()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    this->window = glfwCreateWindow(this->windowWidth,
-                                    this->windowHeight,
-                                    this->gameTitle.c_str(),
-                                    NULL,
-                                    NULL);
+    this->window = glfwCreateWindow(this->windowWidth, this->windowHeight, this->gameTitle.c_str(), NULL, NULL);
     if (window == NULL)
     {
         const char* description;
@@ -93,10 +89,9 @@ void Game::InitializeGLFW()
     glfwGetWindowSize(this->window, &this->windowWidth, &this->windowHeight);
 
     glfwSetKeyCallback(window, &Game::KeyCallback);
-    glfwSetFramebufferSizeCallback(
-        this->window,
-        [](GLFWwindow* window, int width, int height)
-        { ecs::ecsEngine->SendEvent<WindowResizedEvent>(width, height); });
+    glfwSetFramebufferSizeCallback(this->window,
+                                   [](GLFWwindow* window, int width, int height)
+                                   { ecs::ecsEngine->SendEvent<WindowResizedEvent>(width, height); });
 }
 
 void Game::OnQuitGame(const QuitGameEvent* event)
@@ -125,8 +120,7 @@ void Game::RegisterEventCallbacks() {}
 
 void Game::UnregisterEventCallbacks() {}
 
-void Game::KeyCallback(
-    GLFWwindow* window, int key, int scancode, int action, int mode)
+void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
     // when a user presses the escape key, we set the WindowShouldClose property
     // to true, closing the application

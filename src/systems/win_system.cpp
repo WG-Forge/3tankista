@@ -4,7 +4,7 @@
 #include "components/kill_points_component.h"
 #include "components/order_component.h"
 #include "components/player_id_component.h"
-#include "components/position_component.h"
+#include "components/transform_component.h"
 #include "components/ttc_component.h"
 #include "components/turn_component.h"
 #include "components/vehicle_id_component.h"
@@ -61,7 +61,7 @@ void WinSystem::UpdateCapturePoints()
     for (auto baseId : baseVector)
     {
         basePositionVector.push_back(
-            entityManager->GetEntity(baseId)->GetComponent<PositionComponent>()->GetPosition());
+            entityManager->GetEntity(baseId)->GetComponent<TransformComponent>()->GetPosition());
     }
     std::set<uint64_t> players;
     for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
@@ -69,7 +69,7 @@ void WinSystem::UpdateCapturePoints()
     {
         auto playerId      = entityManager->GetEntity(it->GetOwner())->GetComponent<PlayerIdComponent>()->GetPlayerId();
         auto tank          = entityManager->GetEntity(it->GetOwner());
-        auto position      = tank->GetComponent<PositionComponent>()->GetPosition();
+        auto position      = tank->GetComponent<TransformComponent>()->GetPosition();
         auto turnComponent = componentManager->begin<TurnComponent>().operator->();
         if ((turnComponent->GetCurrentTurn()) % turnComponent->GetPlayersNumber() == 0 ||
             turnComponent->GetPlayersNumber() == 1)
@@ -89,7 +89,7 @@ void WinSystem::UpdateCapturePoints()
     {
         auto playerId      = entityManager->GetEntity(it->GetOwner())->GetComponent<PlayerIdComponent>()->GetPlayerId();
         auto tank          = entityManager->GetEntity(it->GetOwner());
-        auto position      = tank->GetComponent<PositionComponent>()->GetPosition();
+        auto position      = tank->GetComponent<TransformComponent>()->GetPosition();
         auto turnComponent = componentManager->begin<TurnComponent>().operator->();
         if ((turnComponent->GetCurrentTurn()) % turnComponent->GetPlayersNumber() == 0 ||
             turnComponent->GetPlayersNumber() == 1)

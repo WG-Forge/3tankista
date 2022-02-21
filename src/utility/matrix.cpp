@@ -1,6 +1,21 @@
 #include "matrix.hpp"
 
 template <>
+const Matrix2f Matrix2f::getInversed() const
+{
+    const Matrix2f& self = *this;
+
+    Matrix2f res;
+    double   invDet = 1.0 / this->det();
+    res(0, 0)       = invDet * self(1, 1);
+    res(0, 1)       = -invDet * self(0, 1);
+    res(1, 0)       = -invDet * self(1, 0);
+    res(1, 1)       = invDet * self(0, 0);
+
+    return res;
+}
+
+template <>
 const Matrix2d Matrix2d::getInversed() const
 {
     const Matrix2d& self = *this;
@@ -114,6 +129,14 @@ const Matrix4d Matrix4d::getInversed() const
                                     { self(2, 0), self(2, 1), self(2, 2) } })
                              .det();
     return res;
+}
+
+template <>
+double Matrix2f::det() const
+{
+    const Matrix2f& self = *this;
+    double          det  = self(0, 0) * self(1, 1) - self(0, 1) * self(1, 0);
+    return det;
 }
 
 template <>

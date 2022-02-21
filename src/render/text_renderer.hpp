@@ -22,10 +22,7 @@ struct Text
 {
     using Color = Vector4f;
 
-    Text(const std::string& text,
-         const Vector2f&    position,
-         const float        scale,
-         const Color        color)
+    Text(const std::string& text, const Vector2f& position, const float scale, const Color color)
         : text{ text }
         , position{ position }
         , scale{ scale }

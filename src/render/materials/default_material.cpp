@@ -19,8 +19,7 @@ void DefaultMaterial::Unuse() const
 
 bool DefaultMaterial::Initialize()
 {
-    this->shader = std::make_unique<Shader>("shaders/default.vert",
-                                            "shaders/default.frag");
+    this->shader = std::make_unique<Shader>("shaders/default.vert", "shaders/default.frag");
     return true;
 }
 

@@ -19,24 +19,20 @@ public:
 
     // TODO: refactor this shit
     template <typename S>
-    static Shape CreateShape(const std::size_t   size          = 0,
-                             const RenderingMode renderingMode = GL_TRIANGLES)
+    static Shape CreateShape(const std::size_t size = 0, const RenderingMode renderingMode = GL_TRIANGLES)
     {
         ShapeGenerator& instance = ShapeGenerator::GetInstance();
 
         // check that shape not registered
         // for hex need check by type and size
         // for another only type
-        auto it = std::find_if(
-            instance.shapeRegistry.begin(),
-            instance.shapeRegistry.end(),
-            [&](const std::pair<IShape*, std::size_t>& shape)
-            {
-                return shape.first->GetShapeID() ==
-                           static_cast<ShapeID>(S::SHAPE_TYPE) &&
-                       shape.first->GetRenderingMode() == renderingMode &&
-                       shape.second == size;
-            });
+        auto it = std::find_if(instance.shapeRegistry.begin(),
+                               instance.shapeRegistry.end(),
+                               [&](const std::pair<IShape*, std::size_t>& shape)
+                               {
+                                   return shape.first->GetShapeID() == static_cast<ShapeID>(S::SHAPE_TYPE) &&
+                                          shape.first->GetRenderingMode() == renderingMode && shape.second == size;
+                               });
 
         if (it != instance.shapeRegistry.cend())
         {

@@ -2,7 +2,7 @@
 #include "components/attack_matrix_component.h"
 #include "components/health_component.h"
 #include "components/player_id_component.h"
-#include "components/position_component.h"
+#include "components/transform_component.h"
 #include "components/ttc_component.h"
 #include "components/vehicle_id_component.h"
 
@@ -30,7 +30,7 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
              ++it)
         {
             auto currentEntity = entityManager->GetEntity(it->GetOwner());
-            if (currentEntity->GetComponent<PositionComponent>()->GetPosition() == action.target)
+            if (currentEntity->GetComponent<TransformComponent>()->GetPosition() == action.target)
             {
                 auto health = currentEntity->GetComponent<HealthComponent>();
                 if (health->GetHealth() != 0) // Already destroyed

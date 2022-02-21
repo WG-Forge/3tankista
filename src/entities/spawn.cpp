@@ -20,6 +20,5 @@ Spawn::Spawn(const ecs::EntityId&   entityId,
 
     this->transform = this->AddComponent<TransformComponent>(position);
 
-    this->material = this->AddComponent<MaterialComponent>(
-        MaterialGenerator::CreateMaterial<DefaultMaterial>(), color);
+    this->material = this->AddComponent<MaterialComponent>(MaterialGenerator::CreateMaterial<DefaultMaterial>(), color);
 }

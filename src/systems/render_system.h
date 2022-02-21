@@ -12,14 +12,12 @@
 
 #include "GLFW/glfw3.h"
 
-class RenderSystem : public ecs::System<RenderSystem>,
-                     public ecs::event::IEventListener
+class RenderSystem : public ecs::System<RenderSystem>, public ecs::event::IEventListener
 {
     static constexpr size_t GLOBAL_VERTEX_BUFFER_SIZE{ 8388608 /* 8 MB */ };
     static constexpr size_t GLOBAL_INDEX_BUFFER_SIZE{ 8388608 /* 8 MB */ };
 
-    static inline const RenderableGroupID CreateRenderableGroupID(
-        MaterialComponent* material, ShapeComponent* shape)
+    static inline const RenderableGroupID CreateRenderableGroupID(MaterialComponent* material, ShapeComponent* shape)
     {
         return ((material->GetMaterialID() << 16) | shape->GetShapeID());
     }
@@ -30,9 +28,9 @@ public:
     RenderSystem(GLFWwindow* window);
     virtual ~RenderSystem();
 
-    virtual void PreUpdate(float dt) override;
-    virtual void Update(float dt) override;
-    virtual void PostUpdate(float dt) override;
+    void PreUpdate(ecs::f32 dt) override;
+    void Update(ecs::f32 dt) override;
+    void PostUpdate(ecs::f32 dt) override;
 
     void DrawText(const std::string& text,
                   const Vector2f&    position,

@@ -17,9 +17,7 @@ public:
         MaterialGenerator& instance = MaterialGenerator::GetInstance();
 
         IMaterial* material = nullptr;
-        material =
-            instance
-                .materialRegistry[static_cast<MaterialID>(M::MATERIAL_TYPE)];
+        material            = instance.materialRegistry[static_cast<MaterialID>(M::MATERIAL_TYPE)];
 
         if (material != nullptr)
         {
@@ -32,8 +30,7 @@ public:
 
         assert((isInitialized == true) && "Failed to initialize material!");
 
-        instance.materialRegistry[static_cast<MaterialID>(M::MATERIAL_TYPE)] =
-            material;
+        instance.materialRegistry[static_cast<MaterialID>(M::MATERIAL_TYPE)] = material;
         return Material(material);
     }
 

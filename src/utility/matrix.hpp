@@ -764,13 +764,15 @@ public:
 private:
     std::array<value_type, rows * columns> m_data;
 };
-
+// TODO: Make this template
 template <>
 const Matrix<2, 2, double> Matrix<2, 2, double>::getInversed() const;
 template <>
 const Matrix<3, 3, double> Matrix<3, 3, double>::getInversed() const;
 template <>
 const Matrix<4, 4, double> Matrix<4, 4, double>::getInversed() const;
+template <>
+const Matrix<2, 2, float> Matrix<2, 2, float>::getInversed() const;
 
 template <>
 double Matrix<2, 2, double>::det() const;
@@ -778,6 +780,8 @@ template <>
 double Matrix<3, 3, double>::det() const;
 template <>
 double Matrix<4, 4, double>::det() const;
+template <>
+double Matrix<2, 2, float>::det() const;
 
 template <>
 Matrix<3, 1, double> Matrix<3, 1, double>::cross(const Matrix<3, 1, double>& other) const;

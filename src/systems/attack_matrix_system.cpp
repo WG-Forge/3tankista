@@ -1,7 +1,7 @@
 #include "attack_matrix_system.h"
 #include "components/attack_matrix_component.h"
 #include "components/player_id_component.h"
-#include "components/position_component.h"
+#include "components/transform_component.h"
 #include "components/vehicle_id_component.h"
 
 AttackMatrixSystem::AttackMatrixSystem()
@@ -37,7 +37,7 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
              ++it)
         {
             auto currentEntity = entityManager->GetEntity(it->GetOwner());
-            if (currentEntity->GetComponent<PositionComponent>()->GetPosition() == action.target)
+            if (currentEntity->GetComponent<TransformComponent>()->GetPosition() == action.target)
             {
                 attackedUsers.insert(currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId());
             }

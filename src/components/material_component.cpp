@@ -1,7 +1,6 @@
 #include "material_component.h"
 
-MaterialComponent::MaterialComponent(const Material& material,
-                                     const Color&    color)
+MaterialComponent::MaterialComponent(const Material& material, const Color& color)
     : Material(material)
     , color(color)
 {
@@ -15,10 +14,7 @@ void MaterialComponent::Apply()
     this->SetUniform4fv(COLOR_UNIFORM_NAME, color);
 }
 
-void MaterialComponent::SetColor(const float r,
-                                 const float g,
-                                 const float b,
-                                 const float a)
+void MaterialComponent::SetColor(const float r, const float g, const float b, const float a)
 {
     this->color[0] = r;
     this->color[1] = g;

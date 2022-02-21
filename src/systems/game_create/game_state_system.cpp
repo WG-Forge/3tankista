@@ -61,12 +61,12 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     // Create tanks
     for (auto& tank : event->gameState.vehicles)
     {
-        auto entity = entityManager->CreateEntity<Tank>(factory, tank.second.vehicleType);
+        auto entity = entityManager->CreateEntity<Tank>(
+            tank.second.position, "textures/at_spg.png", factory, tank.second.vehicleType);
         componentManager->GetComponent<PlayerIdComponent>(entity)->SetPlayerId(
             adapterPlayerId->Get(tank.second.playerId));
         componentManager->GetComponent<VehicleIdComponent>(entity)->SetVehicleId(entity);
         componentManager->GetComponent<SpawnPositionComponent>(entity)->SetSpawnPosition(tank.second.spawnPosition);
-        componentManager->GetComponent<PositionComponent>(entity)->SetPosition(tank.second.position);
         componentManager->GetComponent<CapturePointsComponent>(entity)->SetCapturePoints(tank.second.capturePoints);
         adapterVehicleId->Add(tank.first, entity);
         // Determine playerPosition;
@@ -144,13 +144,13 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
         {
             GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
-                                                   tank->GetComponent<PositionComponent>()->GetPosition(),
+                                                   tank->GetComponent<TransformComponent>()->GetPosition(),
                                                    CellState::FRIEND);
         }
         else
         {
             GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
-                                                   tank->GetComponent<PositionComponent>()->GetPosition(),
+                                                   tank->GetComponent<TransformComponent>()->GetPosition(),
                                                    CellState::ENEMY);
         }
     }

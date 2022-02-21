@@ -1,4 +1,10 @@
 #include "tank.h"
+#include "components/shape_component.h"
+#include "render/materials/default_material.h"
+#include "render/materials/material_generator.h"
+#include "render/shapes/quad_shape.h"
+#include "render/shapes/shape.h"
+#include "render/shapes/shape_generator.h"
 
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
@@ -8,9 +14,9 @@ Tank::Tank(const ecs::EntityId&   entityId,
            TankType               type)
     : GameObject<Tank>(entityId, componentManager)
 {
-	Shape shape = ShapeGenerator::CreateShape<QuadShape>();
+    Shape shape = ShapeGenerator::CreateShape<QuadShape>();
     this->AddComponent<ShapeComponent>(shape);
-    this->transformComponent = AddComponent<TransformComponent>(position);
+    this->transformComponent     = AddComponent<TransformComponent>(position);
     this->spawnPositionComponent = AddComponent<SpawnPositionComponent>(Vector3i{ 0, 0, 0 });
     this->capturePointsComponent = AddComponent<CapturePointsComponent>(0);
     this->playerIdComponent      = AddComponent<PlayerIdComponent>(0);
@@ -45,10 +51,8 @@ Tank::Tank(const ecs::EntityId&   entityId,
             break;
         }
     }
-    this->healthComponent = AddComponent<HealthComponent>(this->ttcComponent->GetMaxHealth());
-    this->textureComponent =
-        this->AddComponent<TextureComponent>(textureFileName);
+    this->healthComponent   = AddComponent<HealthComponent>(this->ttcComponent->GetMaxHealth());
+    this->textureComponent  = this->AddComponent<TextureComponent>(textureFileName);
     this->materialComponent = this->AddComponent<MaterialComponent>(
-        MaterialGenerator::CreateMaterial<DefaultMaterial>(),
-        Color{ 1.0f, 1.0f, 1.0f, 1.0f });
+        MaterialGenerator::CreateMaterial<DefaultMaterial>(), Color{ 1.0f, 1.0f, 1.0f, 1.0f });
 }

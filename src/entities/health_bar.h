@@ -18,32 +18,14 @@ public:
               const Color&           spawnColor);
     ~HealthBar() override = default;
 
-    auto GetHealthEntity()
-    {
-        return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId);
-    }
-    const auto GetHealthEntity() const
-    {
-        return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId);
-    }
+    auto       GetHealthEntity() { return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId); }
+    const auto GetHealthEntity() const { return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId); }
 
-    auto GetSpawnEntity()
-    {
-        return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId);
-    }
-    const auto GetSpawnEntity() const
-    {
-        return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId);
-    }
+    auto       GetSpawnEntity() { return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId); }
+    const auto GetSpawnEntity() const { return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId); }
 
-    auto GetTankEntity()
-    {
-        return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId);
-    }
-    const auto GetTankEntity() const
-    {
-        return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId);
-    }
+    auto       GetTankEntity() { return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId); }
+    const auto GetTankEntity() const { return ecs::ecsEngine->GetEntityManager()->GetEntity(healthEntityId); }
 
 public:
     GameObjectId healthEntityId;

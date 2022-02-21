@@ -15,11 +15,10 @@ public:
 
     virtual ~TransformComponent() = default;
 
-    inline void SetTransform(const Matrix4f& transform)
-    {
-        this->transform = transform;
-    }
+    inline void SetTransform(const Matrix4f& transform) { this->transform = (Transform)transform; }
 
+    inline auto        GetPosition() { return this->transform.GetPosition(); }
+    void               SetPosition(const Vector3i& position) { this->transform.SetPosition(position); }
     inline auto&       GetTransform() { return this->transform; }
     inline const auto& GetTransform() const { return this->transform; }
 

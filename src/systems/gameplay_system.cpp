@@ -221,16 +221,16 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             {
                 // Move to the nearest base
                 pathFinder.SetHexMapComponent(gameArea);
-                pathFinder.SetStartPoint(tank->GetComponent<PositionComponent>()->GetPosition());
+                pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
 
                 auto     it = componentManager->begin<BaseIdComponent>();
                 Vector3i nearestBasePos =
-                    entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition();
+                    entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
                 ++it;
                 for (; componentManager->end<BaseIdComponent>() != it; ++it)
                 {
                     auto basePosition =
-                        entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition();
+                        entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
                     if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
                         (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
                          pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
@@ -244,7 +244,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                 if (path.empty())
                     continue; // STAY
                 SetHexMapComponentCell(
-                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::EMPTY);
+                    gameArea, tank->GetComponent<TransformComponent>()->GetPosition(), CellState::EMPTY);
                 SetHexMapComponentCell(
                     gameArea,
                     path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
@@ -299,8 +299,8 @@ bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
 bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
 {
     bool shoot    = false;
-    auto distance = GameplaySystem::GetDistance(playerTank->GetComponent<PositionComponent>()->GetPosition(),
-                                                enemyTank->GetComponent<PositionComponent>()->GetPosition());
+    auto distance = GameplaySystem::GetDistance(playerTank->GetComponent<TransformComponent>()->GetPosition(),
+                                                enemyTank->GetComponent<TransformComponent>()->GetPosition());
     switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
     {
 
@@ -311,8 +311,8 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
         }
         case TankType::AT_SPG:
         {
-            auto tankPosition = playerTank->GetComponent<PositionComponent>()->GetPosition();
-            auto point        = enemyTank->GetComponent<PositionComponent>()->GetPosition();
+            auto tankPosition = playerTank->GetComponent<TransformComponent>()->GetPosition();
+            auto point        = enemyTank->GetComponent<TransformComponent>()->GetPosition();
             shoot             = distance <= AT_SPG_TANK_DAMAGE_DISTANCE &&
                     (point.x() == tankPosition.x() || point.y() == tankPosition.y() || point.z() == tankPosition.z());
 
@@ -330,8 +330,8 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
         }
         case TankType::SPG:
         {
-            shoot = GameplaySystem::GetDistance(enemyTank->GetComponent<PositionComponent>()->GetPosition(),
-                                                playerTank->GetComponent<PositionComponent>()->GetPosition()) ==
+            shoot = GameplaySystem::GetDistance(enemyTank->GetComponent<TransformComponent>()->GetPosition(),
+                                                playerTank->GetComponent<TransformComponent>()->GetPosition()) ==
                     MEDIUM_TANK_DAMAGE_DISTANCE;
             break;
         }
@@ -345,8 +345,8 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
 Vector3i GameplaySystem::GetShootPosition(Tank* tank, Tank* enemyTank)
 {
 
-    auto enemyPosition = enemyTank->GetComponent<PositionComponent>()->GetPosition();
-    auto tankPosition  = tank->GetComponent<PositionComponent>()->GetPosition();
+    auto enemyPosition = enemyTank->GetComponent<TransformComponent>()->GetPosition();
+    auto tankPosition  = tank->GetComponent<TransformComponent>()->GetPosition();
     switch (tank->GetComponent<TankTypeComponent>()->GetTankType())
     {
 
@@ -370,12 +370,12 @@ bool GameplaySystem::IsCorrectShootPosition(Tank* tank, Tank* enemy)
 {
 
     bool result   = false;
-    auto position = enemy->GetComponent<PositionComponent>()->GetPosition();
+    auto position = enemy->GetComponent<TransformComponent>()->GetPosition();
     if (tank->GetComponent<TankTypeComponent>()->GetTankType() == TankType::AT_SPG)
     {
         if (pathFinder.GetDistance(position) != -1 &&
             pathFinder.GetDistance(position) ==
-                GameplaySystem::GetDistance(tank->GetComponent<PositionComponent>()->GetPosition(), position))
+                GameplaySystem::GetDistance(tank->GetComponent<TransformComponent>()->GetPosition(), position))
         {
             result = true;
         }

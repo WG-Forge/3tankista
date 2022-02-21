@@ -10,8 +10,7 @@
 TextRenderer::TextRenderer()
     : shader(nullptr)
 {
-    this->shader =
-        std::make_unique<Shader>("shaders/text.vert", "shaders/text.frag");
+    this->shader = std::make_unique<Shader>("shaders/text.vert", "shaders/text.frag");
 
     this->shader->SetInt("text", 0);
 
@@ -33,16 +32,13 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
     {
-        std::cout << "ERRPR::FREETYPE: Could not init FreeType Library"
-                  << std::endl
-                  << std::flush;
+        std::cout << "ERRPR::FREETYPE: Could not init FreeType Library" << std::endl << std::flush;
     }
 
     FT_Face face;
     if (FT_New_Face(ft, font.c_str(), 0, &face))
     {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl
-                  << std::flush;
+        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl << std::flush;
     }
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
@@ -53,8 +49,7 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER))
         {
-            std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl
-                      << std::flush;
+            std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl << std::flush;
             continue;
         }
 
@@ -76,12 +71,10 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        Character character = {
-            texture,
-            Vector2i(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            Vector2i(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            static_cast<unsigned int>(face->glyph->advance.x)
-        };
+        Character character = { texture,
+                                Vector2i(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                                Vector2i(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                                static_cast<unsigned int>(face->glyph->advance.x) };
         characters.insert(std::pair<char, Character>(c, character));
     }
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -90,10 +83,7 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     FT_Done_FreeType(ft);
 }
 
-void TextRenderer::AddText(const std::string& text,
-                           const Vector2f&    position,
-                           const float        scale,
-                           const Color        color)
+void TextRenderer::AddText(const std::string& text, const Vector2f& position, const float scale, const Color color)
 {
     strings.push_back(Text{ text, position, scale, color });
 }
@@ -115,22 +105,15 @@ void TextRenderer::RenderText()
         {
             Character ch = characters[*c];
 
-            float xpos =
-                x + (ch.bearing.x() * string.scale) / GAME_WINDOW_WIDTH;
-            float ypos =
-                y + ((this->characters['H'].bearing.y() - ch.bearing.y()) *
-                     string.scale) /
-                        GAME_WINDOW_HEIGHT;
+            float xpos = x + (ch.bearing.x() * string.scale) / GAME_WINDOW_WIDTH;
+            float ypos = y + ((this->characters['H'].bearing.y() - ch.bearing.y()) * string.scale) / GAME_WINDOW_HEIGHT;
 
             float w = (ch.size.x() * string.scale) / GAME_WINDOW_WIDTH;
             float h = (ch.size.y() * string.scale) / GAME_WINDOW_HEIGHT;
 
-            float vertices[6][4] = { { xpos, ypos + h, 0.0f, 0.0f },
-                                     { xpos, ypos, 0.0f, 1.0f },
-                                     { xpos + w, ypos, 1.0f, 1.0f },
-                                     { xpos, ypos + h, 0.0f, 0.0f },
-                                     { xpos + w, ypos, 1.0f, 1.0f },
-                                     { xpos + w, ypos + h, 1.0f, 0.0f } };
+            float vertices[6][4] = { { xpos, ypos + h, 0.0f, 0.0f }, { xpos, ypos, 0.0f, 1.0f },
+                                     { xpos + w, ypos, 1.0f, 1.0f }, { xpos, ypos + h, 0.0f, 0.0f },
+                                     { xpos + w, ypos, 1.0f, 1.0f }, { xpos + w, ypos + h, 1.0f, 0.0f } };
 
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
 

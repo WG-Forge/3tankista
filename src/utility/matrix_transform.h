@@ -9,8 +9,7 @@ template <typename T>
 Matrix4<T> translate(const Matrix4<T>& m, const Vector3<T> v)
 {
     Matrix4<T>  result{ m };
-    const auto& newPos = m.getCol(0) * v[0] + m.getCol(1) * v[1] +
-                         m.getCol(2) * v[2] + m.getCol(3);
+    const auto& newPos = m.getCol(0) * v[0] + m.getCol(1) * v[1] + m.getCol(2) * v[2] + m.getCol(3);
     result.replaceCol(3, newPos);
     return result;
 }
@@ -39,18 +38,12 @@ Matrix4<T> rotate(const Matrix4<T>& m, T angle, const Vector3<T> v)
     rotate.getCol(2)[2] = c + tmp[2] * axis[2];
 
     Matrix4<T> result;
-    result.replaceCol(0,
-                      m.getCol(0) * rotate.getCol(0)[0] +
-                          m.getCol(1) * rotate.getCol(0)[1] +
-                          m.getCol(2) * rotate.getCol(0)[2]);
-    result.replaceCol(1,
-                      m.getCol(0) * rotate.getCol(1)[0] +
-                          m.getCol(1) * rotate.getCol(1)[1] +
-                          m.getCol(2) * rotate.getCol(1)[2]);
-    result.replaceCol(2,
-                      m.getCol(0) * rotate.getCol(2)[0] +
-                          m.getCol(1) * rotate.getCol(2)[1] +
-                          m.getCol(2) * rotate.getCol(2)[2]);
+    result.replaceCol(
+        0, m.getCol(0) * rotate.getCol(0)[0] + m.getCol(1) * rotate.getCol(0)[1] + m.getCol(2) * rotate.getCol(0)[2]);
+    result.replaceCol(
+        1, m.getCol(0) * rotate.getCol(1)[0] + m.getCol(1) * rotate.getCol(1)[1] + m.getCol(2) * rotate.getCol(1)[2]);
+    result.replaceCol(
+        2, m.getCol(0) * rotate.getCol(2)[0] + m.getCol(1) * rotate.getCol(2)[1] + m.getCol(2) * rotate.getCol(2)[2]);
     result.replaceCol(3, m.getCol(3));
     return result;
 }

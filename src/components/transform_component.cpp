@@ -1,7 +1,7 @@
 #include "transform_component.h"
 
 TransformComponent::TransformComponent(const Vector3i& position)
-    : transform(Vector3f(position.x(), position.y(), position.z()))
+    : transform(Vector3i(position.x(), position.y(), position.z()))
 {
 }
 

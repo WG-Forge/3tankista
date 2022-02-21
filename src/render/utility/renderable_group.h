@@ -39,10 +39,7 @@ struct RenderableGroup
         delete this->vertexArray;
     }
 
-    bool operator==(const RenderableGroup& other) const
-    {
-        return this->groupID == other.groupID;
-    }
+    bool operator==(const RenderableGroup& other) const { return this->groupID == other.groupID; }
 };
 
 namespace std
@@ -50,9 +47,6 @@ namespace std
 template <>
 struct hash<RenderableGroup>
 {
-    std::size_t operator()(const RenderableGroup& renderableGroup) const
-    {
-        return renderableGroup.groupID;
-    }
+    std::size_t operator()(const RenderableGroup& renderableGroup) const { return renderableGroup.groupID; }
 };
 } // namespace std

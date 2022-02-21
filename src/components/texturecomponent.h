@@ -17,10 +17,7 @@ public:
     void Misapply();
 
     inline auto&       GetTextureFileName() { return this->textureFileName; }
-    inline const auto& GetTextureFileName() const
-    {
-        return this->textureFileName;
-    }
+    inline const auto& GetTextureFileName() const { return this->textureFileName; }
 
     inline auto&       GetTextureID() { return this->textureId; }
     inline const auto& GetTextureID() const { return this->textureId; }

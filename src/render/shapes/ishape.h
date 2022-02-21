@@ -29,10 +29,7 @@ public:
     }
     virtual ~IShape() = default;
 
-    virtual inline ShapeID GetShapeID() const
-    {
-        return static_cast<ShapeID>(Type::INVALID_SHAPE);
-    }
+    virtual inline ShapeID GetShapeID() const { return static_cast<ShapeID>(Type::INVALID_SHAPE); }
 
     virtual bool Initialize() = 0;
 

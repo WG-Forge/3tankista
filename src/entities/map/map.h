@@ -11,7 +11,7 @@
 class Map : public GameObject<Map>
 {
 public:
-    Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager);
+    Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int size);
     ~Map() override = default;
 
     void        SetContent(const GameObjectId& content) { this->content = content; }
@@ -27,4 +27,6 @@ private:
     std::vector<GameObjectId> spawnPoints;
     NameComponent*            nameComponent;
     SizeComponent*            sizeComponent;
+    TransformComponent*       transform;
+    MaterialComponent*        material;
 };

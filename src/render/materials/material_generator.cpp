@@ -1,8 +1,7 @@
 #include "material_generator.h"
 
 MaterialGenerator::MaterialGenerator()
-    : materialRegistry(static_cast<std::size_t>(IMaterial::Type::MAX_MATERIALS),
-                       nullptr)
+    : materialRegistry(static_cast<std::size_t>(IMaterial::Type::MAX_MATERIALS), nullptr)
 {
 }
 

@@ -14,10 +14,9 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto mapEntityId      = entityManager->CreateEntity<Map>();
+    auto mapEntityId      = entityManager->CreateEntity<Map>(event->mapModel.size);
     auto mapIEntity       = entityManager->GetEntity(mapEntityId);
 
-    mapIEntity->GetComponent<SizeComponent>()->SetSize(event->mapModel.size);
     mapIEntity->GetComponent<NameComponent>()->SetName(event->mapModel.name);
 
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(mapEntityId));
@@ -27,8 +26,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     std::vector<GameObjectId> baseVectorId;
     for (auto& base : baseVectorV3i)
     {
-        auto tempBaseId = entityManager->CreateEntity<Base>();
-        entityManager->GetEntity(tempBaseId)->GetComponent<PositionComponent>()->SetPosition(base);
+        auto tempBaseId = entityManager->CreateEntity<Base>(1, base, Color(0.55f, 0.84f, 0.56f, 1.0f));
+        //        entityManager->GetEntity(tempBaseId)->GetComponent<TransformComponent>()->SetPosition(base);
         baseVectorId.emplace_back(tempBaseId);
     }
     content->SetBase(baseVectorId);
@@ -37,8 +36,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     std::vector<GameObjectId> obstacleVectorId;
     for (auto& obstacle : obstacleVectorV3i)
     {
-        auto tempObstacleId = entityManager->CreateEntity<Obstacle>();
-        entityManager->GetEntity(tempObstacleId)->GetComponent<PositionComponent>()->SetPosition(obstacle);
+        auto tempObstacleId = entityManager->CreateEntity<Obstacle>(obstacle);
+        //        entityManager->GetEntity(tempObstacleId)->GetComponent<TransformComponent>()->SetPosition(obstacle);
         obstacleVectorId.emplace_back(tempObstacleId);
     }
     content->SetObstacle(obstacleVectorId);
@@ -58,9 +57,10 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
          ++it)
     {
+        // FIXME: Add GetPoisiton
         GameplaySystem::SetHexMapComponentCell(
             world->GetComponent<HexMapComponent>(),
-            entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
+            entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition(),
             CellState::OBSTACLE);
     }
 }

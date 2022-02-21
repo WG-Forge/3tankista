@@ -24,18 +24,10 @@ static constexpr size_t VERTEX_NORMAL_DATA_ELEMENT_LEN{ 3 };
 static constexpr size_t VERTEX_TEXCOORD_DATA_ELEMENT_LEN{ 2 };
 static constexpr size_t VERTEX_COLOR_DATA_ELEMENT_LEN{ 3 };
 
-static constexpr size_t VERTEX_POSITION_DATA_ELEMENT_SIZE{
-    VERTEX_POSITION_DATA_ELEMENT_LEN * sizeof(VertexPositionData)
-};
-static constexpr size_t VERTEX_INDEX_DATA_ELEMENT_SIZE{
-    VERTEX_INDEX_DATA_ELEMENT_LEN * sizeof(VertexIndexData)
-};
-static constexpr size_t VERTEX_NORMAL_DATA_ELEMENT_SIZE{
-    VERTEX_NORMAL_DATA_ELEMENT_LEN * sizeof(VertexNormalData)
-};
-static constexpr size_t VERTEX_TEXCOORD_DATA_ELEMENT_SIZE{
-    VERTEX_TEXCOORD_DATA_ELEMENT_LEN * sizeof(VertexTexCoordData)
-};
-static constexpr size_t VERTEX_COLOR_DATA_ELEMENT_SIZE{
-    VERTEX_COLOR_DATA_ELEMENT_LEN * sizeof(VertexColorData)
-};
+static constexpr size_t VERTEX_POSITION_DATA_ELEMENT_SIZE{ VERTEX_POSITION_DATA_ELEMENT_LEN *
+                                                           sizeof(VertexPositionData) };
+static constexpr size_t VERTEX_INDEX_DATA_ELEMENT_SIZE{ VERTEX_INDEX_DATA_ELEMENT_LEN * sizeof(VertexIndexData) };
+static constexpr size_t VERTEX_NORMAL_DATA_ELEMENT_SIZE{ VERTEX_NORMAL_DATA_ELEMENT_LEN * sizeof(VertexNormalData) };
+static constexpr size_t VERTEX_TEXCOORD_DATA_ELEMENT_SIZE{ VERTEX_TEXCOORD_DATA_ELEMENT_LEN *
+                                                           sizeof(VertexTexCoordData) };
+static constexpr size_t VERTEX_COLOR_DATA_ELEMENT_SIZE{ VERTEX_COLOR_DATA_ELEMENT_LEN * sizeof(VertexColorData) };

@@ -3,7 +3,7 @@
 #include "components/capture_points_component.h"
 #include "components/hex_map_component.h"
 #include "components/player_id_component.h"
-#include "components/position_component.h"
+#include "components/transform_component.h"
 #include "components/turn_component.h"
 #include "components/vehicle_id_component.h"
 #include "entities/map/content.h"
@@ -30,30 +30,31 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
     auto hexMapComponent  = world->GetComponent<HexMapComponent>();
     for (auto& action : event->actions)
     {
-        auto entity            = entityManager->GetEntity(action.vehicleId);
-        auto positionComponent = entity->GetComponent<PositionComponent>();
-        auto cellType = GameplaySystem::GetHexMapComponentCell(hexMapComponent, positionComponent->GetPosition());
+        auto entity             = entityManager->GetEntity(action.vehicleId);
+        auto transformComponent = entity->GetComponent<TransformComponent>();
+        auto cellType = GameplaySystem::GetHexMapComponentCell(hexMapComponent, transformComponent->GetPosition());
         if (cellType == CellState::FRIEND)
         {
-            GameplaySystem::SetHexMapComponentCell(hexMapComponent, positionComponent->GetPosition(), CellState::EMPTY);
+            GameplaySystem::SetHexMapComponentCell(
+                hexMapComponent, transformComponent->GetPosition(), CellState::EMPTY);
             GameplaySystem::SetHexMapComponentCell(hexMapComponent, action.target, CellState::FRIEND);
         }
         else if (cellType == CellState::ENEMY)
         {
-            if (entity->GetComponent<SpawnPositionComponent>()->GetSpawnPosition() == positionComponent->GetPosition())
+            if (entity->GetComponent<SpawnPositionComponent>()->GetSpawnPosition() == transformComponent->GetPosition())
             {
                 GameplaySystem::SetHexMapComponentCell(
-                    hexMapComponent, positionComponent->GetPosition(), CellState::ENEMY_SPAWN);
+                    hexMapComponent, transformComponent->GetPosition(), CellState::ENEMY_SPAWN);
             }
             else
             {
                 GameplaySystem::SetHexMapComponentCell(
-                    hexMapComponent, positionComponent->GetPosition(), CellState::EMPTY);
+                    hexMapComponent, transformComponent->GetPosition(), CellState::EMPTY);
             }
             GameplaySystem::SetHexMapComponentCell(hexMapComponent, action.target, CellState::ENEMY);
         }
 
-        positionComponent->SetPosition(action.target);
+        transformComponent->SetPosition(action.target);
     }
 }
 

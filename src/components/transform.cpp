@@ -3,10 +3,9 @@
 #include "utility/matrix_transform.h"
 
 Transform::Transform()
-    : transform{ { 1.0f, 0.0f, 0.0f, 0.0f },
-                 { 0.0f, 1.0f, 0.0f, 0.0f },
-                 { 0.0f, 0.0f, 1.0f, 0.0f },
-                 { 0.0f, 0.0f, 0.0f, 1.0f } }
+    : transform{
+        { 1.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }
+    }
 {
 }
 
@@ -15,7 +14,7 @@ Transform::Transform(const Matrix4f& transform)
 {
 }
 
-Transform::Transform(const Vector3f& position)
+Transform::Transform(const Vector3i& position)
 {
     this->transform = myMath::translate(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
                                                   { 0.0f, 1.0f, 0.0f, 0.0f },
@@ -24,21 +23,17 @@ Transform::Transform(const Vector3f& position)
                                         Hex2Pixel(position));
 }
 
-Transform::Transform(const Vector2f& position_xy)
+Transform::Transform(const Vector2i& position_xy)
 {
     this->transform = myMath::translate(
         Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
                   { 0.0f, 1.0f, 0.0f, 0.0f },
                   { 0.0f, 0.0f, 1.0f, 0.0f },
                   { 0.0f, 0.0f, 0.0f, 1.0f } },
-        Hex2Pixel(Vector3f(position_xy.x(),
-                           position_xy.y(),
-                           -position_xy.x() - position_xy.y())));
+        Hex2Pixel(Vector3i(position_xy.x(), position_xy.y(), 0 /*-position_xy.x() - position_xy.y()*/)));
 }
 
-Transform::Transform(const Vector3f& position,
-                     const Vector3f& axis,
-                     const float     angle_radians)
+Transform::Transform(const Vector3i& position, const Vector3f& axis, const float angle_radians)
 {
     Matrix4f P  = myMath::translate(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
                                              { 0.0f, 1.0f, 0.0f, 0.0f },
@@ -50,10 +45,7 @@ Transform::Transform(const Vector3f& position,
     this->transform = PR;
 }
 
-Transform::Transform(const Vector3f& position,
-                     const Vector3f& axis,
-                     const float     angle_radians,
-                     const Vector3f& scale)
+Transform::Transform(const Vector3i& position, const Vector3f& axis, const float angle_radians, const Vector3f& scale)
 {
     Matrix4f P   = myMath::translate(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
                                              { 0.0f, 1.0f, 0.0f, 0.0f },
@@ -66,13 +58,10 @@ Transform::Transform(const Vector3f& position,
     this->transform = PRS;
 }
 
-void Transform::SetPosition(const Vector3f& position)
+void Transform::SetPosition(const Vector3i& position)
 {
     const auto& pixel = Hex2Pixel(position);
-    this->transform.replaceCol(
-        3,
-        Vector4f(
-            pixel.x(), pixel.y(), pixel.z(), this->transform.getCol(3).w()));
+    this->transform.replaceCol(3, Vector4f(pixel.x(), pixel.y(), pixel.z(), this->transform.getCol(3).w()));
 }
 /*
 void Transform::SetRotation(const Vector3f& rotation_euler_radians)

@@ -23,8 +23,7 @@ public:
     static constexpr Type SHAPE_TYPE{ Type::HEX };
 
 public:
-    HexShape(const std::size_t   size          = 1,
-             const RenderingMode renderingMode = GL_TRIANGLES);
+    HexShape(const std::size_t size = 1, const RenderingMode renderingMode = GL_TRIANGLES);
     ;
     virtual ~HexShape() = default;
 
@@ -35,55 +34,27 @@ public:
 
     virtual void Release() const override {}
 
-    virtual const std::size_t GetVertexesCount() const override
-    {
-        return vertexesCount;
-    }
+    virtual const std::size_t GetVertexesCount() const override { return vertexesCount; }
 
-    virtual const std::size_t GetTrianglesCount() const override
-    {
-        return trianglesCount;
-    }
+    virtual const std::size_t GetTrianglesCount() const override { return trianglesCount; }
 
-    virtual const std::size_t GetLinesCount() const override
-    {
-        return linesCount;
-    }
+    virtual const std::size_t GetLinesCount() const override { return linesCount; }
 
-    virtual const std::size_t GetIndexesCount() const override
-    {
-        return indexesCount;
-    }
+    virtual const std::size_t GetIndexesCount() const override { return indexesCount; }
 
-    virtual const VertexPositionData* GetPositions() const override
-    {
-        return vertexPositionData.data();
-    }
+    virtual const VertexPositionData* GetPositions() const override { return vertexPositionData.data(); }
 
-    virtual const VertexIndexData* GetIndexes() const override
-    {
-        return vertexIndexData.data();
-    }
+    virtual const VertexIndexData* GetIndexes() const override { return vertexIndexData.data(); }
 
-    virtual const VertexNormalData* GetNormals() const override
-    {
-        return nullptr;
-    }
+    virtual const VertexNormalData* GetNormals() const override { return nullptr; }
 
-    virtual const VertexTexCoordData* GetTexCoords() const override
-    {
-        return nullptr;
-    }
+    virtual const VertexTexCoordData* GetTexCoords() const override { return nullptr; }
 
-    virtual const VertexColorData* GetColors() const override
-    {
-        return nullptr;
-    }
+    virtual const VertexColorData* GetColors() const override { return nullptr; }
 
 private:
-    std::vector<std::size_t> GetVertexesIndexes(
-        const std::vector<Vector3f>& vertexes,
-        const std::vector<Vector3f>& vector);
+    std::vector<std::size_t> GetVertexesIndexes(const std::vector<Vector3f>& vertexes,
+                                                const std::vector<Vector3f>& vector);
 
     void GetLinesIndexes(const std::vector<std::size_t>& indexes);
 

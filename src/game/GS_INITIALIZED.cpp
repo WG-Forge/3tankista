@@ -10,11 +10,11 @@
 #include "systems/login_system.h"
 #include "systems/menu_system.h"
 #include "systems/move_system.h"
+#include "systems/render_system.h"
 #include "systems/respawn_system.h"
 #include "systems/server/server_system.h"
 #include "systems/turn_system.h"
 #include "systems/win_system.h"
-#include "systems/render_system.h"
 
 void Game::GS_INITIALIZED()
 {

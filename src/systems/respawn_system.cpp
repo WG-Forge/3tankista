@@ -1,7 +1,7 @@
 #include "respawn_system.h"
 #include "components/health_component.h"
-#include "components/position_component.h"
 #include "components/spawn_position_component.h"
+#include "components/transform_component.h"
 #include "components/ttc_component.h"
 #include "components/turn_component.h"
 #include "gameplay_system.h"
@@ -21,7 +21,7 @@ void RespawnSystem::OnTankDestroyedEvent(const TankDestroyedEvent* event)
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto world = ecs::ecsEngine->GetEntityManager()->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
     auto hexMapComponent = world->GetComponent<HexMapComponent>();
-    auto position        = componentManager->GetComponent<PositionComponent>(event->entityId);
+    auto position        = componentManager->GetComponent<TransformComponent>(event->entityId);
     auto cellType        = GameplaySystem::GetHexMapComponentCell(hexMapComponent, position->GetPosition());
     auto spawnPosition   = componentManager->GetComponent<SpawnPositionComponent>(event->entityId);
     if (cellType == CellState::FRIEND)

@@ -20,9 +20,7 @@ Health::Health(const ecs::EntityId&   entityId,
 
     this->transformComponent = AddComponent<TransformComponent>(position);
 
-    this->textureComponent =
-        this->AddComponent<TextureComponent>(textureFileName);
+    this->textureComponent  = this->AddComponent<TextureComponent>(textureFileName);
     this->materialComponent = this->AddComponent<MaterialComponent>(
-        MaterialGenerator::CreateMaterial<DefaultMaterial>(),
-        Color{ 1.0f, 1.0f, 1.0f, 1.0f });
+        MaterialGenerator::CreateMaterial<DefaultMaterial>(), Color{ 1.0f, 1.0f, 1.0f, 1.0f });
 }

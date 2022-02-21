@@ -14,10 +14,7 @@ public:
 public:
     static constexpr Type MATERIAL_TYPE{ Type::DEFAULT_MATERIAL };
 
-    virtual inline const MaterialID GetMaterialID() const override
-    {
-        return static_cast<MaterialID>(MATERIAL_TYPE);
-    }
+    virtual inline const MaterialID GetMaterialID() const override { return static_cast<MaterialID>(MATERIAL_TYPE); }
 
     virtual void Use() const override;
 
@@ -35,38 +32,32 @@ public:
         }
     }
 
-    virtual void SetViewProjectionTransform(const Matrix4f& view,
-                                            const Matrix4f& proj) override
+    virtual void SetViewProjectionTransform(const Matrix4f& view, const Matrix4f& proj) override
     {
         // TODO: add camera and view-projection matrixes
     }
 
-    virtual const MaterialVertexAttributeLoc
-    GetPositionVertexAttributeLocation() const override
+    virtual const MaterialVertexAttributeLoc GetPositionVertexAttributeLocation() const override
     {
         return POSITION_MATERIAL_VERTEX_ATTRIBUTE_LOC;
     }
 
-    virtual const MaterialVertexAttributeLoc GetNormalVertexAttributeLocation()
-        const override
+    virtual const MaterialVertexAttributeLoc GetNormalVertexAttributeLocation() const override
     {
         return NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC;
     }
 
-    virtual const MaterialVertexAttributeLoc
-    GetTexCoordVertexAttributeLocation() const override
+    virtual const MaterialVertexAttributeLoc GetTexCoordVertexAttributeLocation() const override
     {
         return TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC;
     }
 
-    virtual const MaterialVertexAttributeLoc GetColorVertexAttributeLocation()
-        const override
+    virtual const MaterialVertexAttributeLoc GetColorVertexAttributeLocation() const override
     {
         return COLOR_MATERIAL_VERTEX_ATTRIBUTE_LOC;
     }
 
-    virtual void SetUniform4fv(const std::string& uniformName,
-                               const Vector4f&    vec4) override
+    virtual void SetUniform4fv(const std::string& uniformName, const Vector4f& vec4) override
     {
         if (this->shader != nullptr)
         {
@@ -74,8 +65,7 @@ public:
         }
     }
 
-    virtual void SetUniformMatrix4fv(const std::string& uniformName,
-                                     const Matrix4f&    mat4) override
+    virtual void SetUniformMatrix4fv(const std::string& uniformName, const Matrix4f& mat4) override
     {
         if (this->shader != nullptr)
         {

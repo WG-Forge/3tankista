@@ -1,7 +1,6 @@
 #include "round_shape.h"
 
-RoundShape::RoundShape(const std::size_t   size,
-                       const RenderingMode renderingMode)
+RoundShape::RoundShape(const std::size_t size, const RenderingMode renderingMode)
     : IShape(renderingMode)
 {
 }
