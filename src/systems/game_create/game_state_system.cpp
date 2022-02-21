@@ -40,26 +40,13 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
 
     auto adapterPlayerId       = world->GetComponent<AdapterPlayerIdComponent>();
     auto adapterVehicleId      = world->GetComponent<AdapterVehicleIdComponent>();
-    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
-    auto attackMatrix          = attackMatrixComponent->GetAttackMatrix();
     // Create players
     for (auto& now : event->gameState.players)
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
         std::cout << now.idx << " " << entity << "\n";
         adapterPlayerId->Add(now.idx, entity);
-        attackMatrix.insert({ entity, std::set<uint64_t>{} });
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
-    }
-    attackMatrixComponent->SetAttackMatrix(attackMatrix);
-    for (auto& [key, value] : attackMatrixComponent->GetAttackMatrix())
-    {
-        std::cout << key << " {";
-        for (auto& id : value)
-        {
-            std::cout << id << ", ";
-        }
-        std::cout << "}\n";
     }
     // Create observers
     for (auto& now : event->gameState.observers)

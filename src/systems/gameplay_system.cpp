@@ -254,19 +254,30 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
 {
     auto attackMatrixComponent = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>();
-    int  tankPlayerId          = playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
-    int  enemyPlayerId         = enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
-
+    auto tankPlayerId          = playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+    auto enemyPlayerId         = enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+    std::cout << "gameplay: "
+              << ", tank: " << tankPlayerId << ", enemy: " << enemyPlayerId << "\n";
+    for (auto& [key, value] : attackMatrixComponent->GetAttackMatrix())
+    {
+        std::cout << key << " {";
+        for (auto& id : value)
+        {
+            std::cout << id << ", ";
+        }
+        std::cout << "}\n";
+    }
     // If he attacked us
     if (attackMatrixComponent->IsAttacked(enemyPlayerId, tankPlayerId))
         return true;
-
+    std::cout << "after\n";
     // If he attacked by somebody else
     auto attackMatrix = attackMatrixComponent->GetAttackMatrix();
     for (auto& [who, whom] : attackMatrix)
     {
         if (who == tankPlayerId)
             continue;
+        std::cout << "aaafter: " << who << "\n";
         if (whom.find(enemyPlayerId) != whom.end())
             return false;
     }

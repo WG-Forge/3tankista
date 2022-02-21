@@ -31,7 +31,6 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
     auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
 
     std::set<uint64_t> attackedUsers;
-
     for (auto& action : event->actions)
     {
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
@@ -46,3 +45,4 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
     }
     attackMatrixComponent->ReplaceUserAttacks(event->playerId, attackedUsers);
 }
+
