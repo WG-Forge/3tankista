@@ -7,6 +7,7 @@
 #include "entities/player.h"
 #include "entities/tank.h"
 #include "entities/world.h"
+#include "systems/adapter_system.h"
 #include <algorithm>
 
 GameStateSystem::GameStateSystem()
@@ -37,14 +38,16 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     turnComponent->SetCurrentTurn(event->gameState.currentTurn);
     turnComponent->SetPlayersNumber(event->gameState.numberPlayers);
 
-    auto adapterPlayerId  = world->GetComponent<AdapterPlayerIdComponent>();
-    auto adapterVehicleId = world->GetComponent<AdapterVehicleIdComponent>();
-
+    auto adapterPlayerId       = world->GetComponent<AdapterPlayerIdComponent>();
+    auto adapterVehicleId      = world->GetComponent<AdapterVehicleIdComponent>();
+    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
+    auto attackMatrix          = attackMatrixComponent->GetAttackMatrix();
     // Create players
     for (auto& now : event->gameState.players)
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
         adapterPlayerId->Add(now.idx, entity);
+        attackMatrix.insert({ entity, std::set<uint64_t>{} });
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
 

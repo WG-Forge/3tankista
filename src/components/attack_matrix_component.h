@@ -9,14 +9,14 @@ public:
     AttackMatrixComponent()           = default;
     ~AttackMatrixComponent() override = default;
 
-    void AddAttack(GameObjectId who, GameObjectId whom)
+    void AddAttack(uint64_t  who, uint64_t  whom)
     {
         if (attackMatrix.find(who) == attackMatrix.end())
-            attackMatrix[who] = std::set<GameObjectId>();
+            attackMatrix[who] = std::set<uint64_t>();
         attackMatrix[who].insert(whom);
     }
 
-    bool IsAttacked(GameObjectId who, GameObjectId whom)
+    bool IsAttacked(uint64_t  who, uint64_t  whom)
     {
         if (attackMatrix.find(who) == attackMatrix.end())
             return false;
@@ -28,5 +28,5 @@ public:
     void ClearAttackMatrix() { attackMatrix.clear(); }
 
 private:
-    std::map<GameObjectId, std::set<GameObjectId>> attackMatrix;
+    std::map<uint64_t , std::set<uint64_t >> attackMatrix;
 };

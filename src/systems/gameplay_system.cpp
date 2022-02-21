@@ -6,6 +6,7 @@
 #include "components/order_component.h"
 #include "components/turn_component.h"
 #include "entities/tank.h"
+#include "win_system.h"
 #include <queue>
 
 const std::vector<Vector2i> GameplaySystem::PathFinder::HEX_DIRECTIONS = { { 1, 0 },  { 1, -1 }, { 0, -1 },
@@ -132,7 +133,11 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     auto gameArea         = componentManager->begin<HexMapComponent>().operator->();
     auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
 
-    auto turnComponent = componentManager->begin<TurnComponent>().operator->();
+    auto turnComponent         = componentManager->begin<TurnComponent>().operator->();
+
+    //std::cout << "order " << entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() << "\n";
+    //std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
+
     if (entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() ==
         turnComponent->GetCurrentTurn() % turnComponent->GetPlayersNumber())
     {
@@ -157,7 +162,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 //                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::ENEMY);
             }
         }
-//        for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
+//        for (auto it = componentManager->begin<ObstacleIdComponent>();
+//             componentManager->end<ObstacleIdComponent>() != it;
 //             ++it)
 //        {
 //            GameplaySystem::SetHexMapComponentCell(
@@ -178,18 +184,22 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             Tank* target = nullptr;
             for (auto& enemy : enemies)
             {
-                if (CanShoot(tank, enemy) && IsCorrectShootPosition(tank, enemy) && CheckNeutrality(tank, enemy))
+                if (CanShoot(tank, enemy))
                 {
-                    if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
-                                                 enemy->GetComponent<HealthComponent>()->GetHealth())
+                    if (IsCorrectShootPosition(tank, enemy) && CheckNeutrality(tank, enemy))
                     {
-                        target = enemy;
+                        if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
+                                                     enemy->GetComponent<HealthComponent>()->GetHealth())
+                        {
+                            target = enemy;
+                        }
                     }
                 }
             }
 
             if (target != nullptr)
             {
+
                 ecs::ecsEngine->SendEvent<ShootRequestEvent>(ShootModel{
                     tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
             }
@@ -231,7 +241,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             }
         }
     }
-    ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
+    // ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
+
     ecs::ecsEngine->SendEvent<TurnRequestEvent>();
     ecs::ecsEngine->SendEvent<GameActionsRequestEvent>();
 }

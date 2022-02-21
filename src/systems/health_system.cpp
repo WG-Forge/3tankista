@@ -1,5 +1,7 @@
 #include "health_system.h"
+#include "components/attack_matrix_component.h"
 #include "components/health_component.h"
+#include "components/player_id_component.h"
 #include "components/position_component.h"
 #include "components/ttc_component.h"
 #include "components/vehicle_id_component.h"
@@ -16,8 +18,11 @@ HealthSystem::~HealthSystem()
 
 void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
 {
-    auto entityManager    = ecs::ecsEngine->GetEntityManager();
-    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto               entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto               componentManager = ecs::ecsEngine->GetComponentManager();
+    std::set<uint64_t> attackset;
+    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
+
     for (auto& action : event->actions)
     {
         auto damage = entityManager->GetEntity(action.vehicleId)->GetComponent<TtcComponent>()->GetDamage();
@@ -27,6 +32,11 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
             auto currentEntity = entityManager->GetEntity(it->GetOwner());
             if (currentEntity->GetComponent<PositionComponent>()->GetPosition() == action.target)
             {
+                attackset.insert(currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId());
+                auto attackMatrix = attackMatrixComponent->GetAttackMatrix();
+                attackMatrix
+                    [entityManager->GetEntity(action.vehicleId)->GetComponent<PlayerIdComponent>()->GetPlayerId()] =
+                        attackset;
                 auto health = currentEntity->GetComponent<HealthComponent>();
                 health->SetHealth(std::max(0, health->GetHealth() - damage));
                 if (health->GetHealth() == 0)

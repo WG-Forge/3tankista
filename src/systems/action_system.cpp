@@ -1,4 +1,6 @@
 #include "action_system.h"
+#include "components/attack_matrix_component.h"
+#include "components/player_id_component.h"
 #include "enums/action.h"
 #include <unordered_map>
 
@@ -53,6 +55,18 @@ void ActionSystem::OnGameActionsResponseEvent(const GameActionsResponseEvent* ev
     for (auto& now : moveActions)
     {
         ecs::ecsEngine->SendEvent<MoveResponseEvent>(now.first, now.second);
+    }
+    if (shootActions.empty())
+    {
+        std::set<uint64_t> attackset{};
+        auto               componentManager = ecs::ecsEngine->GetComponentManager();
+        auto               entityManager    = ecs::ecsEngine->GetEntityManager();
+        auto attackMatrixComponent          = componentManager->begin<AttackMatrixComponent>().operator->();
+
+        auto attackMatrix                 = attackMatrixComponent->GetAttackMatrix();
+        attackMatrix[entityManager->GetEntity(event->gameActionsModel.actions[0].playerIndex)
+                         ->GetComponent<PlayerIdComponent>()
+                         ->GetPlayerId()] = attackset;
     }
     for (auto& now : shootActions)
     {

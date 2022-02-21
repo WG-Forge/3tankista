@@ -250,3 +250,4 @@ struct UpdateCapturePointsEvent : public ecs::event::Event<UpdateCapturePointsEv
 struct QuitGameEvent : public ecs::event::Event<QuitGameEvent>
 {
 };
+

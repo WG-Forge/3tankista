@@ -2,9 +2,11 @@
 #include "components/base_id_component.h"
 #include "components/capture_points_component.h"
 #include "components/kill_points_component.h"
+#include "components/order_component.h"
 #include "components/player_id_component.h"
 #include "components/position_component.h"
 #include "components/ttc_component.h"
+#include "components/turn_component.h"
 #include "components/vehicle_id_component.h"
 #include "entities/map/map.h"
 
@@ -64,20 +66,35 @@ void WinSystem::UpdateCapturePoints()
     for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
          ++it)
     {
-        auto playerId = entityManager->GetEntity(it->GetOwner())->GetComponent<PlayerIdComponent>()->GetPlayerId();
-        auto tank     = entityManager->GetEntity(it->GetOwner());
-        auto position = tank->GetComponent<PositionComponent>()->GetPosition();
-        if (std::find(basePositionVector.begin(), basePositionVector.end(), position) != basePositionVector.end())
+        auto playerId      = entityManager->GetEntity(it->GetOwner())->GetComponent<PlayerIdComponent>()->GetPlayerId();
+        auto tank          = entityManager->GetEntity(it->GetOwner());
+        auto position      = tank->GetComponent<PositionComponent>()->GetPosition();
+        auto turnComponent = componentManager->begin<TurnComponent>().operator->();
+
+        //std::cerr << "total num of turns " << turnComponent->GetNumOfTurns() << "\n";
+        //std::cerr << "total num of players " << turnComponent->GetPlayersNumber() << "\n";
+        if ((turnComponent->GetCurrentTurn()) % turnComponent->GetPlayersNumber() == 0 ||
+            turnComponent->GetPlayersNumber() == 1)
         {
-            auto newCapturePointsOfTank = tank->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
-            tank->GetComponent<CapturePointsComponent>()->SetCapturePoints(newCapturePointsOfTank);
-            auto newCapturePointsOfPlayer =
-                entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
-            entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->SetCapturePoints(
-                newCapturePointsOfPlayer);
-            // std::cout <<"up"<< newCapturePointsOfPlayer << "\n";
+            //std::cerr << "current turn " << turnComponent->GetCurrentTurn() << "\n";
+            if (std::find(basePositionVector.begin(), basePositionVector.end(), position) != basePositionVector.end())
+            {
+                auto newCapturePointsOfTank = tank->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
+                tank->GetComponent<CapturePointsComponent>()->SetCapturePoints(newCapturePointsOfTank);
+                auto newCapturePointsOfPlayer =
+                    entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
+                entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->SetCapturePoints(
+                    newCapturePointsOfPlayer);
+                //std::cout <<"up"<< newCapturePointsOfPlayer << "\n";
+            }
         }
+//        std::cout<<playerId<<" "
+//            <<
+//            entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints()
+//            << "\n";
+
     }
+
 }
 
 void WinSystem::OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event)

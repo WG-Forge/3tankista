@@ -44,6 +44,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::GAME_STATE:
             {
                 auto model = json.get<GameStateModel>();
+                std::cout << json.dump() << "\n";
                 // No need to adapt GameState
                 /*
                 for (auto& now : model.players)
@@ -77,6 +78,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
                 model.attackMatrix = std::move(adaptedAttackMatrix);
                  */
                 ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
+
                 break;
             }
             case Action::GAME_ACTIONS:
@@ -110,7 +112,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::TURN:
             {
-                std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1 << "\n";
+                std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
                 componentManager->begin<TurnComponent>()->SetCurrentTurn(
                     componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1);
                 break;
