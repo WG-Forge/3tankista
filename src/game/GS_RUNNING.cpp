@@ -22,7 +22,7 @@ void Game::GS_RUNNING()
         {
             std::cout << id << ", ";
         }
-        std::cout << "}\n";
+        std::cout << "}\n" << std::flush;
     }
     if (!componentManager->begin<TurnComponent>()->isFinished())
     {
@@ -35,7 +35,8 @@ void Game::GS_RUNNING()
             std::cout
                 << "cp "
                 << entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
-                << "\n";
+                << "\n"
+                << std::flush;
             if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
                 5)
             {

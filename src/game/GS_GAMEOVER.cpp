@@ -11,7 +11,8 @@ void Game::GS_GAMEOVER_ENTER()
 {
     RegisterEventCallback(&Game::OnQuitGame);
     std::cout << "end of game"
-              << "\n";
+              << "\n"
+              << std::flush;
 }
 
 void Game::GS_RUNNING_LEAVE()
