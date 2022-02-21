@@ -32,13 +32,8 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
             auto currentEntity = entityManager->GetEntity(it->GetOwner());
             if (currentEntity->GetComponent<PositionComponent>()->GetPosition() == action.target)
             {
-                attackset.insert(currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId());
-                auto attackMatrix = attackMatrixComponent->GetAttackMatrix();
-                attackMatrix
-                    [entityManager->GetEntity(action.vehicleId)->GetComponent<PlayerIdComponent>()->GetPlayerId()] =
-                        attackset;
                 auto health = currentEntity->GetComponent<HealthComponent>();
-                if (health->GetHealth() != 0)
+                if (health->GetHealth() != 0) // Already destroyed
                 {
                     health->SetHealth(std::max(0, health->GetHealth() - damage));
                     if (health->GetHealth() == 0)
@@ -46,7 +41,6 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
                         ecs::ecsEngine->SendEvent<TankDestroyedEvent>(action.vehicleId, currentEntity->GetEntityID());
                     }
                 }
-                attackMatrixComponent->SetAttackMatrix(attackMatrix);
             }
         }
     }

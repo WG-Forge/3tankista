@@ -71,12 +71,12 @@ void WinSystem::UpdateCapturePoints()
         auto position      = tank->GetComponent<PositionComponent>()->GetPosition();
         auto turnComponent = componentManager->begin<TurnComponent>().operator->();
 
-        //std::cerr << "total num of turns " << turnComponent->GetNumOfTurns() << "\n";
-        //std::cerr << "total num of players " << turnComponent->GetPlayersNumber() << "\n";
+        // std::cerr << "total num of turns " << turnComponent->GetNumOfTurns() << "\n";
+        // std::cerr << "total num of players " << turnComponent->GetPlayersNumber() << "\n";
         if ((turnComponent->GetCurrentTurn()) % turnComponent->GetPlayersNumber() == 0 ||
             turnComponent->GetPlayersNumber() == 1)
         {
-            //std::cerr << "current turn " << turnComponent->GetCurrentTurn() << "\n";
+            // std::cerr << "current turn " << turnComponent->GetCurrentTurn() << "\n";
             if (std::find(basePositionVector.begin(), basePositionVector.end(), position) != basePositionVector.end())
             {
                 auto newCapturePointsOfTank = tank->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
@@ -85,16 +85,14 @@ void WinSystem::UpdateCapturePoints()
                     entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints() + 1;
                 entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->SetCapturePoints(
                     newCapturePointsOfPlayer);
-                //std::cout <<"up"<< newCapturePointsOfPlayer << "\n";
+                // std::cout <<"up"<< newCapturePointsOfPlayer << "\n";
             }
         }
-//        std::cout<<playerId<<" "
-//            <<
-//            entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints()
-//            << "\n";
-
+        //        std::cout<<playerId<<" "
+        //            <<
+        //            entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints()
+        //            << "\n";
     }
-
 }
 
 void WinSystem::OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event)

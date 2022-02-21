@@ -56,19 +56,6 @@ void ActionSystem::OnGameActionsResponseEvent(const GameActionsResponseEvent* ev
     {
         ecs::ecsEngine->SendEvent<MoveResponseEvent>(now.first, now.second);
     }
-    if (shootActions.empty())
-    {
-        std::set<uint64_t> attackset{};
-        auto               componentManager = ecs::ecsEngine->GetComponentManager();
-        auto               entityManager    = ecs::ecsEngine->GetEntityManager();
-        auto attackMatrixComponent          = componentManager->begin<AttackMatrixComponent>().operator->();
-
-        auto attackMatrix                 = attackMatrixComponent->GetAttackMatrix();
-        attackMatrix[entityManager->GetEntity(event->gameActionsModel.actions[0].playerIndex)
-                         ->GetComponent<PlayerIdComponent>()
-                         ->GetPlayerId()] = attackset;
-        attackMatrixComponent->SetAttackMatrix(attackMatrix);
-    }
     for (auto& now : shootActions)
     {
         ecs::ecsEngine->SendEvent<ShootResponseEvent>(now.first, now.second);
