@@ -46,6 +46,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     for (auto& now : event->gameState.players)
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
+        std::cout << now.idx << " " << entity << "\n";
         adapterPlayerId->Add(now.idx, entity);
         attackMatrix.insert({ entity, std::set<uint64_t>{} });
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
@@ -101,14 +102,14 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         int d2 = rhs.x() * rhs.x() + rhs.y() * rhs.y();
         return d1 > d2;
     };
-    std::vector<std::pair<GameObjectId, Vector2i>> playerHexPos;
+    std::vector<std::pair<uint64_t, Vector2i>> playerHexPos;
     for (auto& now : playerPosition)
     {
         playerHexPos.push_back({ now.first, { now.second.x(), now.second.z() } });
     }
     std::sort(playerHexPos.begin(),
               playerHexPos.end(),
-              [&](std::pair<GameObjectId, Vector2i>& lhs, std::pair<GameObjectId, Vector2i>& rhs)
+              [&](std::pair<uint64_t, Vector2i>& lhs, std::pair<uint64_t, Vector2i>& rhs)
               { return less(lhs.second, rhs.second); });
     int index = 0;
     while (index < playerHexPos.size())
@@ -121,18 +122,25 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     auto playersNum      = event->gameState.numberPlayers;
     auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
     componentManager->begin<MainPlayerComponent>()->SetMainPlayerId(adapterPlayerId->Get(mainPlayerIndex));
-    for (int i = index; i < playerHexPos.size(); i++)
+    for (int i = index; i > -1; --i)
     {
         componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
             ->SetOrder(turn % playersNum);
         turn++;
     }
-    for (int i = 0; i < index; i++)
-    {
-        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
-            ->SetOrder(turn % playersNum);
-        turn++;
-    }
+
+//    for (int i = index; i < playerHexPos.size(); i++)
+//    {
+//        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+//            ->SetOrder(turn % playersNum);
+//        turn++;
+//    }
+//    for (int i = 0; i < index; i++)
+//    {
+//        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+//            ->SetOrder(turn % playersNum);
+//        turn++;
+//    }
     auto mainPlayerId = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
     for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
          ++it)

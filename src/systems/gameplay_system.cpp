@@ -135,7 +135,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 
     auto turnComponent         = componentManager->begin<TurnComponent>().operator->();
 
-    //std::cout << "order " << entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() << "\n";
+    std::cout << "order " << entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() << "\n";
+    std::cout << "id " << entityManager->GetEntity(mainPlayerId)->GetComponent<PlayerIdComponent>()->GetPlayerId() << "\n";
     //std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
 
     if (entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() ==

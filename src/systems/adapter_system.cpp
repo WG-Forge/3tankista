@@ -44,7 +44,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::GAME_STATE:
             {
                 auto model = json.get<GameStateModel>();
-                std::cout << json.dump() << "\n";
+                //std::cout << json.dump() << "\n";
                 // No need to adapt GameState
                 /*
                 for (auto& now : model.players)
