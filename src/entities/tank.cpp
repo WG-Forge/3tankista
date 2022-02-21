@@ -1,24 +1,16 @@
 #include "tank.h"
-Tank::Tank(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager)
-    : GameObject<Tank>(entityId, componentManager)
-{
-    this->positionComponent      = AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });
-    this->spawnPositionComponent = AddComponent<SpawnPositionComponent>(Vector3i{ 0, 0, 0 });
-    this->capturePointsComponent = AddComponent<CapturePointsComponent>(0);
-    this->playerIdComponent      = AddComponent<PlayerIdComponent>(0);
-    this->vehicleIdComponent     = AddComponent<VehicleIdComponent>(0);
-    this->healthComponent        = AddComponent<HealthComponent>(0);
-    this->ttcComponent           = AddComponent<TtcComponent>(0, 0, 0);
-    this->tankTypeComponent      = AddComponent<TankTypeComponent>(TankType::NO_TYPE);
-}
 
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
+           const Vector3i&        position,
+           const std::string&     textureFileName,
            const AbstractFactory& factory,
            TankType               type)
     : GameObject<Tank>(entityId, componentManager)
 {
-    this->positionComponent      = AddComponent<PositionComponent>(Vector3i{ 0, 0, 0 });
+	Shape shape = ShapeGenerator::CreateShape<QuadShape>();
+    this->AddComponent<ShapeComponent>(shape);
+    this->transformComponent = AddComponent<TransformComponent>(position);
     this->spawnPositionComponent = AddComponent<SpawnPositionComponent>(Vector3i{ 0, 0, 0 });
     this->capturePointsComponent = AddComponent<CapturePointsComponent>(0);
     this->playerIdComponent      = AddComponent<PlayerIdComponent>(0);
@@ -54,4 +46,9 @@ Tank::Tank(const ecs::EntityId&   entityId,
         }
     }
     this->healthComponent = AddComponent<HealthComponent>(this->ttcComponent->GetMaxHealth());
+    this->textureComponent =
+        this->AddComponent<TextureComponent>(textureFileName);
+    this->materialComponent = this->AddComponent<MaterialComponent>(
+        MaterialGenerator::CreateMaterial<DefaultMaterial>(),
+        Color{ 1.0f, 1.0f, 1.0f, 1.0f });
 }

@@ -3,10 +3,7 @@
 #include "game_object.h"
 
 void Game::GS_RESTARTED()
-
 {
-    // this->PushState(GameState::STARTED);
-
     ChangeState(GameState::STARTED);
 }
 

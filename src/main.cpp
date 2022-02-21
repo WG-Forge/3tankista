@@ -5,7 +5,8 @@ int main(int argc, char** argv)
 {
     Game* gameInstance = new Game("Obstacle Demo");
 
-    gameInstance->Initialize();
+    gameInstance->Initialize(
+        GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, GAME_WINDOW_FULLSCREEN);
 
     gameInstance->Run();
 

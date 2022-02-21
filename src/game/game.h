@@ -1,8 +1,11 @@
 #pragma once
 
 #include "game/fsm/simple_fsm.h"
+#include "game_configuration.h"
 #include "game_events.h"
 #include "game_types.h"
+
+#include "render/utility/opengl.h"
 
 #include "ecs.h"
 
@@ -13,7 +16,9 @@ public:
     ~Game() = default;
 
 public:
-    void Initialize();
+    void Initialize(const int  width,
+                    const int  height,
+                    const bool fullscreen = false);
 
     void Run();
 
@@ -135,6 +140,30 @@ public:
 private:
     void InitializeECS();
 
+    void InitializeGLFW();
+
+    void ProcessWindowEvent();
+
+    void Terminate();
+
+    void RegisterEventCallbacks();
+
+    void UnregisterEventCallbacks();
+
 private:
+    static void KeyCallback(
+        GLFWwindow* window, int key, int scancode, int action, int mode);
+
+private:
+    GLFWwindow* window;
+
+    int windowPosX;
+    int windowPosY;
+
+    int windowWidth;
+    int windowHeight;
+
+    bool fullscreen;
+
     const std::string gameTitle;
 };

@@ -14,6 +14,7 @@
 #include "systems/server/server_system.h"
 #include "systems/turn_system.h"
 #include "systems/win_system.h"
+#include "systems/render_system.h"
 
 void Game::GS_INITIALIZED()
 {
@@ -32,13 +33,14 @@ void Game::GS_INITIALIZED()
     auto* WiS           = systemManager->AddSystem<WinSystem>();
     auto* AmS           = systemManager->AddSystem<AttackMatrixSystem>();
     auto* TuS           = systemManager->AddSystem<TurnSystem>();
+    auto* RnS           = systemManager->AddSystem<RenderSystem>(this->window);
 
     systemManager->UpdateSystemWorkOrder();
     ChangeState(GameState::RESTARTED);
 }
 
 void Game::GS_INITIALIZED_ENTER()
-
 {
     this->InitializeECS();
+    this->InitializeGLFW();
 }

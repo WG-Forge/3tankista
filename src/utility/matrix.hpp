@@ -853,6 +853,40 @@ MATRIX_MAKE_TYPEDEFS(4, 4)
 template <typename Type, int Size>
 using Vector = Matrix<Size, 1, Type>;
 
+namespace std
+{
+template <>
+struct hash<Vector3f>
+{
+    std::size_t operator()(const Vector3f& vec3) const
+    {
+        std::size_t seed = vec3.size();
+        for (const auto& i : vec3)
+        {
+            seed ^= (std::size_t)(i + 0x9e3779b9 + (seed << 6) + (seed >> 2));
+        }
+        return seed;
+    }
+};
+} // namespace std
+
+namespace std
+{
+template <>
+struct hash<Vector2f>
+{
+    std::size_t operator()(const Vector2f& vec2) const
+    {
+        std::size_t seed = vec2.size();
+        for (const auto& i : vec2)
+        {
+            seed ^= (std::size_t)(i + 0x9e3779b9 + (seed << 6) + (seed >> 2));
+        }
+        return seed;
+    }
+};
+} // namespace std
+
 void to_json(nlohmann::json& json, const Vector3i& vector3i);
 
 void from_json(const nlohmann::json& json, Vector3i& vector3i);

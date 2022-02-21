@@ -254,3 +254,27 @@ struct UpdateCapturePointsEvent : public ecs::event::Event<UpdateCapturePointsEv
 struct QuitGameEvent : public ecs::event::Event<QuitGameEvent>
 {
 };
+
+struct WindowMinimizedEvent : public ecs::event::Event<WindowMinimizedEvent>
+{
+};
+
+struct WindowRestoredEvent : public ecs::event::Event<WindowRestoredEvent>
+{
+};
+
+struct WindowResizedEvent : public ecs::event::Event<WindowResizedEvent>
+{
+    int width;
+    int height;
+
+    WindowResizedEvent(int w, int h)
+        : width(w)
+        , height(h)
+    {
+    }
+};
+
+struct WindowCloseEvent : public ecs::event::Event<WindowCloseEvent>
+{
+};
