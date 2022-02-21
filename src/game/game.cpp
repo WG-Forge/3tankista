@@ -12,6 +12,7 @@ Game::Game(const std::string& title)
     , windowWidth(-1)
     , windowHeight(-1)
 {
+    this->RegisterEventCallbacks();
 }
 
 Game::~Game()

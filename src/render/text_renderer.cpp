@@ -28,21 +28,16 @@ TextRenderer::TextRenderer()
 
 void TextRenderer::Load(const std::string& font, unsigned int fontSize)
 {
-
-    // Сначала очищаем ранее загруженные символы
     this->characters.clear();
 
-    // Затем инициализируем и загружаем библиотеку FreeType
     FT_Library ft;
-    if (FT_Init_FreeType(&ft)) // все функции в случае ошибки возвращают
-                               // значение, отличное от 0
+    if (FT_Init_FreeType(&ft))
     {
         std::cout << "ERRPR::FREETYPE: Could not init FreeType Library"
                   << std::endl
                   << std::flush;
     }
 
-    // Загружаем шрифта в качестве face
     FT_Face face;
     if (FT_New_Face(ft, font.c_str(), 0, &face))
     {
@@ -50,16 +45,12 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
                   << std::flush;
     }
 
-    // Устанавливаем размер загружаемых глифов
     FT_Set_Pixel_Sizes(face, 0, fontSize);
 
-    // Отключаем ограничение на выравнивание байтов
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    // Предварительно загружаем/компилируем символы шрифта и сохраняем их
     for (GLubyte c = 0; c < 255; ++c)
     {
-        // Хагрузка символа глифа
         if (FT_Load_Char(face, c, FT_LOAD_RENDER))
         {
             std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl
@@ -67,7 +58,6 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
             continue;
         }
 
-        // Генерация текстуры
         unsigned int texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -81,13 +71,11 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
                      GL_UNSIGNED_BYTE,
                      face->glyph->bitmap.buffer);
 
-        // Установка параметров текстур
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        // Теперь сохраняем символы для их дальнейшего использования
         Character character = {
             texture,
             Vector2i(face->glyph->bitmap.width, face->glyph->bitmap.rows),
@@ -98,7 +86,6 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     }
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    //Когда закончили, освобождаем ресурсы FreeType
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
 }
@@ -113,8 +100,6 @@ void TextRenderer::AddText(const std::string& text,
 
 void TextRenderer::RenderText()
 {
-    // Активируем соответсвтующее состание рендера
-
     for (const auto& string : strings)
     {
         this->shader->Use();
@@ -125,7 +110,6 @@ void TextRenderer::RenderText()
         float x = string.position.x();
         float y = string.position.y();
 
-        //Цикл по всем символам
         std::string::const_iterator c;
         for (c = string.text.begin(); c != string.text.end(); ++c)
         {
@@ -141,7 +125,6 @@ void TextRenderer::RenderText()
             float w = (ch.size.x() * string.scale) / GAME_WINDOW_WIDTH;
             float h = (ch.size.y() * string.scale) / GAME_WINDOW_HEIGHT;
 
-            // Обновляем VBO для каждого символа
             float vertices[6][4] = { { xpos, ypos + h, 0.0f, 0.0f },
                                      { xpos, ypos, 0.0f, 1.0f },
                                      { xpos + w, ypos, 1.0f, 1.0f },
@@ -149,25 +132,15 @@ void TextRenderer::RenderText()
                                      { xpos + w, ypos, 1.0f, 1.0f },
                                      { xpos + w, ypos + h, 1.0f, 0.0f } };
 
-            // Рендерим на прямоугольник текстуру глифа
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
-            // Обновляем содержимое памяти VBO
             glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-            glBufferSubData(GL_ARRAY_BUFFER,
-                            0,
-                            sizeof(vertices),
-                            vertices); // обязательно используйте функцию
-            // glBufferSubData(), а не glBufferData()
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-            // Рендерим прямоугольник
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
-            // Теперь смещаем курсор к следующему глифу
-            x += ((ch.advance >> 6) * string.scale) /
-                 GAME_WINDOW_WIDTH; // битовый сдвиг на 6, чтобы получить
-                                    // значение в пикселях (2^6 = 64)
+            x += ((ch.advance >> 6) * string.scale) / GAME_WINDOW_WIDTH;
         }
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);

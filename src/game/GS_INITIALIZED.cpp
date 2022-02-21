@@ -261,7 +261,7 @@ void Game::GS_INITIALIZED()
 
     ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
         Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
-                  { 0.0f, 1.0f, 0.0f, 0.51f },
+                  { 0.0f, 1.0f, 0.0f, 0.91f },
                   { 0.0f, 0.0f, 1.0f, 0.0f },
                   { 0.0f, 0.0f, 0.0f, 1.0f } },
         "textures/neutral_hp.png",
@@ -271,7 +271,7 @@ void Game::GS_INITIALIZED()
 
     ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
         Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
-                  { 0.0f, 1.0f, 0.0f, 0.61f },
+                  { 0.0f, 1.0f, 0.0f, 0.81f },
                   { 0.0f, 0.0f, 1.0f, 0.0f },
                   { 0.0f, 0.0f, 0.0f, 1.0f } },
         "textures/neutral_hp.png",
@@ -291,7 +291,7 @@ void Game::GS_INITIALIZED()
 
     ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
         Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
-                  { 0.0f, 1.0f, 0.0f, 0.81f },
+                  { 0.0f, 1.0f, 0.0f, 0.61f },
                   { 0.0f, 0.0f, 1.0f, 0.0f },
                   { 0.0f, 0.0f, 0.0f, 1.0f } },
         "textures/neutral_hp.png",
@@ -301,7 +301,7 @@ void Game::GS_INITIALIZED()
 
     ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
         Matrix4f{ { 1.0f, 0.0f, 0.0f, -0.7f },
-                  { 0.0f, 1.0f, 0.0f, 0.91f },
+                  { 0.0f, 1.0f, 0.0f, 0.51f },
                   { 0.0f, 0.0f, 1.0f, 0.0f },
                   { 0.0f, 0.0f, 0.0f, 1.0f } },
         "textures/neutral_hp.png",
