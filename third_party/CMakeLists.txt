@@ -4,3 +4,4 @@ project(third_party LANGUAGES CXX)
 
 add_subdirectory(asio)
 add_subdirectory(json)
+add_subdirectory(ecs)
