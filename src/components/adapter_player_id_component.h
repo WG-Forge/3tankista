@@ -12,8 +12,8 @@ public:
     }
     ~AdapterPlayerIdComponent() override = default;
 
-    GameObjectId Get(uint64_t playerId) const { return adaptationTable.at(playerId); }
-    uint64_t     GetServerId(GameObjectId id) const { return reverseTable.at(id); }
+    uint64_t Get(uint64_t playerId) const { return adaptationTable.at(playerId); }
+    uint64_t GetServerId(uint64_t id) const { return reverseTable.at(id); }
 
     void Add(uint64_t playerId, GameObjectId gameObjectId)
     {
@@ -28,6 +28,6 @@ public:
     }
 
 private:
-    std::unordered_map<uint64_t, GameObjectId> adaptationTable;
-    std::map<GameObjectId, uint64_t>           reverseTable;
+    std::unordered_map<uint64_t, uint64_t> adaptationTable;
+    std::unordered_map<uint64_t, uint64_t> reverseTable;
 };

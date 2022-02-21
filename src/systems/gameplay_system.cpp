@@ -6,6 +6,7 @@
 #include "components/order_component.h"
 #include "components/turn_component.h"
 #include "entities/tank.h"
+#include "win_system.h"
 #include <queue>
 
 const std::vector<Vector2i> GameplaySystem::PathFinder::HEX_DIRECTIONS = { { 1, 0 },  { 1, -1 }, { 0, -1 },
@@ -130,14 +131,20 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto gameArea         = componentManager->begin<HexMapComponent>().operator->();
-    auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetCurrentPlayerId();
+    auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
 
     auto turnComponent = componentManager->begin<TurnComponent>().operator->();
+
+    std::cout << "order " << entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() << "\n";
+    std::cout << "id " << entityManager->GetEntity(mainPlayerId)->GetComponent<PlayerIdComponent>()->GetPlayerId()
+              << "\n";
+    // std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
+
     if (entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() ==
         turnComponent->GetCurrentTurn() % turnComponent->GetPlayersNumber())
     {
 
-        gameArea->ClearMap();
+        // gameArea->ClearMap();
         std::vector<Tank*> currentPlayerTanks;
         std::vector<Tank*> enemies;
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
@@ -147,25 +154,27 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
             {
                 currentPlayerTanks.push_back(tank);
-                SetHexMapComponentCell(
-                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::FRIEND);
+                //                SetHexMapComponentCell(
+                //                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(),
+                //                    CellState::FRIEND);
             }
             else
             {
                 enemies.push_back(tank);
-                SetHexMapComponentCell(
-                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(), CellState::ENEMY);
+                //                SetHexMapComponentCell(
+                //                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(),
+                //                    CellState::ENEMY);
             }
         }
-        for (auto it = componentManager->begin<ObstacleIdComponent>();
-             componentManager->end<ObstacleIdComponent>() != it;
-             ++it)
-        {
-            SetHexMapComponentCell(
-                gameArea,
-                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
-                CellState::OBSTACLE);
-        }
+        //        for (auto it = componentManager->begin<ObstacleIdComponent>();
+        //             componentManager->end<ObstacleIdComponent>() != it;
+        //             ++it)
+        //        {
+        //            GameplaySystem::SetHexMapComponentCell(
+        //                gameArea,
+        //                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
+        //                CellState::OBSTACLE);
+        //        }
         std::sort(currentPlayerTanks.begin(),
                   currentPlayerTanks.end(),
                   [](Tank* lhs, Tank* rhs)
@@ -179,18 +188,22 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             Tank* target = nullptr;
             for (auto& enemy : enemies)
             {
-                if (CanShoot(tank, enemy) && IsCorrectShootPosition(tank, enemy) && CheckNeutrality(tank, enemy))
+                if (CanShoot(tank, enemy))
                 {
-                    if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
-                                                 enemy->GetComponent<HealthComponent>()->GetHealth())
+                    if (IsCorrectShootPosition(tank, enemy) && CheckNeutrality(tank, enemy))
                     {
-                        target = enemy;
+                        if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
+                                                     enemy->GetComponent<HealthComponent>()->GetHealth())
+                        {
+                            target = enemy;
+                        }
                     }
                 }
             }
 
             if (target != nullptr)
             {
+
                 ecs::ecsEngine->SendEvent<ShootRequestEvent>(ShootModel{
                     tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
             }
@@ -232,7 +245,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             }
         }
     }
-    ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
+    // ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
+
     ecs::ecsEngine->SendEvent<TurnRequestEvent>();
     ecs::ecsEngine->SendEvent<GameActionsRequestEvent>();
 }
@@ -240,19 +254,30 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
 {
     auto attackMatrixComponent = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>();
-    int  tankPlayerId          = playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
-    int  enemyPlayerId         = enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
-
+    auto tankPlayerId          = playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+    auto enemyPlayerId         = enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
+    std::cout << "gameplay: "
+              << ", tank: " << tankPlayerId << ", enemy: " << enemyPlayerId << "\n";
+    for (auto& [key, value] : attackMatrixComponent->GetAttackMatrix())
+    {
+        std::cout << key << " {";
+        for (auto& id : value)
+        {
+            std::cout << id << ", ";
+        }
+        std::cout << "}\n";
+    }
     // If he attacked us
     if (attackMatrixComponent->IsAttacked(enemyPlayerId, tankPlayerId))
         return true;
-
+    std::cout << "after\n";
     // If he attacked by somebody else
     auto attackMatrix = attackMatrixComponent->GetAttackMatrix();
     for (auto& [who, whom] : attackMatrix)
     {
         if (who == tankPlayerId)
             continue;
+        std::cout << "aaafter: " << who << "\n";
         if (whom.find(enemyPlayerId) != whom.end())
             return false;
     }

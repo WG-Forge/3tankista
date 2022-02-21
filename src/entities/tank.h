@@ -29,4 +29,5 @@ private:
     TtcComponent*           ttcComponent;
     CapturePointsComponent* capturePointsComponent;
     TankTypeComponent*      tankTypeComponent;
+    HealthComponent*        healthComponent;
 };

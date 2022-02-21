@@ -12,8 +12,8 @@ public:
     }
     ~MainPlayerComponent() override = default;
 
-    void SetCurrentPlayerId(const uint64_t playerId) { mainPlayerId = playerId; }
-    auto GetCurrentPlayerId() const { return mainPlayerId; }
+    void SetMainPlayerId(const uint64_t playerId) { mainPlayerId = playerId; }
+    auto GetMainPlayerId() const { return mainPlayerId; }
 
 private:
     uint64_t mainPlayerId;

@@ -9,8 +9,10 @@ public:
     WinSystem();
     ~WinSystem() override;
 
-    void OnTankDestroyedEvent(const TankDestroyedEvent* event);
-    void OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event);
+    void        OnTankDestroyedEvent(const TankDestroyedEvent* event);
+    void        OnUpdateCapturePointsEvent(const UpdateCapturePointsEvent* event);
+    static void UpdateCapturePoints();
+    static void UpdateAttackMatrix();
 
 private:
     void RegisterEventCallbacks();

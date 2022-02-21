@@ -1,4 +1,6 @@
 #include "action_system.h"
+#include "components/attack_matrix_component.h"
+#include "components/player_id_component.h"
 #include "enums/action.h"
 #include <unordered_map>
 

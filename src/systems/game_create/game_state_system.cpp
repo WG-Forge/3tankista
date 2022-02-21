@@ -7,6 +7,7 @@
 #include "entities/player.h"
 #include "entities/tank.h"
 #include "entities/world.h"
+#include "systems/adapter_system.h"
 #include <algorithm>
 
 GameStateSystem::GameStateSystem()
@@ -37,17 +38,16 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     turnComponent->SetCurrentTurn(event->gameState.currentTurn);
     turnComponent->SetPlayersNumber(event->gameState.numberPlayers);
 
-    auto adapterPlayerId  = world->GetComponent<AdapterPlayerIdComponent>();
-    auto adapterVehicleId = world->GetComponent<AdapterVehicleIdComponent>();
-
+    auto adapterPlayerId       = world->GetComponent<AdapterPlayerIdComponent>();
+    auto adapterVehicleId      = world->GetComponent<AdapterVehicleIdComponent>();
     // Create players
     for (auto& now : event->gameState.players)
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx, now.name);
+        std::cout << now.idx << " " << entity << "\n";
         adapterPlayerId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
-
     // Create observers
     for (auto& now : event->gameState.observers)
     {
@@ -70,7 +70,6 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         componentManager->GetComponent<PositionComponent>(entity)->SetPosition(tank.second.position);
         componentManager->GetComponent<CapturePointsComponent>(entity)->SetCapturePoints(tank.second.capturePoints);
         adapterVehicleId->Add(tank.first, entity);
-
         // Determine playerPosition;
         if (playerPosition.find(tank.second.playerId) == playerPosition.end())
         {
@@ -99,14 +98,14 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         int d2 = rhs.x() * rhs.x() + rhs.y() * rhs.y();
         return d1 > d2;
     };
-    std::vector<std::pair<GameObjectId, Vector2i>> playerHexPos;
+    std::vector<std::pair<uint64_t, Vector2i>> playerHexPos;
     for (auto& now : playerPosition)
     {
         playerHexPos.push_back({ now.first, { now.second.x(), now.second.z() } });
     }
     std::sort(playerHexPos.begin(),
               playerHexPos.end(),
-              [&](std::pair<GameObjectId, Vector2i>& lhs, std::pair<GameObjectId, Vector2i>& rhs)
+              [&](std::pair<uint64_t, Vector2i>& lhs, std::pair<uint64_t, Vector2i>& rhs)
               { return less(lhs.second, rhs.second); });
     int index = 0;
     while (index < playerHexPos.size())
@@ -117,19 +116,44 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     }
     auto turn            = event->gameState.currentTurn;
     auto playersNum      = event->gameState.numberPlayers;
-    auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetCurrentPlayerId();
-    componentManager->begin<MainPlayerComponent>()->SetCurrentPlayerId(adapterPlayerId->Get(mainPlayerIndex));
-    for (int i = index; i < playerHexPos.size(); i++)
+    auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
+    componentManager->begin<MainPlayerComponent>()->SetMainPlayerId(adapterPlayerId->Get(mainPlayerIndex));
+    for (int i = index; i > -1; --i)
     {
         componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
             ->SetOrder(turn % playersNum);
         turn++;
     }
-    for (int i = 0; i < index; i++)
+
+    //    for (int i = index; i < playerHexPos.size(); i++)
+    //    {
+    //        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+    //            ->SetOrder(turn % playersNum);
+    //        turn++;
+    //    }
+    //    for (int i = 0; i < index; i++)
+    //    {
+    //        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+    //            ->SetOrder(turn % playersNum);
+    //        turn++;
+    //    }
+    auto mainPlayerId = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
+    for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
+         ++it)
     {
-        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
-            ->SetOrder(turn % playersNum);
-        turn++;
+        auto tank = (Tank*)entityManager->GetEntity(it->GetVehicleId());
+        if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
+        {
+            GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+                                                   tank->GetComponent<PositionComponent>()->GetPosition(),
+                                                   CellState::FRIEND);
+        }
+        else
+        {
+            GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+                                                   tank->GetComponent<PositionComponent>()->GetPosition(),
+                                                   CellState::ENEMY);
+        }
     }
 }
 

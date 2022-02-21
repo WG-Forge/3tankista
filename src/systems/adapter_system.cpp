@@ -32,7 +32,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::LOGOUT:
             {
-                // No model for logout
+                std::cerr << "Logout is successful\n";
                 break;
             }
             case Action::MAP:
@@ -44,7 +44,8 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::GAME_STATE:
             {
                 auto model = json.get<GameStateModel>();
-                // No need to adapt GameState
+                // std::cout << json.dump() << "\n";
+                //  No need to adapt GameState
                 /*
                 for (auto& now : model.players)
                 {
@@ -77,6 +78,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
                 model.attackMatrix = std::move(adaptedAttackMatrix);
                  */
                 ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
+
                 break;
             }
             case Action::GAME_ACTIONS:
@@ -110,8 +112,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::TURN:
             {
-                componentManager->begin<TurnComponent>()->SetCurrentTurn(
-                    componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1);
+                ecs::ecsEngine->SendEvent<TurnResponseEvent>();
                 break;
             }
             case Action::CHAT:
@@ -128,14 +129,17 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::SHOOT:
             {
-                // No model for shoot
+                auto sentJson = nlohmann::json::parse(event->sentData).get<ShootModel>();
+                std::cerr << "SHOOT: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
+                          << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
                 break;
             }
         }
     }
-    else
+    else if (event->result == Result::TIMEOUT)
     {
-        // TODO: Error handling logic
+        ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
+        std::cout << "timeout\n";
     }
 }
 
