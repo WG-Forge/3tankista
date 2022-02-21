@@ -140,8 +140,16 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
               << "\n";
     // std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
 
-    if (entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() ==
-        turnComponent->GetCurrentTurn() % turnComponent->GetPlayersNumber())
+    uint64_t currentPlayerId;
+    for (auto it = componentManager->begin<OrderComponent>(); componentManager->end<OrderComponent>() != it; ++it)
+    {
+        if (it->GetOrder() == turnComponent->GetCurrentTurn() % turnComponent->GetPlayersNumber())
+        {
+            currentPlayerId = it->GetOwner();
+        }
+    }
+
+    if (mainPlayerId == currentPlayerId)
     {
 
         // gameArea->ClearMap();
@@ -247,6 +255,8 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     }
     // ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
 
+    auto attackMatrix = componentManager->begin<AttackMatrixComponent>().operator->();
+    attackMatrix->ClearUserAttacks(currentPlayerId);
     ecs::ecsEngine->SendEvent<TurnRequestEvent>();
     ecs::ecsEngine->SendEvent<GameActionsRequestEvent>();
 }
