@@ -111,6 +111,10 @@ struct TurnRequestEvent : public ecs::event::Event<TurnRequestEvent>
 {
 };
 
+struct TurnResponseEvent : public ecs::event::Event<TurnResponseEvent>
+{
+};
+
 struct GameOverEvent : public ecs::event::Event<GameOverEvent>
 {
     bool     isDraw;

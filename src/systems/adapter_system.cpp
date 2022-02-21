@@ -112,9 +112,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::TURN:
             {
-                std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
-                componentManager->begin<TurnComponent>()->SetCurrentTurn(
-                    componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1);
+                ecs::ecsEngine->SendEvent<TurnResponseEvent>();
                 break;
             }
             case Action::CHAT:
