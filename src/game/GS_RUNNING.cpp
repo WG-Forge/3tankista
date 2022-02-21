@@ -3,7 +3,6 @@
 #include "components/kill_points_component.h"
 #include "components/turn_component.h"
 #include "game.h"
-#include "game_object.h"
 #include "systems/win_system.h"
 
 void Game::GS_RUNNING()
@@ -13,7 +12,18 @@ void Game::GS_RUNNING()
     auto                         entityManager    = ecs::ecsEngine->GetEntityManager();
     bool                         isFinished       = false;
     std::pair<int, GameObjectId> winnerId{ 0, 0 };
-
+    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
+    auto attackMatrix          = attackMatrixComponent->GetAttackMatrix();
+    attackMatrixComponent->SetAttackMatrix(attackMatrix);
+    for (auto& [key, value] : attackMatrixComponent->GetAttackMatrix())
+    {
+        std::cout << key << " {";
+        for (auto& id : value)
+        {
+            std::cout << id << ", ";
+        }
+        std::cout << "}\n";
+    }
     if (!componentManager->begin<TurnComponent>()->isFinished())
     {
         // std::cout<<"GS "<<componentManager->begin<TurnComponent>()->GetCurrentTurn()<<"\n";
@@ -21,7 +31,11 @@ void Game::GS_RUNNING()
              componentManager->end<KillPointsComponent>() != it;
              ++it)
         {
-
+            std::cout << "kp " << it->GetKillPoints() << "\n";
+            std::cout
+                << "cp "
+                << entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
+                << "\n";
             if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
                 5)
             {
@@ -45,7 +59,7 @@ void Game::GS_RUNNING()
         {
             isDraw = true;
         }
-        //ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
+        // ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
         ecs::ecsEngine->SendEvent<GameOverEvent>(isDraw, winnerId.second);
         ecs::ecsEngine->SendEvent<LogoutRequestEvent>();
         ChangeState(GameState::GAMEOVER);

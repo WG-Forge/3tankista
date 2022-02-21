@@ -20,7 +20,7 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
 {
     auto               entityManager    = ecs::ecsEngine->GetEntityManager();
     auto               componentManager = ecs::ecsEngine->GetComponentManager();
-    std::set<uint64_t> attackset;
+    std::set<uint64_t> attackset{};
     auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
 
     for (auto& action : event->actions)
@@ -38,11 +38,15 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
                     [entityManager->GetEntity(action.vehicleId)->GetComponent<PlayerIdComponent>()->GetPlayerId()] =
                         attackset;
                 auto health = currentEntity->GetComponent<HealthComponent>();
-                health->SetHealth(std::max(0, health->GetHealth() - damage));
-                if (health->GetHealth() == 0)
+                if (health->GetHealth() != 0)
                 {
-                    ecs::ecsEngine->SendEvent<TankDestroyedEvent>(action.vehicleId, currentEntity->GetEntityID());
+                    health->SetHealth(std::max(0, health->GetHealth() - damage));
+                    if (health->GetHealth() == 0)
+                    {
+                        ecs::ecsEngine->SendEvent<TankDestroyedEvent>(action.vehicleId, currentEntity->GetEntityID());
+                    }
                 }
+                attackMatrixComponent->SetAttackMatrix(attackMatrix);
             }
         }
     }

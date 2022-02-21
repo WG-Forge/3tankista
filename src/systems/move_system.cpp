@@ -24,10 +24,10 @@ MoveSystem::~MoveSystem()
 
 void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
 {
-    auto               entityManager    = ecs::ecsEngine->GetEntityManager();
-    auto               componentManager = ecs::ecsEngine->GetComponentManager();
-    auto               world           = entityManager->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
-    auto               hexMapComponent = world->GetComponent<HexMapComponent>();
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto world            = entityManager->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
+    auto hexMapComponent  = world->GetComponent<HexMapComponent>();
     for (auto& action : event->actions)
     {
         auto entity            = entityManager->GetEntity(action.vehicleId);
@@ -40,7 +40,16 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
         }
         else if (cellType == CellState::ENEMY)
         {
-            GameplaySystem::SetHexMapComponentCell(hexMapComponent, positionComponent->GetPosition(), CellState::EMPTY);
+            if (entity->GetComponent<SpawnPositionComponent>()->GetSpawnPosition() == positionComponent->GetPosition())
+            {
+                GameplaySystem::SetHexMapComponentCell(
+                    hexMapComponent, positionComponent->GetPosition(), CellState::ENEMY_SPAWN);
+            }
+            else
+            {
+                GameplaySystem::SetHexMapComponentCell(
+                    hexMapComponent, positionComponent->GetPosition(), CellState::EMPTY);
+            }
             GameplaySystem::SetHexMapComponentCell(hexMapComponent, action.target, CellState::ENEMY);
         }
 

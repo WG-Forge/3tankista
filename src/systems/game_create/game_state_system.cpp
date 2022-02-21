@@ -51,7 +51,16 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         attackMatrix.insert({ entity, std::set<uint64_t>{} });
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
-
+    attackMatrixComponent->SetAttackMatrix(attackMatrix);
+    for (auto& [key, value] : attackMatrixComponent->GetAttackMatrix())
+    {
+        std::cout << key << " {";
+        for (auto& id : value)
+        {
+            std::cout << id << ", ";
+        }
+        std::cout << "}\n";
+    }
     // Create observers
     for (auto& now : event->gameState.observers)
     {
@@ -129,18 +138,18 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         turn++;
     }
 
-//    for (int i = index; i < playerHexPos.size(); i++)
-//    {
-//        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
-//            ->SetOrder(turn % playersNum);
-//        turn++;
-//    }
-//    for (int i = 0; i < index; i++)
-//    {
-//        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
-//            ->SetOrder(turn % playersNum);
-//        turn++;
-//    }
+    //    for (int i = index; i < playerHexPos.size(); i++)
+    //    {
+    //        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+    //            ->SetOrder(turn % playersNum);
+    //        turn++;
+    //    }
+    //    for (int i = 0; i < index; i++)
+    //    {
+    //        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+    //            ->SetOrder(turn % playersNum);
+    //        turn++;
+    //    }
     auto mainPlayerId = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
     for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
          ++it)

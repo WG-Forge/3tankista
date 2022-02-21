@@ -9,14 +9,14 @@ public:
     AttackMatrixComponent()           = default;
     ~AttackMatrixComponent() override = default;
 
-    void AddAttack(uint64_t  who, uint64_t  whom)
+    void AddAttack(uint64_t who, uint64_t whom)
     {
         if (attackMatrix.find(who) == attackMatrix.end())
             attackMatrix[who] = std::set<uint64_t>();
         attackMatrix[who].insert(whom);
     }
 
-    bool IsAttacked(uint64_t  who, uint64_t  whom)
+    bool IsAttacked(uint64_t who, uint64_t whom)
     {
         if (attackMatrix.find(who) == attackMatrix.end())
             return false;
@@ -25,8 +25,12 @@ public:
 
     const auto& GetAttackMatrix() const { return attackMatrix; }
 
+    void SetAttackMatrix(std::map<uint64_t, std::set<uint64_t>> matrix) { attackMatrix = std::move(matrix); };
+
     void ClearAttackMatrix() { attackMatrix.clear(); }
 
+
+
 private:
-    std::map<uint64_t , std::set<uint64_t >> attackMatrix;
+    std::map<uint64_t, std::set<uint64_t>> attackMatrix;
 };

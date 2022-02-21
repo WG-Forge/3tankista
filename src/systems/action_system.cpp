@@ -67,6 +67,7 @@ void ActionSystem::OnGameActionsResponseEvent(const GameActionsResponseEvent* ev
         attackMatrix[entityManager->GetEntity(event->gameActionsModel.actions[0].playerIndex)
                          ->GetComponent<PlayerIdComponent>()
                          ->GetPlayerId()] = attackset;
+        attackMatrixComponent->SetAttackMatrix(attackMatrix);
     }
     for (auto& now : shootActions)
     {
