@@ -38,8 +38,8 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     turnComponent->SetCurrentTurn(event->gameState.currentTurn);
     turnComponent->SetPlayersNumber(event->gameState.numberPlayers);
 
-    auto adapterPlayerId       = world->GetComponent<AdapterPlayerIdComponent>();
-    auto adapterVehicleId      = world->GetComponent<AdapterVehicleIdComponent>();
+    auto adapterPlayerId  = world->GetComponent<AdapterPlayerIdComponent>();
+    auto adapterVehicleId = world->GetComponent<AdapterVehicleIdComponent>();
     // Create players
     for (auto& now : event->gameState.players)
     {

@@ -45,4 +45,3 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
     }
     attackMatrixComponent->ReplaceUserAttacks(event->playerId, attackedUsers);
 }
-
