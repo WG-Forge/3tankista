@@ -36,6 +36,9 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
                 if (health->GetHealth() != 0) // Already destroyed
                 {
                     health->SetHealth(std::max(0, health->GetHealth() - damage));
+                    // send event about hp changing
+                    // currentEntity -- it's target
+                    // health -- it's new health
                     if (health->GetHealth() == 0)
                     {
                         ecs::ecsEngine->SendEvent<TankDestroyedEvent>(action.vehicleId, currentEntity->GetEntityID());

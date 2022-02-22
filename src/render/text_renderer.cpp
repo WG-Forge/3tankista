@@ -93,9 +93,10 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     FT_Done_FreeType(ft);
 }
 
-void TextRenderer::AddText(const std::string& text, const Vector2f& position, const float scale, const Color color)
+void TextRenderer::AddText(
+    const uint64_t vehicleId, const std::string& text, const Vector2f& position, const float scale, const Color color)
 {
-    strings.push_back(Text{ text, position, scale, color });
+    strings.push_back(Text{ vehicleId, text, position, scale, color });
 }
 
 void TextRenderer::RenderText()

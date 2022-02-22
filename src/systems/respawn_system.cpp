@@ -38,6 +38,7 @@ void RespawnSystem::OnTankDestroyedEvent(const TankDestroyedEvent* event)
     auto healthComponent = componentManager->GetComponent<HealthComponent>(event->entityId);
     auto maxHealth       = componentManager->GetComponent<TtcComponent>(event->entityId)->GetMaxHealth();
     healthComponent->SetHealth(maxHealth);
+    // send event about new health. See health_system
 }
 
 void RespawnSystem::RegisterEventCallbacks()

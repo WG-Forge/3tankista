@@ -4,6 +4,7 @@
 
 HealthBar::HealthBar(const ecs::EntityId&   entityId,
                      ecs::ComponentManager* componentManager,
+                     const uint64_t         vehicleId,
                      const Matrix4f&        transform,
                      const std::string&     healthTextureFileName,
                      const std::string&     healthText,
@@ -11,6 +12,8 @@ HealthBar::HealthBar(const ecs::EntityId&   entityId,
                      const Color&           spawnColor)
     : ecs::Entity<HealthBar>(entityId, componentManager)
 {
+
+    this->vehicleIdComponent = AddComponent<VehicleIdComponent>(vehicleId);
 
     this->spawnEntityId = ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(Vector3i{ 0, 0, 0 }, spawnColor);
     Spawn* atSpgFirstPlayerSpawn = (Spawn*)ecs::ecsEngine->GetEntityManager()->GetEntity(this->spawnEntityId);
@@ -33,6 +36,7 @@ HealthBar::HealthBar(const ecs::EntityId&   entityId,
         ecs::ecsEngine->GetEntityManager()->CreateEntity<Health>(Vector3i(0, 0, 0), healthTextureFileName);
     Health* atSpgFirstPlayerHp = (Health*)ecs::ecsEngine->GetEntityManager()->GetEntity(this->healthEntityId);
 
+    // NOTE: it's magic numbers only for beautiful image
     TransformComponent* atSpgFirstPlayerHpTransformComponent = atSpgFirstPlayerHp->GetComponent<TransformComponent>();
     atSpgFirstPlayerHpTransformComponent->SetTransform(
         Matrix4f{ { 4 * transform[0], transform[1], transform[2], transform[3] + (transform[3] > 0 ? -0.1f : 0.1f) },
