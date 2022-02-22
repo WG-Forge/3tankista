@@ -2,9 +2,6 @@
 
 #include "matrix.hpp"
 
-namespace myMath
-{
-
 template <typename T>
 Matrix4<T> translate(const Matrix4<T>& m, const Vector3<T> v)
 {
@@ -59,4 +56,27 @@ Matrix4<T> scale(const Matrix4<T>& m, const Vector3<T>& v)
     return result;
 }
 
-} // namespace myMath
+template <typename T>
+Matrix4<T> ortho(T left, T right, T bottom, T top)
+{
+    Matrix4<T> result = Matrix4<T>::eye();
+    result(0, 0)      = static_cast<T>(2) / (right - left);
+    result(1, 1)      = static_cast<T>(2) / (top - bottom);
+    //    result(2, 2)      = -static_cast<T>(1);
+    //    result(0, 3)      = -(right + left) / (right - left);
+    //    result(1, 3)      = -(top + bottom) / (top - bottom);
+    return result;
+}
+
+template <typename T>
+Matrix4<T> ortho(T left, T right, T bottom, T top, T zNear, T zFar)
+{
+    Matrix4<T> result = Matrix4<T>::eye();
+    result(0, 0)      = static_cast<T>(2) / (right - left);
+    result(1, 1)      = static_cast<T>(2) / (top - bottom);
+    result(2, 2)      = static_cast<T>(1) / (zFar - zNear);
+    result(0, 3)      = -(right + left) / (right - left);
+    result(1, 3)      = -(top + bottom) / (top - bottom);
+    result(2, 3)      = -zNear / (zFar - zNear);
+    return result;
+}

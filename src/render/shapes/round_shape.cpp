@@ -36,12 +36,12 @@ bool RoundShape::Initialize()
         r2.y()      = s * r1.x() + c * r1.y();
         Vector2f v2 = LONG_DIAGONAL * r2;
 
-        vertexPositionData.push_back(v1.x() / GAME_WINDOW_WIDTH);
-        vertexPositionData.push_back(v1.y() / GAME_WINDOW_HEIGHT);
+        vertexPositionData.push_back(v1.x() /*/ GAME_WINDOW_WIDTH*/);
+        vertexPositionData.push_back(v1.y() /*/ GAME_WINDOW_HEIGHT*/);
         vertexPositionData.push_back(zCoord);
 
-        vertexPositionData.push_back(v2.x() / GAME_WINDOW_WIDTH);
-        vertexPositionData.push_back(v2.y() / GAME_WINDOW_HEIGHT);
+        vertexPositionData.push_back(v2.x() /*/ GAME_WINDOW_WIDTH*/);
+        vertexPositionData.push_back(v2.y() /*/ GAME_WINDOW_HEIGHT*/);
         vertexPositionData.push_back(zCoord);
 
         r1 = r2;

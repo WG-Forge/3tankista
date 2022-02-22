@@ -42,7 +42,7 @@ bool HexShape::Initialize()
             hexVertexes = this->GetVertHexVertices(Vector3i{ i, j, 0 });
             for (auto& vert : hexVertexes)
             {
-                vert = Vector3f{ vert.x() / GAME_WINDOW_WIDTH, vert.y() / GAME_WINDOW_HEIGHT, 0.0f };
+                vert = Vector3f{ vert.x() /*/ GAME_WINDOW_WIDTH*/, vert.y() /*/ GAME_WINDOW_HEIGHT*/, 0.0f };
             }
             this->vectorOfVertexes.push_back(hexVertexes);
             this->vertexesSet.insert(hexVertexes.begin(), hexVertexes.end());

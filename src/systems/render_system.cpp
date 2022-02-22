@@ -2,7 +2,7 @@
 
 #include "log/logger.h"
 
-#include "utility/matrix.hpp"
+#include "utility/matrix_transform.h"
 
 RenderSystem::RenderSystem(GLFWwindow* window)
     : window(window)

@@ -16,7 +16,8 @@ static constexpr MaterialVertexAttributeLoc NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC
 static constexpr MaterialVertexAttributeLoc COLOR_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 2 };
 static constexpr MaterialVertexAttributeLoc TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 3 };
 
-inline static const std::string MODEL_TRANSFORM_UNIFORM_NAME{ "uModelTransform" };
+inline static const std::string TRANSFORM_UNIFORM_NAME{ "uTransform" };
+inline static const std::string PROJECTION_UNIFORM_NAME{ "uProjection" };
 inline static const std::string COLOR_UNIFORM_NAME{ "uColor" };
 inline static const std::string MIX_VALUE_UNIFORM_NAME{ "uMixValue" };
 
@@ -49,6 +50,8 @@ public:
     virtual void Release() = 0;
 
     virtual void SetModelTransform(const Matrix4f& model) = 0;
+
+    virtual void SetProjectionTransform(const Matrix4f& model) = 0;
 
     virtual void SetViewProjectionTransform(const Matrix4f& view, const Matrix4f& proj) = 0;
 

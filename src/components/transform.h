@@ -18,7 +18,7 @@ public:
     explicit Transform(const Vector2i& position_xy);
     explicit Transform(const Vector3i& position);
     Transform(const Vector3i& position, const Vector3f& axis, float angle);
-    Transform(const Vector3i& position, const Vector3f& axis, float angle, const Vector3f& scale);
+    Transform(const Vector3i& position, const Vector3f& axis, float angle, const Vector3f& scaleFactors);
 
     inline void Zero() { this->transform = Matrix4f{}; }
     inline void One()
@@ -69,7 +69,7 @@ private:
     Vector3f Hex2Pixel(const Vector3i& hex)
     {
         const auto& pixel = hex.x() * HEX_BASIS.getCol(0) + hex.y() * HEX_BASIS.getCol(1);
-        return { pixel.x() / GAME_WINDOW_WIDTH, pixel.y() / GAME_WINDOW_HEIGHT, 0 };
+        return { pixel.x() /*/ GAME_WINDOW_WIDTH*/, pixel.y() /*/ GAME_WINDOW_HEIGHT*/, 0 };
     }
 
 }; // class Transform

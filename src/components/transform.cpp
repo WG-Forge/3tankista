@@ -16,44 +16,32 @@ Transform::Transform(const Matrix4f& transform)
 
 Transform::Transform(const Vector3i& position)
 {
-    this->transform = myMath::translate(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
-                                                  { 0.0f, 1.0f, 0.0f, 0.0f },
-                                                  { 0.0f, 0.0f, 1.0f, 0.0f },
-                                                  { 0.0f, 0.0f, 0.0f, 1.0f } },
-                                        Hex2Pixel(position));
+    this->transform = translate(Matrix4f::eye(), Hex2Pixel(position));
 }
 
 Transform::Transform(const Vector2i& position_xy)
 {
-    this->transform = myMath::translate(
-        Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
-                  { 0.0f, 1.0f, 0.0f, 0.0f },
-                  { 0.0f, 0.0f, 1.0f, 0.0f },
-                  { 0.0f, 0.0f, 0.0f, 1.0f } },
-        Hex2Pixel(Vector3i(position_xy.x(), position_xy.y(), 0 /*-position_xy.x() - position_xy.y()*/)));
+    this->transform =
+        translate(Matrix4f::eye(),
+                  Hex2Pixel(Vector3i(position_xy.x(), position_xy.y(), 0 /*-position_xy.x() - position_xy.y()*/)));
 }
 
 Transform::Transform(const Vector3i& position, const Vector3f& axis, const float angle_radians)
 {
-    Matrix4f P  = myMath::translate(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
-                                             { 0.0f, 1.0f, 0.0f, 0.0f },
-                                             { 0.0f, 0.0f, 1.0f, 0.0f },
-                                             { 0.0f, 0.0f, 0.0f, 1.0f } },
-                                   Hex2Pixel(position));
-    Matrix4f PR = myMath::rotate(P, angle_radians, axis);
+    Matrix4f P  = translate(Matrix4f::eye(), Hex2Pixel(position));
+    Matrix4f PR = rotate(P, angle_radians, axis);
 
     this->transform = PR;
 }
 
-Transform::Transform(const Vector3i& position, const Vector3f& axis, const float angle_radians, const Vector3f& scale)
+Transform::Transform(const Vector3i& position,
+                     const Vector3f& axis,
+                     const float     angle_radians,
+                     const Vector3f& scaleFactors)
 {
-    Matrix4f P   = myMath::translate(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.0f },
-                                             { 0.0f, 1.0f, 0.0f, 0.0f },
-                                             { 0.0f, 0.0f, 1.0f, 0.0f },
-                                             { 0.0f, 0.0f, 0.0f, 1.0f } },
-                                   Hex2Pixel(position));
-    Matrix4f PR  = myMath::rotate(P, angle_radians, axis);
-    Matrix4f PRS = myMath::scale(PR, scale);
+    Matrix4f P   = translate(Matrix4f::eye(), Hex2Pixel(position));
+    Matrix4f PR  = rotate(P, angle_radians, axis);
+    Matrix4f PRS = scale(PR, scaleFactors);
 
     this->transform = PRS;
 }
