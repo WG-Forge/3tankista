@@ -32,3 +32,9 @@ inline static const Matrix2f HEX_BASIS{
     { (GRID_BASIS.getCol(0) * 3 + GRID_BASIS.getCol(1)).x(), (GRID_BASIS.getCol(1) * 2).x() },
     { (GRID_BASIS.getCol(0) * 3 + GRID_BASIS.getCol(1)).y(), (GRID_BASIS.getCol(1) * 2).y() }
 };
+
+inline static const std::string AT_SPG_TANK_TEXTURE_NAME{ "textures/at_spg.png" };
+inline static const std::string SPG_TANK_TEXTURE_NAME{ "textures/spg.png" };
+inline static const std::string LIGHT_TANK_TEXTURE_NAME{ "textures/light.png" };
+inline static const std::string HEAVY_TANK_TEXTURE_NAME{ "textures/heavy.png" };
+inline static const std::string MEDIUM_TANK_TEXTURE_NAME{ "textures/medium.png" };

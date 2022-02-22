@@ -57,7 +57,6 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
          ++it)
     {
-        // FIXME: Add GetPoisiton
         GameplaySystem::SetHexMapComponentCell(
             world->GetComponent<HexMapComponent>(),
             entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition(),

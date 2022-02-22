@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-using ShapeID       = uint16_t;
+using ShapeID       = uint64_t;
 using RenderingMode = unsigned int;
 
 static constexpr ShapeID INVALID_SHAPE_ID{ 0xffff };

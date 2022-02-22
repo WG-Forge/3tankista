@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utility>
+#include <cstdint>
 
 class ShapeBufferIndex
 {

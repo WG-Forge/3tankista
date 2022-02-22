@@ -210,7 +210,7 @@ void RenderSystem::SetShapeBufferIndex(ShapeComponent* shapeComponent)
     const auto it = std::find_if(this->bufferedShapes.begin(),
                                  this->bufferedShapes.end(),
                                  [&](const ShapeBufferIndex* bufferIndex)
-                                 { return bufferIndex->shapeId == shapeComponent->GetShapeID(); });
+                                 { return bufferIndex->GetShapeId() == shapeComponent->GetShapeID(); });
     if (it != this->bufferedShapes.end())
     {
         // set indices
