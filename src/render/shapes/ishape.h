@@ -2,13 +2,7 @@
 
 #include "render/utility/opengl.h"
 
-#include <cstdint>
-
-using ShapeID       = uint64_t;
-using RenderingMode = unsigned int;
-
-static constexpr ShapeID INVALID_SHAPE_ID{ 0xffff };
-
+#include "render/global.h"
 class IShape
 {
 public:

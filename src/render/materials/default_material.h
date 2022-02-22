@@ -84,7 +84,7 @@ public:
         }
     }
 
-    inline void SetUniform1f(const std::string& uniformName, const float value)
+    inline void SetUniform1f(const std::string& uniformName, const float value) override
     {
         if (this->shader != nullptr)
         {

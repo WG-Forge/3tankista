@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "render/global.h"
 
 class ShapeBufferIndex
 {

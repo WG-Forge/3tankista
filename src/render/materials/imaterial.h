@@ -1,25 +1,8 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
+#include "render/global.h"
 
 #include "utility/matrix.hpp"
-
-using MaterialID                 = uint16_t;
-using MaterialVertexAttributeLoc = uint32_t;
-
-static constexpr MaterialID                 INVALID_MATERIAL_ID{ 0xffff };
-static constexpr MaterialVertexAttributeLoc INVALID_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 0xffffffff };
-
-static constexpr MaterialVertexAttributeLoc POSITION_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 0 };
-static constexpr MaterialVertexAttributeLoc NORMAL_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 1 };
-static constexpr MaterialVertexAttributeLoc COLOR_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 2 };
-static constexpr MaterialVertexAttributeLoc TEXCOORD_MATERIAL_VERTEX_ATTRIBUTE_LOC{ 3 };
-
-inline static const std::string TRANSFORM_UNIFORM_NAME{ "uTransform" };
-inline static const std::string PROJECTION_UNIFORM_NAME{ "uProjection" };
-inline static const std::string COLOR_UNIFORM_NAME{ "uColor" };
-inline static const std::string MIX_VALUE_UNIFORM_NAME{ "uMixValue" };
 
 class IMaterial
 {

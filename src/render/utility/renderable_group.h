@@ -4,10 +4,9 @@
 
 #include "render/materials/material.h"
 
-#include <cstdint>
-#include <functional>
+#include "render/global.h"
 
-using RenderableGroupID = uint32_t;
+#include <functional>
 
 struct RenderableGroup
 {

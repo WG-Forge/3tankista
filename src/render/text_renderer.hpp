@@ -5,7 +5,7 @@
 
 #include "glad.h"
 
-#include "utility/matrix.hpp"
+#include "render/global.h"
 
 #include "render/utility/buffers.h"
 #include "render/utility/shader.hpp"
@@ -20,7 +20,6 @@ struct Character
 
 struct Text
 {
-    using Color = Vector4f;
 
     Text(const std::string& text, const Vector2f& position, const float scale, const Color color)
         : text{ text }
@@ -33,12 +32,11 @@ struct Text
     std::string text{};
     Vector2f    position{ 0.0f, 0.0f };
     float       scale{ 1.0f };
-    Color       color{ 1.0f, 1.0f, 1.0f, 1.0f };
+    Color       color{ WHITE_COLOR };
 };
 
 class TextRenderer
 {
-    using Color = Vector4f;
 
     static constexpr size_t TEXT_VERTEX_BUFFER_SIZE{ 8388608 /* 8 MB */ };
 
@@ -50,7 +48,7 @@ public:
     void AddText(const std::string& text,
                  const Vector2f&    position,
                  const float        scale,
-                 const Color        color = Color(1.0f, 1.0f, 1.0f, 1.0f));
+                 const Color        color = Color(WHITE_COLOR));
 
     void RenderText();
 
