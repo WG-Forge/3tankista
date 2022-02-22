@@ -1,4 +1,4 @@
-#include "texturecomponent.h"
+#include "texture_component.h"
 
 #include <iostream>
 

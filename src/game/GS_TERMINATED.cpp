@@ -3,7 +3,7 @@
 
 void Game::GS_TERMINATED()
 {
-    this->Terminate();
+    glfwSetWindowShouldClose(this->window, true);
 }
 
 void Game::GS_TERMINATED_ENTER() {}

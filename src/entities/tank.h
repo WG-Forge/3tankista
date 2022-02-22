@@ -6,7 +6,7 @@
 #include "components/player_id_component.h"
 #include "components/spawn_position_component.h"
 #include "components/tank_type_component.h"
-#include "components/texturecomponent.h"
+#include "components/texture_component.h"
 #include "components/transform_component.h"
 #include "components/ttc_component.h"
 #include "components/ttc_factories/abstract_factory.h"

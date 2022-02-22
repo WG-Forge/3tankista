@@ -6,7 +6,7 @@
 
 #include "components/material_component.h"
 #include "components/shape_component.h"
-#include "components/texturecomponent.h"
+#include "components/texture_component.h"
 #include "components/transform_component.h"
 
 #include "ecs.h"
