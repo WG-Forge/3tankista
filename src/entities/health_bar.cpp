@@ -45,8 +45,15 @@ HealthBar::HealthBar(const ecs::EntityId&   entityId,
                   { transform[12], transform[13], transform[14], transform[15] } });
 
     ecs::ecsEngine->GetSystemManager()->GetSystem<RenderSystem>()->DrawText(
+        vehicleId,
         healthText,
         Vector2f{ transform[3] + (transform[3] > 0 ? -0.12f : 0.08f), transform[7] - 0.015f },
         2.0,
         Color(9.0f, 9.0f, 9.0f, 1.0f));
+}
+
+void HealthBar::SetHealth(const std::string& health)
+{
+    ecs::ecsEngine->GetSystemManager()->GetSystem<RenderSystem>()->ChangeText(this->vehicleIdComponent->GetVehicleId(),
+                                                                              health);
 }

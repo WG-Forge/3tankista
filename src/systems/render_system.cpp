@@ -155,9 +155,15 @@ void RenderSystem::PostUpdate(ecs::f32 dt)
     glfwPollEvents();
 }
 
-void RenderSystem::DrawText(const std::string& text, const Vector2f& position, const float scale, const Color color)
+void RenderSystem::ChangeText(const uint64_t vehicleId, const std::string& text)
 {
-    this->textRenderer->AddText(text, position, scale, color);
+    this->textRenderer->ChangeText(vehicleId, text);
+}
+
+void RenderSystem::DrawText(
+    const uint64_t vehicleId, const std::string& text, const Vector2f& position, const float scale, const Color color)
+{
+    this->textRenderer->AddText(vehicleId, text, position, scale, color);
 }
 
 void RenderSystem::InitializeOpenGL()

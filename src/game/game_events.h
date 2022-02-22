@@ -255,6 +255,18 @@ struct QuitGameEvent : public ecs::event::Event<QuitGameEvent>
 {
 };
 
+struct HealthChanged : public ecs::event::Event<HealthChanged>
+{
+    uint64_t vehicleId;
+    int      health;
+
+    HealthChanged(const uint64_t vehicleId, const int health)
+        : vehicleId{ vehicleId }
+        , health{ health }
+    {
+    }
+};
+
 struct WindowMinimizedEvent : public ecs::event::Event<WindowMinimizedEvent>
 {
 };

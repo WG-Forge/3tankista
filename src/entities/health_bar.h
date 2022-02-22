@@ -10,8 +10,8 @@
 
 // TODO: 1) delete spawn and tank and add TankSpawnEntity;
 //       2) add 15 textures with spawn and tank type
-//       3) write SetHeathText()
-//       4) add vehicleId
+//       3) write SetHeathText() +
+//       4) add vehicleId +
 //       5) think about uisystem
 //       6) think about text renderer
 //       7) add black texture for hp
