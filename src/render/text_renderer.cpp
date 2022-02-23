@@ -20,7 +20,7 @@ TextRenderer::TextRenderer()
         ortho(0.0f, static_cast<float>(GAME_WINDOW_WIDTH), static_cast<float>(GAME_WINDOW_HEIGHT), 0.0f);
 
     this->shader->Use();
-    this->shader->SetInt("text", 0);
+    //    this->shader->SetInt("text", 0);
     this->shader->SetMat4(PROJECTION_UNIFORM_NAME, projection);
     this->shader->Unuse();
 
@@ -122,9 +122,9 @@ void TextRenderer::RenderText()
             float w = ch.size.x() * string.scale;
             float h = ch.size.y() * string.scale;
 
-            float vertices[6][4] = { { xpos, ypos + h, 0.0f, 0.0f }, { xpos, ypos, 0.0f, 1.0f },
-                                     { xpos + w, ypos, 1.0f, 1.0f }, { xpos, ypos + h, 0.0f, 0.0f },
-                                     { xpos + w, ypos, 1.0f, 1.0f }, { xpos + w, ypos + h, 1.0f, 0.0f } };
+            float vertices[6][4] = { { xpos, ypos + h, 0.0f, 1.0f },     { xpos + w, ypos, 1.0f, 0.0f },
+                                     { xpos, ypos, 0.0f, 0.0f },         { xpos, ypos + h, 0.0f, 1.0f },
+                                     { xpos + w, ypos + h, 1.0f, 1.0f }, { xpos + w, ypos, 1.0f, 0.0f } };
 
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
 

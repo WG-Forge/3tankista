@@ -16,13 +16,13 @@ constexpr int LIGHT_TANK_DAMAGE_DISTANCE  = 2;
 constexpr int SPG_TANK_DAMAGE_DISTANCE    = 3;
 constexpr int AT_SPG_TANK_DAMAGE_DISTANCE = 3;
 
-static constexpr unsigned int GAME_WINDOW_WIDTH{ 800 };
+static constexpr unsigned int GAME_WINDOW_WIDTH{ 1920 };
 
-static constexpr unsigned int GAME_WINDOW_HEIGHT{ 600 };
+static constexpr unsigned int GAME_WINDOW_HEIGHT{ 1080 };
 
 static constexpr bool GAME_WINDOW_FULLSCREEN{ false };
 
-static constexpr std::size_t HEX_SIZE{ std::size_t(24 /*32 * 1.75*/) };
+static constexpr std::size_t HEX_SIZE{ std::size_t(GAME_WINDOW_WIDTH / 80 /*32 * 1.75*/) };
 
 inline static const std::size_t LONG_DIAGONAL  = HEX_SIZE * std::sqrt(3) / 2.0; // 1/2 from short hex diagonal
 inline static const std::size_t SHORT_DIAGONAL = HEX_SIZE / 2.0;                // 1/4 from long hex diagonal
@@ -38,3 +38,25 @@ inline static const std::string SPG_TANK_TEXTURE_NAME{ "textures/spg.png" };
 inline static const std::string LIGHT_TANK_TEXTURE_NAME{ "textures/light.png" };
 inline static const std::string HEAVY_TANK_TEXTURE_NAME{ "textures/heavy.png" };
 inline static const std::string MEDIUM_TANK_TEXTURE_NAME{ "textures/medium.png" };
+
+inline static const std::string AT_SPG_HEALTH_BAR_ROSE_TEXTURE_NAME{ "textures/at_spg_health_bar_rose.png" };
+inline static const std::string SPG_HEALTH_BAR_ROSE_TEXTURE_NAME{ "textures/spg_health_bar_rose.png" };
+inline static const std::string LIGHT_HEALTH_BAR_ROSE_TEXTURE_NAME{ "textures/light_health_bar_rose.png" };
+inline static const std::string HEAVY_HEALTH_BAR_ROSE_TEXTURE_NAME{ "textures/heavy_health_bar_rose.png" };
+inline static const std::string MEDIUM_HEALTH_BAR_ROSE_TEXTURE_NAME{ "textures/medium_health_bar_rose.png" };
+
+inline static const std::string AT_SPG_HEALTH_BAR_ORANGE_TEXTURE_NAME{ "textures/at_spg_health_bar_orange.png" };
+inline static const std::string SPG_HEALTH_BAR_ORANGE_TEXTURE_NAME{ "textures/spg_health_bar_orange.png" };
+inline static const std::string LIGHT_HEALTH_BAR_ORANGE_TEXTURE_NAME{ "textures/light_health_bar_orange.png" };
+inline static const std::string HEAVY_HEALTH_BAR_ORANGE_TEXTURE_NAME{ "textures/heavy_health_bar_orange.png" };
+inline static const std::string MEDIUM_HEALTH_BAR_ORANGE_TEXTURE_NAME{ "textures/medium_health_bar_orange.png" };
+
+inline static const std::string AT_SPG_HEALTH_BAR_BLUE_TEXTURE_NAME{ "textures/at_spg_health_bar_blue.png" };
+inline static const std::string SPG_HEALTH_BAR_BLUE_TEXTURE_NAME{ "textures/spg_health_bar_blue.png" };
+inline static const std::string LIGHT_HEALTH_BAR_BLUE_TEXTURE_NAME{ "textures/light_health_bar_blue.png" };
+inline static const std::string HEAVY_HEALTH_BAR_BLUE_TEXTURE_NAME{ "textures/heavy_health_bar_blue.png" };
+inline static const std::string MEDIUM_HEALTH_BAR_BLUE_TEXTURE_NAME{ "textures/medium_health_bar_blue.png" };
+
+inline static const std::string FRIEND_HP_TEXTURE_NAME{ "textures/friend_hp.png" };
+inline static const std::string ENEMY_HP_TEXTURE_NAME{ "textures/enemy_hp.png" };
+inline static const std::string NEUTRAL_HP_TEXTURE_NAME{ "textures/neutral_hp.png" };

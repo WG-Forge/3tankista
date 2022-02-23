@@ -1,13 +1,18 @@
 #include "game_state_system.h"
+
 #include "components//turn_component.h"
 #include "components/adapter_player_id_component.h"
 #include "components/name_component.h"
 #include "components/ttc_factories/ttc_component_factory.h"
+
 #include "entities/map/map.h"
 #include "entities/player.h"
+#include "entities/spawn.h"
 #include "entities/tank.h"
 #include "entities/world.h"
+
 #include "systems/adapter_system.h"
+
 #include <algorithm>
 
 GameStateSystem::GameStateSystem()
@@ -74,6 +79,12 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         {
             playerPosition[tank.second.playerId] = tank.second.spawnPosition;
         }
+        // create spawn circle
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(tank.second.spawnPosition, BLUE_SPAWN_COLOR);
+        // problem with choosing spawn color and hp color
+
+        // send event about tank creation
+        ecs::ecsEngine->SendEvent<NewTankCreated>(entity);
     }
 
     auto less = [](Vector2i lhs, Vector2i rhs)

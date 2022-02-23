@@ -3,9 +3,7 @@
 #include "utility/matrix_transform.h"
 
 Transform::Transform()
-    : transform{
-        { 1.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }
-    }
+    : transform{ Matrix4f::eye() }
 {
 }
 
@@ -50,4 +48,9 @@ void Transform::SetPosition(const Vector3i& position)
 {
     const auto& pixel = Hex2Pixel(position);
     this->transform.replaceCol(3, Vector4f(pixel.x(), pixel.y(), pixel.z(), this->transform.getCol(3).w()));
+}
+
+void Transform::SetPosition(const Vector3f& position)
+{
+    this->transform.replaceCol(3, Vector4f{ position.x(), position.y(), position.z(), 1.0f });
 }

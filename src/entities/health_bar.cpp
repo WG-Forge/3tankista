@@ -13,24 +13,25 @@ HealthBar::HealthBar(const ecs::EntityId&   entityId,
     : ecs::Entity<HealthBar>(entityId, componentManager)
 {
 
-    this->vehicleIdComponent = AddComponent<VehicleIdComponent>(vehicleId);
+    this->vehicleId = vehicleId;
 
-    this->spawnEntityId = ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(Vector3i{ 0, 0, 0 }, spawnColor);
-    Spawn* atSpgFirstPlayerSpawn = (Spawn*)ecs::ecsEngine->GetEntityManager()->GetEntity(this->spawnEntityId);
+    //    this->spawnEntityId = ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(Vector3i{ 0, 0, 0 },
+    //    spawnColor); Spawn* atSpgFirstPlayerSpawn =
+    //    (Spawn*)ecs::ecsEngine->GetEntityManager()->GetEntity(this->spawnEntityId);
 
-    TransformComponent* atSpgFirstPlayerSpawnTransformComponent =
-        atSpgFirstPlayerSpawn->GetComponent<TransformComponent>();
-    atSpgFirstPlayerSpawnTransformComponent->SetTransform(transform);
+    //    atSpgFirstPlayerSpawn->GetComponent<TransformComponent>()->SetTransform(transform);
 
-    //    this->tankEntityId = ecs::ecsEngine->GetEntityManager()->CreateEntity<Tank>(
-    //        Vector3i(0, 0, 0), tankTextureFileName);
-    //    Tank* atSpgFirstPlayerTank =
-    //        (Tank*)ecs::ecsEngine->GetEntityManager()->GetEntity(
-    //            this->tankEntityId);
+    this->tankEntityId =
+        ecs::ecsEngine->GetEntityManager()->CreateEntity<Health>(Vector3i(0, 0, 0), tankTextureFileName);
+    Health* tank = (Health*)ecs::ecsEngine->GetEntityManager()->GetEntity(this->tankEntityId);
 
-    //    TransformComponent* atSpgFirstPlayerTankTransformComponent =
-    //        atSpgFirstPlayerTank->GetComponent<TransformComponent>();
-    //    atSpgFirstPlayerTankTransformComponent->SetTransform(transform);
+    static const auto aspectRatio = GAME_WINDOW_WIDTH / 1920.0f;
+
+    tank->GetComponent<TransformComponent>()->SetTransform(
+        Matrix4f{ { 3.5f * aspectRatio * transform[0], transform[1], transform[2], transform[3] },
+                  { transform[4], 1.96875f * aspectRatio * transform[5], transform[6], transform[7] },
+                  { transform[8], transform[9], transform[10], transform[11] },
+                  { transform[12], transform[13], transform[14], transform[15] } });
 
     this->healthEntityId =
         ecs::ecsEngine->GetEntityManager()->CreateEntity<Health>(Vector3i(0, 0, 0), healthTextureFileName);
@@ -39,21 +40,29 @@ HealthBar::HealthBar(const ecs::EntityId&   entityId,
     // NOTE: it's magic numbers only for beautiful image
     TransformComponent* atSpgFirstPlayerHpTransformComponent = atSpgFirstPlayerHp->GetComponent<TransformComponent>();
     atSpgFirstPlayerHpTransformComponent->SetTransform(
-        Matrix4f{ { 4 * transform[0], transform[1], transform[2], transform[3] + (transform[3] > 0 ? -0.1f : 0.1f) },
-                  { transform[4], 5 * transform[5], transform[6], transform[7] + 0.01f },
+        Matrix4f{ { 15 * aspectRatio * transform[0],
+                    transform[1],
+                    transform[2],
+                    transform[3] + (transform[3] > 0 ? -0.14f * aspectRatio * GAME_WINDOW_WIDTH / 2.0f
+                                                     : 0.14f * aspectRatio * GAME_WINDOW_WIDTH / 2.0f) },
+                  { transform[4],
+                    7 * aspectRatio * transform[5],
+                    transform[6],
+                    transform[7] + 0.002f * aspectRatio * GAME_WINDOW_HEIGHT },
                   { transform[8], transform[9], transform[10], transform[11] },
                   { transform[12], transform[13], transform[14], transform[15] } });
 
     ecs::ecsEngine->GetSystemManager()->GetSystem<RenderSystem>()->DrawText(
         vehicleId,
         healthText,
-        Vector2f{ transform[3] + (transform[3] > 0 ? -0.12f : 0.08f), transform[7] - 0.015f },
-        2.0,
+        Vector2f{ transform[3] + (transform[3] > 0 ? -0.12f * aspectRatio * GAME_WINDOW_WIDTH / 2.0f
+                                                   : 0.12f * aspectRatio * GAME_WINDOW_WIDTH / 2.0f),
+                  transform[7] - 0.021f * aspectRatio * GAME_WINDOW_HEIGHT / 2.0f },
+        1.0 * aspectRatio,
         Color(9.0f, 9.0f, 9.0f, 1.0f));
 }
 
 void HealthBar::SetHealth(const std::string& health)
 {
-    ecs::ecsEngine->GetSystemManager()->GetSystem<RenderSystem>()->ChangeText(this->vehicleIdComponent->GetVehicleId(),
-                                                                              health);
+    ecs::ecsEngine->GetSystemManager()->GetSystem<RenderSystem>()->ChangeText(vehicleId, health);
 }

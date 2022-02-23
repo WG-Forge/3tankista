@@ -36,6 +36,7 @@ public:
                                     { 1.0f, 1.0f, 1.0f, 1.0f } };
     }
 
+    void SetPosition(const Vector3f& position);
     void SetPosition(const Vector3i& position);
 
     inline Vector3i GetPosition() const

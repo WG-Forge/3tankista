@@ -35,4 +35,8 @@ private:
     HealthComponent*        healthComponent;
     MaterialComponent*      materialComponent;
     TextureComponent*       textureComponent;
+
+    // можно привязать к танку Spawn + HealthBar
+    // танк будет сам рисовать Spawn, а так же текстуру танка и Spawn для HealthBar +
+    // HealthBar будет создаваться в танке
 };

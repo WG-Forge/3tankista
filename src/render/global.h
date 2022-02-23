@@ -31,3 +31,7 @@ inline static const std::string MIX_VALUE_UNIFORM_NAME{ "uMixValue" };
 using Color = Vector4f;
 
 inline static const Color WHITE_COLOR{ 1.0f, 1.0f, 1.0f, 1.0f };
+
+inline static const Color BLUE_SPAWN_COLOR{ 0.31f, 0.75f, 0.89f, 1.0f };
+inline static const Color ORANGE_SPAWN_COLOR{ 1.0f, 0.55f, 0.26f, 1.0f };
+inline static const Color ROSE_SPAWN_COLOR{ 0.88f, 0.44f, 0.86f, 1.0f };

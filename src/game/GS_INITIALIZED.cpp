@@ -14,6 +14,7 @@
 #include "systems/respawn_system.h"
 #include "systems/server/server_system.h"
 #include "systems/turn_system.h"
+#include "systems/uisystem.h"
 #include "systems/win_system.h"
 
 void Game::GS_INITIALIZED()
@@ -34,6 +35,7 @@ void Game::GS_INITIALIZED()
     auto* AmS           = systemManager->AddSystem<AttackMatrixSystem>();
     auto* TuS           = systemManager->AddSystem<TurnSystem>();
     auto* RnS           = systemManager->AddSystem<RenderSystem>(this->window);
+    auto* UiS           = systemManager->AddSystem<UiSystem>();
 
     systemManager->UpdateSystemWorkOrder();
     ChangeState(GameState::RESTARTED);

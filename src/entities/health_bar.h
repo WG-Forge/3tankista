@@ -44,5 +44,5 @@ public:
     GameObjectId spawnEntityId;
     GameObjectId tankEntityId;
 
-    VehicleIdComponent* vehicleIdComponent;
+    uint64_t vehicleId;
 };

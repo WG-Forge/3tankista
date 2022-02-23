@@ -43,6 +43,10 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
                     {
                         ecs::ecsEngine->SendEvent<TankDestroyedEvent>(action.vehicleId, currentEntity->GetEntityID());
                     }
+                    ecs::ecsEngine->SendEvent<HealthChanged>(
+                        currentEntity->GetComponent<VehicleIdComponent>()->GetVehicleId(),
+                        health->GetHealth(),
+                        currentEntity->GetComponent<TtcComponent>()->GetMaxHealth());
                 }
             }
         }
