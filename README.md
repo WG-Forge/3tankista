@@ -46,13 +46,15 @@ So everything is divided in three groups:
 
 #### Some main systems:
 
-The ServerSystem is responsible for establishing a connection and communicating with the game server. ASIO library is used for these purposes. System accepts only 1 event with information about the type of action and data.
+The **ServerSystem** is responsible for establishing a connection and communicating with the game server. [ASIO](https://think-async.com/Asio/) library is used for these purposes. System accepts only 1 event with information about the type of action and data.
 
-AdapterSystem
-...
+The **AdapterSystem** accepts raw data from the **ServerSystem** and parses the JSON in the application models. Then it sends events that are used by all other systems. For parsing JSON AdapterSystem uses [nlohmann/json](https://github.com/nlohmann/json) library.
 
-GameplaySystem
-...
+GameStateSystem
+
+MapSystem
+
+The **GamePlaySystem** is responsible for all actions that need to be done to complete the turn, and for all decisions made by the artificial intelligence of tanks.
 
 >This project is a turn-based game.\
 It is necessary with the help of your tanks to get victory in one of two ways: by destruction points, by capture points.\
