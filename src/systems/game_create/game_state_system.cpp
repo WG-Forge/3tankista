@@ -65,8 +65,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     // Create tanks
     for (auto& tank : event->gameState.vehicles)
     {
-        auto entity = entityManager->CreateEntity<Tank>(
-            tank.second.position,  factory, tank.second.vehicleType);
+        auto entity = entityManager->CreateEntity<Tank>(tank.second.position, factory, tank.second.vehicleType);
         componentManager->GetComponent<PlayerIdComponent>(entity)->SetPlayerId(
             adapterPlayerId->Get(tank.second.playerId));
         componentManager->GetComponent<VehicleIdComponent>(entity)->SetVehicleId(entity);
