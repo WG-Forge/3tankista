@@ -44,26 +44,17 @@ So everything is divided in three groups:
 - Components
 - Systems
 
-#### Some main systems:
+**Entity** represent the main objects of the game (tank, obstacle, etc.) most of which are displayed on the map.\
+**Components** store data that is inherent in an **Entity**.\
+**Systems** provides functionality with a logic block for working with **Entity** and their **Components**.\
+**Systems** communicate with each other using **Events**, which are implemented using the **Observer** pattern.
 
-The **ServerSystem** is responsible for establishing a connection and communicating with the game server. [ASIO](https://think-async.com/Asio/) library is used for these purposes. System accepts only 1 event with information about the type of action and data.
-
-The **AdapterSystem** accepts raw data from the **ServerSystem** and parses the JSON in the application models. Then it sends events that are used by all other systems. For parsing JSON AdapterSystem uses [nlohmann/json](https://github.com/nlohmann/json) library.
-
-GameStateSystem
-
-MapSystem
-
-The **GamePlaySystem** is responsible for all actions that need to be done to complete the turn, and for all decisions made by the artificial intelligence of tanks.
-
->This project is a turn-based game.\
-It is necessary with the help of your tanks to get victory in one of two ways: by destruction points, by capture points.\
-The game is a client-server application. The exchange with the server is carried out using asio.\
-All data( sent and received) is processed using nlohmann/json.\
-The application is written using the Entity-Component-System design pattern.
+Internally, the **ECS engine** itself is responsible for allocating memory for the entire objects.
 
 ### Graphics
 
+The following technology stack was used to display the data: [OpenGL](https://www.khronos.org/) + [GLFW3](https://www.glfw.org/) + [Glad](https://glad.dav1d.de/), a set of [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h) and [FreeType](https://freetype.org/) libraries was used to display textures and text.
+All sprites are rendered using the **RenderSystem**, and text is rendered using the **TextRenderer**, which is part of the **RenderSystem**. Shaders are also written (vertex and fragment shaders for displaying sprites and also vertex and fragment shaders for displaying text) using the GLSL language on OpenGL 3.3 Core.
 
 ### AI algorithm 
 
@@ -96,6 +87,10 @@ cmake --build build
 
 Just run ```client``` application in the ```build\src``` folder.
 
+> All text information is entered into the console!\
+Until all the information is entered, nothing will be displayed in the window.\
+In the future, it is planned to add all input to the GUI. 
+
 **Next you should enter:**
 1. Nickname;
 2. Password;
@@ -112,11 +107,11 @@ Now you can enjoy how the bot is playing in real time.
 
 ## Third party
 
-- [asio](https://think-async.com/Asio/)
-- [ecs](https://github.com/MedoviyKeksik/ECS)
-- [freetype](https://freetype.org/)
-- [glad](https://github.com/Dav1dde/glad)
-- [glfw](https://www.glfw.org/)
+- [ASIO](https://think-async.com/Asio/)
+- [ECS](https://github.com/MedoviyKeksik/ECS)
+- [FreeType](https://freetype.org/)
+- [Glad](https://glad.dav1d.de/)
+- [GLFW3](https://www.glfw.org/)
 - [nlohmann/json](https://github.com/nlohmann/json)
 - [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
 
@@ -124,7 +119,7 @@ Now you can enjoy how the bot is playing in real time.
 
 - [<img src="https://github.com/Sjarozha.png" title="Sjarozha" width="50" align="center"/>](https://github.com/Sjarozha) - Sergey Titov
 - [<img src="https://github.com/MaXMoPKa.png" title="MaXMoPKa" width="50" align="center"/>](https://github.com/MaXMoPKa) - Vladislav Aleynikov
-- [<img src="https://github.com/MedoviyKeksik.png" title="MedoviyKeksik" width="50" align="center"/>](https://github.com/MedoviyKeksik) - Severin Klim
+- [<img src="https://github.com/MedoviyKeksik.png" title="MedoviyKeksik" width="50" align="center"/>](https://github.com/MedoviyKeksik) - Klim Severin
 
 Photo of our team when we discuss who committed this bug :)
 
