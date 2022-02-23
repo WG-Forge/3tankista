@@ -51,19 +51,27 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
 
 void MenuSystem::OnGameOver(const GameOverEvent* event)
 {
-    if (event->isDraw)
+    if (event->winners.size() > 1)
     {
-        std::cout << "It is draw. All players lost\n";
+        std::cout << "It is draw for players:\n";
+        for (auto& winner : event->winners)
+        {
+            std::cout
+                << "Player:\n"
+                << ecs::ecsEngine->GetEntityManager()->GetEntity(winner.first)->GetComponent<NameComponent>()->GetName()
+                << "\n"
+                << "Capture points: " << winner.second.first << "\n"
+                << "Kill points: " << winner.second.second << "\n";
+        }
+        std::cout << "Other players lost\n";
     }
-    else
+    else if (event->winners.size() == 1)
     {
-        auto componentManager = ecs::ecsEngine->GetComponentManager();
-        auto playerAdapter    = componentManager->begin<AdapterPlayerIdComponent>();
-        auto winner           = ecs::ecsEngine->GetEntityManager()->GetEntity(event->winner);
+        auto winner = ecs::ecsEngine->GetEntityManager()->GetEntity(event->winners[0].first);
         std::cout << "Winner:\n"
                   << winner->GetComponent<NameComponent>()->GetName() << "\n"
-                  << "Capture points: " << winner->GetComponent<CapturePointsComponent>()->GetCapturePoints() << "\n"
-                  << "Kill points: " << winner->GetComponent<KillPointsComponent>()->GetKillPoints() << "\n";
+                  << "Capture points: " << event->winners[0].second.first << "\n"
+                  << "Kill points: " << event->winners[0].second.second << "\n";
     }
 }
 

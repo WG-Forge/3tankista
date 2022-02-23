@@ -94,6 +94,15 @@ void Game::InitializeGLFW()
                                    { ecs::ecsEngine->SendEvent<WindowResizedEvent>(width, height); });
 }
 
+void Game::OnStartGame(const StartGameEvent* event)
+{
+    this->ChangeState(GameState::STARTED);
+}
+
+void Game::OnBadRestart(const BadRestartEvent* event)
+{
+    this->ChangeState(GameState::RESTARTED);
+}
 void Game::OnQuitGame(const QuitGameEvent* event)
 {
     this->ChangeState(GameState::TERMINATED);

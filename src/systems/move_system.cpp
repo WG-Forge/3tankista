@@ -28,6 +28,7 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto world            = entityManager->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
     auto hexMapComponent  = world->GetComponent<HexMapComponent>();
+
     for (auto& action : event->actions)
     {
         auto entity             = entityManager->GetEntity(action.vehicleId);
@@ -53,7 +54,6 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
             }
             GameplaySystem::SetHexMapComponentCell(hexMapComponent, action.target, CellState::ENEMY);
         }
-
         transformComponent->SetPosition(action.target);
     }
 }
