@@ -9,7 +9,6 @@
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
            const Vector3i&        position,
-           const std::string&     textureFileName,
            const AbstractFactory& factory,
            TankType               type)
     : GameObject<Tank>(entityId, componentManager)
@@ -26,33 +25,37 @@ Tank::Tank(const ecs::EntityId&   entityId,
     {
         case TankType::MEDIUM:
         {
-            this->ttcComponent = factory.CreateMediumTankTtc(this->entityId);
-
+            this->ttcComponent     = factory.CreateMediumTankTtc(this->entityId);
+            this->textureComponent = this->AddComponent<TextureComponent>("textures/medium.png");
             break;
         }
         case TankType::HEAVY:
         {
-            this->ttcComponent = factory.CreateHeavyTankTtc(this->entityId);
+            this->ttcComponent     = factory.CreateHeavyTankTtc(this->entityId);
+            this->textureComponent = this->AddComponent<TextureComponent>("textures/heavy.png");
             break;
         }
         case TankType::LIGHT:
         {
-            this->ttcComponent = factory.CreateLightTankTtc(this->entityId);
+            this->ttcComponent     = factory.CreateLightTankTtc(this->entityId);
+            this->textureComponent = this->AddComponent<TextureComponent>("textures/light.png");
+
             break;
         }
         case TankType::SPG:
         {
-            this->ttcComponent = factory.CreateSpgTankTtc(this->entityId);
+            this->ttcComponent     = factory.CreateSpgTankTtc(this->entityId);
+            this->textureComponent = this->AddComponent<TextureComponent>("textures/spg.png");
             break;
         }
         case TankType::AT_SPG:
         {
-            this->ttcComponent = factory.CreateAtSpgTankTtc(this->entityId);
+            this->ttcComponent     = factory.CreateAtSpgTankTtc(this->entityId);
+            this->textureComponent = this->AddComponent<TextureComponent>("textures/at_spg.png");
             break;
         }
     }
     this->healthComponent   = AddComponent<HealthComponent>(this->ttcComponent->GetMaxHealth());
-    this->textureComponent  = this->AddComponent<TextureComponent>(textureFileName);
     this->materialComponent = this->AddComponent<MaterialComponent>(
         MaterialGenerator::CreateMaterial<DefaultMaterial>(), Color{ 1.0f, 1.0f, 1.0f, 1.0f });
 }
