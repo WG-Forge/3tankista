@@ -3,68 +3,12 @@
 #include "entities/health_bar.h"
 
 #include "components/main_player_component.h"
+#include "components/order_component.h"
+#include "components/turn_component.h"
 
 UiSystem::UiSystem()
 {
     this->RegisterEventCallbacks();
-
-    // create tanks when player joined
-    // for create we need: is our tank, color, max hp, transform component
-    // transform component we can calc from position vector in pixels (Vector3f)
-    // transform matrix and color we can use like uniform and calc it from
-
-    // create health bars
-    // save their id
-    //    const auto roseAtSpgTankHealthBar =
-    //        ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
-    //                                                                              { 0.0f, 1.0f, 0.0f, 0.2f },
-    //                                                                              { 0.0f, 0.0f, 1.0f, 0.0f },
-    //                                                                              { 0.0f, 0.0f, 0.0f, 1.0f } },
-    //                                                                    FRIEND_HP_TEXTURE_NAME,
-    //                                                                    "1 / 1",
-    //                                                                    AT_SPG_TANK_TEXTURE_NAME,
-    //                                                                    ROSE_SPAWN_COLOR);
-    //    healthBarsId.push_back(roseAtSpgTankHealthBar);
-    //    const auto roseLightTankHealthBar =
-    //        ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
-    //                                                                              { 0.0f, 1.0f, 0.0f, 0.1f },
-    //                                                                              { 0.0f, 0.0f, 1.0f, 0.0f },
-    //                                                                              { 0.0f, 0.0f, 0.0f, 1.0f } },
-    //                                                                    FRIEND_HP_TEXTURE_NAME,
-    //                                                                    "1 / 1",
-    //                                                                    LIGHT_TANK_TEXTURE_NAME,
-    //                                                                    ROSE_SPAWN_COLOR);
-    //    healthBarsId.push_back(roseLightTankHealthBar);
-    //    const auto roseHeavyTankHealthBar =
-    //        ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
-    //                                                                              { 0.0f, 1.0f, 0.0f, 0.0f },
-    //                                                                              { 0.0f, 0.0f, 1.0f, 0.0f },
-    //                                                                              { 0.0f, 0.0f, 0.0f, 1.0f } },
-    //                                                                    FRIEND_HP_TEXTURE_NAME,
-    //                                                                    "3 / 3",
-    //                                                                    HEAVY_TANK_TEXTURE_NAME,
-    //                                                                    ROSE_SPAWN_COLOR);
-    //    healthBarsId.push_back(roseHeavyTankHealthBar);
-    //    const auto roseMediumTankHealthBar =
-    //        ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
-    //                                                                              { 0.0f, 1.0f, 0.0f, -0.1f },
-    //                                                                              { 0.0f, 0.0f, 1.0f, 0.0f },
-    //                                                                              { 0.0f, 0.0f, 0.0f, 1.0f } },
-    //                                                                    FRIEND_HP_TEXTURE_NAME,
-    //                                                                    "2 / 2",
-    //                                                                    MEDIUM_TANK_TEXTURE_NAME,
-    //                                                                    ROSE_SPAWN_COLOR);
-    //    healthBarsId.push_back(roseMediumTankHealthBar);
-    //    const auto roseSpgTankHealthBar =
-    //        ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(Matrix4f{ { 1.0f, 0.0f, 0.0f, 0.7f },
-    //                                                                              { 0.0f, 1.0f, 0.0f, -0.2f },
-    //                                                                              { 0.0f, 0.0f, 1.0f, 0.0f },
-    //                                                                              { 0.0f, 0.0f, 0.0f, 1.0f } },
-    //                                                                    FRIEND_HP_TEXTURE_NAME,
-    //                                                                    "2 / 2",
-    //                                                                    SPG_TANK_TEXTURE_NAME,
-    //                                                                    ROSE_SPAWN_COLOR);
-    //    healthBarsId.push_back(roseSpgTankHealthBar);
 }
 
 UiSystem::~UiSystem()
@@ -81,12 +25,21 @@ void UiSystem::OnHealthChanged(const HealthChanged* event)
                                  {
                                      HealthBar* healthBar =
                                          (HealthBar*)ecs::ecsEngine->GetEntityManager()->GetEntity(healthBarId);
-                                     return healthBar->vehicleId;
+                                     return healthBar->vehicleId == event->vehicleId;
                                  });
     if (it != this->healthBarsId.end())
     {
+        // изменять tansform matrix черновго квадрата в зависимости соотношения currHp/MaxHp
+        // currHp/MaxHp = 1      -> 0
+        // currHp/MaxHp = 999999 -> 100
+
+        // варианты: currHp == maxHp -> 0
+        //           currHp == 0     -> 100
+        //           (other)         x = currHp/maxHp && size = x * sizeHealthBar;
+
         HealthBar*  healthBar  = (HealthBar*)ecs::ecsEngine->GetEntityManager()->GetEntity(*it);
         std::string healthText = std::to_string(event->health) + " / " + std::to_string(event->maxHealth);
+        //        std::cerr << " New hp " << healthText << std::endl << std::flush;
         healthBar->SetHealth(healthText);
     }
 }
@@ -112,13 +65,16 @@ void UiSystem::OnNewTankCreated(const NewTankCreated* event)
 
         const std::string tankTextureName = this->ChooseTextureForTankHealthBar(tank, std::get<HealthBarPosition>(*it));
 
+        auto componentManager = ecs::ecsEngine->GetComponentManager();
+        auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
+
         const auto newTankHealthBar = ecs::ecsEngine->GetEntityManager()->CreateEntity<HealthBar>(
             tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
             healthBarTransform,
-            FRIEND_HP_TEXTURE_NAME,
+            tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId ? FRIEND_HP_TEXTURE_NAME
+                                                                                   : ENEMY_HP_TEXTURE_NAME,
             healthString,
             tankTextureName,
-            //            tank->GetComponent<TextureComponent>()->GetTextureFileName(),
             std::get<Color>(*it));
         healthBarsId.push_back(newTankHealthBar);
     }
