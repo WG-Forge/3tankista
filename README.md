@@ -102,7 +102,7 @@ Just run ```client``` application in the ```build\src``` folder.
 5. Number of players;
 6. Is this client is observer (y/n).
 
-@Startup screenshot here@
+![LoginScreenshot](https://user-images.githubusercontent.com/39442984/155405501-141fd2c8-aa9b-46ae-8136-8ed232075196.png)
 
 Now you can enjoy how the bot is playing in real time.
 
