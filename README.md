@@ -108,7 +108,7 @@ Just run ```client``` application in the ```build\src``` folder.
 
 Now you can enjoy how the bot is playing in real time.
 
-@Screenshot of the GUI@
+![GUI](https://user-images.githubusercontent.com/39442984/155409635-25975026-7c08-4b2c-a22f-1245f43a48da.png)
 
 ## Third party
 
