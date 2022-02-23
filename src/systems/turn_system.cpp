@@ -23,7 +23,7 @@ void TurnSystem::UnregisterEventCallbacks()
 void TurnSystem::OnTurnResponseEvent(const TurnResponseEvent* event)
 {
     auto componentManager = ecs::ecsEngine->GetComponentManager();
-    std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
+    std::cout << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
     componentManager->begin<TurnComponent>()->SetCurrentTurn(
         componentManager->begin<TurnComponent>()->GetCurrentTurn() + 1);
 }

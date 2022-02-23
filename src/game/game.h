@@ -127,6 +127,8 @@ public:
     void GS_GAMEOVER_LEAVE();
 
     void OnLoginGame(const GameLoginEvent* event);
+    void OnStartGame(const StartGameEvent* event);
+    void OnBadRestart(const BadRestartEvent* event);
     void OnQuitGame(const QuitGameEvent* event);
 
 public:

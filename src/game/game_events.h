@@ -117,11 +117,9 @@ struct TurnResponseEvent : public ecs::event::Event<TurnResponseEvent>
 
 struct GameOverEvent : public ecs::event::Event<GameOverEvent>
 {
-    bool     isDraw;
-    uint64_t winner;
-    GameOverEvent(const bool isDraw, const uint64_t winner)
-        : isDraw(isDraw)
-        , winner(winner)
+    std::vector<std::pair<uint64_t, std::pair<int, int>>> winners;
+    explicit GameOverEvent(std::vector<std::pair<uint64_t, std::pair<int, int>>> winners)
+        : winners(std::move(winners))
     {
     }
 };
@@ -276,5 +274,13 @@ struct WindowResizedEvent : public ecs::event::Event<WindowResizedEvent>
 };
 
 struct WindowCloseEvent : public ecs::event::Event<WindowCloseEvent>
+{
+};
+
+struct StartGameEvent : public ecs::event::Event<StartGameEvent>
+{
+};
+
+struct BadRestartEvent : public ecs::event::Event<BadRestartEvent>
 {
 };

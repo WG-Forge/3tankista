@@ -43,7 +43,6 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     for (auto& now : event->gameState.players)
     {
         auto entity = entityManager->CreateEntity<Player>(now.idx, now.name, now.isObserver);
-        std::cout << now.idx << " " << entity << "\n";
         adapterPlayerId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
     }
@@ -62,7 +61,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     for (auto& tank : event->gameState.vehicles)
     {
         auto entity = entityManager->CreateEntity<Tank>(
-            tank.second.position, "textures/at_spg.png", factory, tank.second.vehicleType);
+            tank.second.position,  factory, tank.second.vehicleType);
         componentManager->GetComponent<PlayerIdComponent>(entity)->SetPlayerId(
             adapterPlayerId->Get(tank.second.playerId));
         componentManager->GetComponent<VehicleIdComponent>(entity)->SetVehicleId(entity);

@@ -7,109 +7,45 @@
 
 void Game::GS_RUNNING()
 {
+
     WinSystem::UpdateCapturePoints();
-    auto                         componentManager = ecs::ecsEngine->GetComponentManager();
-    auto                         entityManager    = ecs::ecsEngine->GetEntityManager();
-    bool                         isFinished       = false;
-    std::pair<int, GameObjectId> winnerId{ 0, 0 };
-    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
-    auto attackMatrix          = attackMatrixComponent->GetAttackMatrix();
-    attackMatrixComponent->SetAttackMatrix(attackMatrix);
-    for (auto& [key, value] : attackMatrixComponent->GetAttackMatrix())
-    {
-        std::cout << key << " {";
-        for (auto& id : value)
-        {
-            std::cout << id << ", ";
-        }
-        std::cout << "}\n" << std::flush;
-    }
+    auto                                                  players          = std::move(WinSystem::GetWinPoints());
+    auto                                                  componentManager = ecs::ecsEngine->GetComponentManager();
+    auto                                                  entityManager    = ecs::ecsEngine->GetEntityManager();
+    bool                                                  isFinished       = false;
+    std::vector<std::pair<uint64_t, std::pair<int, int>>> winners;
     if (!componentManager->begin<TurnComponent>()->isFinished())
     {
-        // std::cout<<"GS "<<componentManager->begin<TurnComponent>()->GetCurrentTurn()<<"\n";
-        for (auto it = componentManager->begin<KillPointsComponent>();
-             componentManager->end<KillPointsComponent>() != it;
-             ++it)
+        // get winners by capture points
+        for (auto& player : players)
         {
-            std::cout << "kp " << it->GetKillPoints() << "\n";
-            std::cout
-                << "cp "
-                << entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
-                << "\n"
-                << std::flush;
-            if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
-                5)
+            if (player.second.first >= 5)
             {
-                winnerId   = std::make_pair(winnerId.first + 1, it->GetOwner());
+                winners.push_back({ player.first, player.second });
                 isFinished = true;
             }
         }
-        if (winnerId.first != 1)
+        // get winners by kill points with capture points
+        auto maxKillPoints = WinSystem::GetMaxKillPoints(winners);
+        for (int i = 0; i < winners.size(); ++i)
         {
-            int max = 0;
-            for (auto it = componentManager->begin<KillPointsComponent>();
-                 componentManager->end<KillPointsComponent>() != it;
-                 ++it)
+            if (winners[i].second.second != maxKillPoints)
             {
-                if (max < it->GetKillPoints())
-                {
-                    max = it->GetKillPoints();
-                }
-            }
-            winnerId = {};
-            for (auto it = componentManager->begin<KillPointsComponent>();
-                 componentManager->end<KillPointsComponent>() != it;
-                 ++it)
-            {
-                if (max == it->GetKillPoints())
-                {
-                    winnerId = std::make_pair(winnerId.first + 1, it->GetOwner());
-                }
+                winners.erase(winners.begin() + i);
             }
         }
     }
     else
     {
-        for (auto it = componentManager->begin<KillPointsComponent>();
-             componentManager->end<KillPointsComponent>() != it;
-             ++it)
+        // get winners by kill points
+        auto maxKillPoints = WinSystem::GetMaxKillPoints(players);
+        for (auto& player : players)
         {
-            std::cout << "kp " << it->GetKillPoints() << "\n";
-            std::cout
-                << "cp "
-                << entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints()
-                << "\n"
-                << std::flush;
-            if (entityManager->GetEntity(it->GetOwner())->GetComponent<CapturePointsComponent>()->GetCapturePoints() >=
-                5)
+            if (player.second.second == maxKillPoints)
             {
-                winnerId   = std::make_pair(winnerId.first + 1, it->GetOwner());
-                isFinished = true;
+                winners.push_back({ player.first, player.second });
             }
         }
-        if (!isFinished)
-        {
-            int max = 0;
-            for (auto it = componentManager->begin<KillPointsComponent>();
-                 componentManager->end<KillPointsComponent>() != it;
-                 ++it)
-            {
-                if (max < it->GetKillPoints())
-                {
-                    max = it->GetKillPoints();
-                }
-            }
-            for (auto it = componentManager->begin<KillPointsComponent>();
-                 componentManager->end<KillPointsComponent>() != it;
-                 ++it)
-            {
-                if (max == it->GetKillPoints())
-                {
-                    winnerId = std::make_pair(winnerId.first + 1, it->GetOwner());
-                }
-            }
-        }
-
         isFinished = true;
     }
     if (!isFinished)
@@ -118,21 +54,15 @@ void Game::GS_RUNNING()
     }
     else
     {
-        bool isDraw = false;
-        if (winnerId.first != 1)
-        {
-            isDraw = true;
-        }
-        // ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
-        ecs::ecsEngine->SendEvent<GameOverEvent>(isDraw, winnerId.second);
+        ecs::ecsEngine->SendEvent<GameOverEvent>(winners);
         ecs::ecsEngine->SendEvent<LogoutRequestEvent>();
         ChangeState(GameState::GAMEOVER);
     }
 }
 
-void Game::GS_RUNNING_ENTER()
-{
-    // ecs::ecsEngine->SendEvent<GameFinishedRequestEvent>();
-}
+void Game::GS_RUNNING_ENTER() {}
 
-void Game::GS_STARTED_LEAVE() {}
+void Game::GS_STARTED_LEAVE()
+{
+    // ecs::ecsEngine->GetSystemManager()->SetSystemPriority<WinSystem>(ecs::HIGH_SYSTEM_PRIORITY);
+}

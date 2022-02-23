@@ -19,7 +19,6 @@ public:
     Tank(const ecs::EntityId&   entityId,
          ecs::ComponentManager* componentManager,
          const Vector3i&        position,
-         const std::string&     textureFileName,
          const AbstractFactory& factory,
          TankType               type);
     ~Tank() override = default;

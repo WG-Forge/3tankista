@@ -32,7 +32,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::LOGOUT:
             {
-                std::cerr << "Logout is successful\n";
+                std::cout << "Logout is successful\n";
                 break;
             }
             case Action::MAP:
@@ -44,39 +44,6 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::GAME_STATE:
             {
                 auto model = json.get<GameStateModel>();
-                // std::cout << json.dump() << "\n";
-                //  No need to adapt GameState
-                /*
-                for (auto& now : model.players)
-                {
-                    now.idx = playerAdapter.Get(now.idx);
-                }
-                for (auto& now : model.observers)
-                {
-                    now.idx = playerAdapter.Get(now.idx);
-                }
-                model.currentPlayerIndex =
-                    playerAdapter.Get(model.currentPlayerIndex);
-                std::unordered_map<int, TankModel> adaptedVehicles;
-                for (auto& now : model.vehicles)
-                {
-                    now.second.playerId =
-                        playerAdapter.Get(now.second.playerId);
-                    adaptedVehicles[vehicleAdapter.Get(now.first)] = now.second;
-                }
-                model.vehicles = std::move(adaptedVehicles);
-                std::unordered_map<int, std::vector<int>> adaptedAttackMatrix;
-                for (auto& now : model.attackMatrix)
-                {
-                    for (auto& it : now.second)
-                    {
-                        it = playerAdapter.Get(it);
-                    }
-                    adaptedAttackMatrix[playerAdapter.Get(now.first)] =
-                        now.second;
-                }
-                model.attackMatrix = std::move(adaptedAttackMatrix);
-                 */
                 ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
 
                 break;
@@ -123,14 +90,14 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::MOVE:
             {
                 auto sentJson = nlohmann::json::parse(event->sentData).get<MoveModel>();
-                std::cerr << "MOVE: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
+                std::cout << "MOVE: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
                           << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
                 break;
             }
             case Action::SHOOT:
             {
                 auto sentJson = nlohmann::json::parse(event->sentData).get<ShootModel>();
-                std::cerr << "SHOOT: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
+                std::cout << "SHOOT: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
                           << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
                 break;
             }
@@ -140,6 +107,14 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     {
         ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
         std::cout << "timeout\n";
+    }
+    else if (event->result != Result::OKEY && event->action == Action::LOGIN)
+    {
+        // ecs::ecsEngine->SendEvent<GameLoginEvent>();
+    }
+    else
+    {
+        std::cout << "Response: " << static_cast<int>(event->result) << " " << event->data << "\n\n\n";
     }
 }
 

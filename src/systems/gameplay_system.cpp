@@ -135,13 +135,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
 
     auto turnComponent = componentManager->begin<TurnComponent>().operator->();
-
-    std::cout << "order " << entityManager->GetEntity(mainPlayerId)->GetComponent<OrderComponent>()->GetOrder() << "\n";
-    std::cout << "id " << entityManager->GetEntity(mainPlayerId)->GetComponent<PlayerIdComponent>()->GetPlayerId()
-              << "\n";
-    // std::cerr << "TURN №" << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
-
-    uint64_t currentPlayerId;
+    uint64_t                                                      currentPlayerId;
     for (auto it = componentManager->begin<OrderComponent>(); componentManager->end<OrderComponent>() != it; ++it)
     {
         if (it->GetOrder() == turnComponent->GetCurrentTurn() % turnComponent->GetPlayersNumber())
@@ -153,8 +147,6 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     if (mainPlayerId == currentPlayerId &&
         !entityManager->GetEntity(mainPlayerId)->GetComponent<ObserverComponent>()->GetIsObserver())
     {
-
-        // gameArea->ClearMap();
         std::vector<Tank*> currentPlayerTanks;
         std::vector<Tank*> enemies;
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
@@ -164,27 +156,12 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
             {
                 currentPlayerTanks.push_back(tank);
-                //                SetHexMapComponentCell(
-                //                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(),
-                //                    CellState::FRIEND);
             }
             else
             {
                 enemies.push_back(tank);
-                //                SetHexMapComponentCell(
-                //                    gameArea, tank->GetComponent<PositionComponent>()->GetPosition(),
-                //                    CellState::ENEMY);
             }
         }
-        //        for (auto it = componentManager->begin<ObstacleIdComponent>();
-        //             componentManager->end<ObstacleIdComponent>() != it;
-        //             ++it)
-        //        {
-        //            GameplaySystem::SetHexMapComponentCell(
-        //                gameArea,
-        //                entityManager->GetEntity(it->GetOwner())->GetComponent<PositionComponent>()->GetPosition(),
-        //                CellState::OBSTACLE);
-        //        }
         std::sort(currentPlayerTanks.begin(),
                   currentPlayerTanks.end(),
                   [](Tank* lhs, Tank* rhs)
@@ -213,7 +190,6 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
 
             if (target != nullptr)
             {
-
                 ecs::ecsEngine->SendEvent<ShootRequestEvent>(ShootModel{
                     tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
             }
@@ -222,7 +198,6 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                 // Move to the nearest base
                 pathFinder.SetHexMapComponent(gameArea);
                 pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
-
                 auto     it = componentManager->begin<BaseIdComponent>();
                 Vector3i nearestBasePos =
                     entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
@@ -255,8 +230,6 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
             }
         }
     }
-    // ecs::ecsEngine->SendEvent<UpdateCapturePointsEvent>();
-
     auto attackMatrix = componentManager->begin<AttackMatrixComponent>().operator->();
     attackMatrix->ClearUserAttacks(currentPlayerId);
     ecs::ecsEngine->SendEvent<TurnRequestEvent>();
