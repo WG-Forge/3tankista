@@ -32,7 +32,10 @@ public:
     void Update(ecs::f32 dt) override;
     void PostUpdate(ecs::f32 dt) override;
 
-    void DrawText(const std::string& text,
+    void ChangeText(const uint64_t vehicleId, const std::string& text);
+
+    void DrawText(const uint64_t     vehicleId,
+                  const std::string& text,
                   const Vector2f&    position,
                   const float        scale,
                   const Color        color = Color(1.0f, 1.0f, 1.0f, 1.0f));

@@ -11,7 +11,6 @@
 class ShapeGenerator
 {
     // NOTE: think about it
-
     using ShapeRegistry = std::vector<std::pair<IShape*, std::size_t>>;
 
 public:

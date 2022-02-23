@@ -7,12 +7,22 @@
 
 #include <iostream>
 
+#include "render/materials/imaterial.h"
+
+#include "utility/matrix_transform.h"
+
 TextRenderer::TextRenderer()
     : shader(nullptr)
 {
     this->shader = std::make_unique<Shader>("shaders/text.vert", "shaders/text.frag");
 
-    this->shader->SetInt("text", 0);
+    Matrix4f projection =
+        ortho(0.0f, static_cast<float>(GAME_WINDOW_WIDTH), static_cast<float>(GAME_WINDOW_HEIGHT), 0.0f);
+
+    this->shader->Use();
+    //    this->shader->SetInt("text", 0);
+    this->shader->SetMat4(PROJECTION_UNIFORM_NAME, projection);
+    this->shader->Unuse();
 
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &this->VBO);
@@ -83,9 +93,10 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     FT_Done_FreeType(ft);
 }
 
-void TextRenderer::AddText(const std::string& text, const Vector2f& position, const float scale, const Color color)
+void TextRenderer::AddText(
+    const uint64_t vehicleId, const std::string& text, const Vector2f& position, const float scale, const Color color)
 {
-    strings.push_back(Text{ text, position, scale, color });
+    strings.push_back(Text{ vehicleId, text, position, scale, color });
 }
 
 void TextRenderer::RenderText()
@@ -105,15 +116,15 @@ void TextRenderer::RenderText()
         {
             Character ch = characters[*c];
 
-            float xpos = x + (ch.bearing.x() * string.scale) / GAME_WINDOW_WIDTH;
+            float xpos = x + ch.bearing.x() * string.scale;
             float ypos = y + ((this->characters['H'].bearing.y() - ch.bearing.y()) * string.scale) / GAME_WINDOW_HEIGHT;
 
-            float w = (ch.size.x() * string.scale) / GAME_WINDOW_WIDTH;
-            float h = (ch.size.y() * string.scale) / GAME_WINDOW_HEIGHT;
+            float w = ch.size.x() * string.scale;
+            float h = ch.size.y() * string.scale;
 
-            float vertices[6][4] = { { xpos, ypos + h, 0.0f, 0.0f }, { xpos, ypos, 0.0f, 1.0f },
-                                     { xpos + w, ypos, 1.0f, 1.0f }, { xpos, ypos + h, 0.0f, 0.0f },
-                                     { xpos + w, ypos, 1.0f, 1.0f }, { xpos + w, ypos + h, 1.0f, 0.0f } };
+            float vertices[6][4] = { { xpos, ypos + h, 0.0f, 1.0f },     { xpos + w, ypos, 1.0f, 0.0f },
+                                     { xpos, ypos, 0.0f, 0.0f },         { xpos, ypos + h, 0.0f, 1.0f },
+                                     { xpos + w, ypos + h, 1.0f, 1.0f }, { xpos + w, ypos, 1.0f, 0.0f } };
 
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
@@ -123,7 +134,7 @@ void TextRenderer::RenderText()
 
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
-            x += ((ch.advance >> 6) * string.scale) / GAME_WINDOW_WIDTH;
+            x += (ch.advance >> 6) * string.scale;
         }
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);

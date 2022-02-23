@@ -28,13 +28,21 @@ public:
     {
         if (this->shader != nullptr)
         {
-            shader->SetMat4(MODEL_TRANSFORM_UNIFORM_NAME, model);
+            this->shader->SetMat4(TRANSFORM_UNIFORM_NAME, model);
+        }
+    }
+
+    virtual void SetProjectionTransform(const Matrix4f& model) override
+    {
+        if (this->shader != nullptr)
+        {
+            this->shader->SetMat4(PROJECTION_UNIFORM_NAME, model);
         }
     }
 
     virtual void SetViewProjectionTransform(const Matrix4f& view, const Matrix4f& proj) override
     {
-        // TODO: add camera and view-projection matrixes
+        // TODO: implement if it need
     }
 
     virtual const MaterialVertexAttributeLoc GetPositionVertexAttributeLocation() const override
@@ -76,7 +84,7 @@ public:
         }
     }
 
-    inline void SetUniform1f(const std::string& uniformName, const float value)
+    inline void SetUniform1f(const std::string& uniformName, const float value) override
     {
         if (this->shader != nullptr)
         {

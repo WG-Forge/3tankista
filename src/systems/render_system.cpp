@@ -2,7 +2,7 @@
 
 #include "log/logger.h"
 
-#include "utility/matrix.hpp"
+#include "utility/matrix_transform.h"
 
 RenderSystem::RenderSystem(GLFWwindow* window)
     : window(window)
@@ -155,9 +155,15 @@ void RenderSystem::PostUpdate(ecs::f32 dt)
     glfwPollEvents();
 }
 
-void RenderSystem::DrawText(const std::string& text, const Vector2f& position, const float scale, const Color color)
+void RenderSystem::ChangeText(const uint64_t vehicleId, const std::string& text)
 {
-    this->textRenderer->AddText(text, position, scale, color);
+    this->textRenderer->ChangeText(vehicleId, text);
+}
+
+void RenderSystem::DrawText(
+    const uint64_t vehicleId, const std::string& text, const Vector2f& position, const float scale, const Color color)
+{
+    this->textRenderer->AddText(vehicleId, text, position, scale, color);
 }
 
 void RenderSystem::InitializeOpenGL()
@@ -210,7 +216,7 @@ void RenderSystem::SetShapeBufferIndex(ShapeComponent* shapeComponent)
     const auto it = std::find_if(this->bufferedShapes.begin(),
                                  this->bufferedShapes.end(),
                                  [&](const ShapeBufferIndex* bufferIndex)
-                                 { return bufferIndex->shapeId == shapeComponent->GetShapeID(); });
+                                 { return bufferIndex->GetShapeId() == shapeComponent->GetShapeID(); });
     if (it != this->bufferedShapes.end())
     {
         // set indices

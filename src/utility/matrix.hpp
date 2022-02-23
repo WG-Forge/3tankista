@@ -764,7 +764,7 @@ public:
 private:
     std::array<value_type, rows * columns> m_data;
 };
-// TODO: Make this template
+
 template <>
 const Matrix<2, 2, double> Matrix<2, 2, double>::getInversed() const;
 template <>

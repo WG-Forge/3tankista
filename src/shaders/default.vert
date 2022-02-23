@@ -5,7 +5,8 @@ layout (location = 2) in vec3 aColor;
 layout (location = 3) in vec2 aTexCoord;
 
 uniform vec4 uColor;
-uniform mat4 uModelTransform;
+uniform mat4 uTransform;
+uniform mat4 uProjection;
 
 out vec4 varColor;
 out vec3 varNormal;
@@ -17,6 +18,6 @@ void main()
     varTexCoord = aTexCoord;
     varColor    = uColor;
 
-    gl_Position = uModelTransform * vec4(aPos, 1.0);
+    gl_Position = uProjection * uTransform * vec4(aPos, 1.0);
 
 }

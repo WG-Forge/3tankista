@@ -3,7 +3,7 @@
 #include "game/game_object.h"
 
 #include "components/material_component.h"
-#include "components/texturecomponent.h"
+#include "components/texture_component.h"
 #include "components/transform_component.h"
 
 class Health : public GameObject<Health>

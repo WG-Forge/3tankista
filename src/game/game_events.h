@@ -1,10 +1,15 @@
 #pragma once
 
+#include <utility>
+
 #include "ecs.h"
+
+#include "render/global.h"
+
 #include "enums/action.h"
 #include "enums/result.h"
+
 #include "nlohmann/json.hpp"
-#include <utility>
 
 // ServerSystem events
 
@@ -251,6 +256,30 @@ struct UpdateCapturePointsEvent : public ecs::event::Event<UpdateCapturePointsEv
 
 struct QuitGameEvent : public ecs::event::Event<QuitGameEvent>
 {
+};
+
+struct NewTankCreated : public ecs::event::Event<NewTankCreated>
+{
+    GameObjectId tankId;
+
+    NewTankCreated(const GameObjectId& tankId)
+        : tankId(tankId)
+    {
+    }
+};
+
+struct HealthChanged : public ecs::event::Event<HealthChanged>
+{
+    uint64_t vehicleId;
+    int      health;
+    int      maxHealth;
+
+    HealthChanged(const uint64_t vehicleId, const int health, const int maxHealth)
+        : vehicleId{ vehicleId }
+        , health{ health }
+        , maxHealth{ maxHealth }
+    {
+    }
 };
 
 struct WindowMinimizedEvent : public ecs::event::Event<WindowMinimizedEvent>

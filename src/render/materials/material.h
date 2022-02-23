@@ -19,6 +19,8 @@ public:
 
     inline void SetModelTransform(const Matrix4f& model) { this->materialImpl->SetModelTransform(model); }
 
+    inline void SetProjectionTransform(const Matrix4f& model) { this->materialImpl->SetProjectionTransform(model); }
+
     inline void SetViewProjectionTransform(const Matrix4f& view, const Matrix4f& proj)
     {
         this->materialImpl->SetViewProjectionTransform(view, proj);
