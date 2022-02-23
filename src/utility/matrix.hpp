@@ -47,10 +47,8 @@ public:
     explicit Matrix(const_reference x)
         : m_data()
     {
-        static_assert(rows * columns == 1,
-                      "MATRIX::ERROR, matrix size ins't equal 1!");
-        static_assert(rows == 1 && columns == 1,
-                      "MATRIX::ERROR, rows|columns count isn't equal 1!");
+        static_assert(rows * columns == 1, "MATRIX::ERROR, matrix size ins't equal 1!");
+        static_assert(rows == 1 && columns == 1, "MATRIX::ERROR, rows|columns count isn't equal 1!");
 
         m_data[0] = x;
     }
@@ -62,10 +60,8 @@ public:
     Matrix(const_reference x, const_reference y)
         : m_data()
     {
-        static_assert(rows * columns == 2,
-                      "MATRIX::ERROR, matrix size ins't equal 2!");
-        static_assert((rows == 1 && columns == 2) ||
-                          (columns == 1 && rows == 2),
+        static_assert(rows * columns == 2, "MATRIX::ERROR, matrix size ins't equal 2!");
+        static_assert((rows == 1 && columns == 2) || (columns == 1 && rows == 2),
                       "MATRIX::ERROR, rows|columns count isn't equal 1|2!");
         m_data[0] = x;
         m_data[1] = y;
@@ -79,10 +75,8 @@ public:
     Matrix(const_reference x, const_reference y, const_reference z)
         : m_data()
     {
-        static_assert(rows * columns == 3,
-                      "MATRIX::ERROR, matrix size ins't equal 3!");
-        static_assert((rows == 1 && columns == 3) ||
-                          (columns == 1 && rows == 3),
+        static_assert(rows * columns == 3, "MATRIX::ERROR, matrix size ins't equal 3!");
+        static_assert((rows == 1 && columns == 3) || (columns == 1 && rows == 3),
                       "MATRIX::ERROR, rows|columns count isn't equal 1|3!");
         m_data[0] = x;
         m_data[1] = y;
@@ -95,16 +89,11 @@ public:
      * @param z is z initial value.
      * @param w is w initial value.
      */
-    Matrix(const_reference x,
-           const_reference y,
-           const_reference z,
-           const_reference w)
+    Matrix(const_reference x, const_reference y, const_reference z, const_reference w)
         : m_data()
     {
-        static_assert(rows * columns == 4,
-                      "MATRIX::ERROR, matrix size ins't equal 4!");
-        static_assert((rows == 1 && columns == 4) ||
-                          (columns == 1 && rows == 4),
+        static_assert(rows * columns == 4, "MATRIX::ERROR, matrix size ins't equal 4!");
+        static_assert((rows == 1 && columns == 4) || (columns == 1 && rows == 4),
                       "MATRIX::ERROR, rows|columns count isn't equal 1|4!");
         m_data[0] = x;
         m_data[1] = y;
@@ -120,18 +109,12 @@ public:
      * @param args is from the fourts to n inital values.
      */
     template <typename... ArgsType>
-    Matrix(const_reference x,
-           const_reference y,
-           const_reference z,
-           const_reference w,
-           const ArgsType&... args)
+    Matrix(const_reference x, const_reference y, const_reference z, const_reference w, const ArgsType&... args)
         : m_data()
     {
-        static_assert(rows * columns == sizeof...(args) + 4,
-                      "MATRIX::ERROR, matrix size ins't equal args + 4!");
+        static_assert(rows * columns == sizeof...(args) + 4, "MATRIX::ERROR, matrix size ins't equal args + 4!");
         static_assert(rows == 1, "MATRIX::ERROR, rows count isn't equal 1!");
-        static_assert(columns == sizeof...(args) + 4,
-                      "MATRIX::ERROR, rows count isn't equal args + 4!");
+        static_assert(columns == sizeof...(args) + 4, "MATRIX::ERROR, rows count isn't equal args + 4!");
         m_data[0] = x;
         m_data[1] = y;
         m_data[2] = z;
@@ -146,8 +129,7 @@ public:
      * @brief Matrix is parametrized constructor for matrices of any sizes.
      * @param list is initializer_list of initializer_lists.
      */
-    explicit Matrix(
-        const std::initializer_list<std::initializer_list<value_type>>& list)
+    explicit Matrix(const std::initializer_list<std::initializer_list<value_type>>& list)
         : m_data()
     {
         size_type listSize = 0;
@@ -187,8 +169,7 @@ public:
     bool operator==(const Matrix& other) const
     {
         bool result = false;
-        if (this->rowsCount() == other.rowsCount() &&
-            this->columnsCount() == other.columnsCount())
+        if (this->rowsCount() == other.rowsCount() && this->columnsCount() == other.columnsCount())
         {
             result = std::equal(this->begin(), this->end(), other.begin());
         }
@@ -212,10 +193,7 @@ public:
     /**
      * @return the the number of coefficients, which is rows * columns.
      */
-    constexpr size_type size() const noexcept
-    {
-        return this->rowsCount() * this->columnsCount();
-    }
+    constexpr size_type size() const noexcept { return this->rowsCount() * this->columnsCount(); }
     /**
      * @return a reference coefficient at given index, with bounds
      * checking. If pos is not within the range of the container,
@@ -264,8 +242,7 @@ public:
         }
         else
         {
-            throw std::out_of_range(
-                "ERROR::MATRIX, invalide row and/or column, out of range!");
+            throw std::out_of_range("ERROR::MATRIX, invalide row and/or column, out of range!");
         }
     }
     /**
@@ -282,8 +259,7 @@ public:
         }
         else
         {
-            throw std::out_of_range(
-                "ERROR::MATRIX, invalide row and/or column, out of range!");
+            throw std::out_of_range("ERROR::MATRIX, invalide row and/or column, out of range!");
         }
     }
     /**
@@ -317,8 +293,7 @@ public:
         }
         else
         {
-            throw std::out_of_range(
-                "ERROR::MATRIX, invalide row and/or column, out of range!");
+            throw std::out_of_range("ERROR::MATRIX, invalide row and/or column, out of range!");
         }
     }
     /**
@@ -326,8 +301,7 @@ public:
      */
     reference x()
     {
-        static_assert(rows * columns >= 1,
-                      "MATRIX::ERROR, matrix size less than 1!");
+        static_assert(rows * columns >= 1, "MATRIX::ERROR, matrix size less than 1!");
         return this->m_data[0];
     }
     /**
@@ -335,8 +309,7 @@ public:
      */
     reference y()
     {
-        static_assert(rows * columns >= 2,
-                      "MATRIX::ERROR, matrix size less than 2!");
+        static_assert(rows * columns >= 2, "MATRIX::ERROR, matrix size less than 2!");
         return this->m_data[1];
     }
     /**
@@ -344,8 +317,7 @@ public:
      */
     reference z()
     {
-        static_assert(rows * columns >= 3,
-                      "MATRIX::ERROR, matrix size less than 3!");
+        static_assert(rows * columns >= 3, "MATRIX::ERROR, matrix size less than 3!");
         return this->m_data[2];
     }
     /**
@@ -353,8 +325,7 @@ public:
      */
     reference w()
     {
-        static_assert(rows * columns >= 4,
-                      "MATRIX::ERROR, matrix size less than 4!");
+        static_assert(rows * columns >= 4, "MATRIX::ERROR, matrix size less than 4!");
         return this->m_data[3];
     }
     /**
@@ -362,8 +333,7 @@ public:
      */
     value_type x() const
     {
-        static_assert(rows * columns >= 1,
-                      "MATRIX::ERROR, matrix size less than 1!");
+        static_assert(rows * columns >= 1, "MATRIX::ERROR, matrix size less than 1!");
         return this->m_data[0];
     }
     /**
@@ -371,8 +341,7 @@ public:
      */
     value_type y() const
     {
-        static_assert(rows * columns >= 2,
-                      "MATRIX::ERROR, matrix size less than 2!");
+        static_assert(rows * columns >= 2, "MATRIX::ERROR, matrix size less than 2!");
         return this->m_data[1];
     }
     /**
@@ -380,8 +349,7 @@ public:
      */
     value_type z() const
     {
-        static_assert(rows * columns >= 3,
-                      "MATRIX::ERROR, matrix size less than 3!");
+        static_assert(rows * columns >= 3, "MATRIX::ERROR, matrix size less than 3!");
         return this->m_data[2];
     }
     /**
@@ -389,8 +357,7 @@ public:
      */
     value_type w() const
     {
-        static_assert(rows * columns >= 4,
-                      "MATRIX::ERROR, matrix size less than 4!");
+        static_assert(rows * columns >= 4, "MATRIX::ERROR, matrix size less than 4!");
         return this->m_data[3];
     }
     /**
@@ -411,8 +378,7 @@ public:
      */
     reference operator()(size_type row, size_type column)
     {
-        assert(row >= 0 && row < this->rowsCount() && column >= 0 &&
-               column < this->columnsCount());
+        assert(row >= 0 && row < this->rowsCount() && column >= 0 && column < this->columnsCount());
         return this->coeffRef(row, column);
     }
     /**
@@ -435,8 +401,7 @@ public:
      */
     value_type operator()(size_type row, size_type column) const
     {
-        assert(row >= 0 && row < this->rowsCount() && column >= 0 &&
-               column < this->columnsCount());
+        assert(row >= 0 && row < this->rowsCount() && column >= 0 && column < this->columnsCount());
         return this->coeff(row, column);
     }
     /**
@@ -495,10 +460,7 @@ public:
     /**
      * @brief end const version of end()
      */
-    const_iterator end() const
-    {
-        return const_iterator(this->data() + this->size());
-    }
+    const_iterator end() const { return const_iterator(this->data() + this->size()); }
     /**
      * @brief cend is only for vectors (either row-vectors or column-vectors),
      * i.e. matrices which are known at compile-time to have either one row or
@@ -506,10 +468,7 @@ public:
      * @return a read-only const_iterator to the element following the last
      * element of the 1D vector or array.
      */
-    const_iterator cend() const
-    {
-        return const_iterator(this->data() + this->size());
-    }
+    const_iterator cend() const { return const_iterator(this->data() + this->size()); }
 
 public:
     // Matrix arithmetics
@@ -592,19 +551,14 @@ public:
     /**
      * @brief fill sets all coefficients in this expression to value val.
      */
-    void fill(const_reference value)
-    {
-        std::fill(this->m_data.begin(), this->m_data.end(), value);
-    }
+    void fill(const_reference value) { std::fill(this->m_data.begin(), this->m_data.end(), value); }
     /**
      * @return true if *this contains at least one Not A Number (NaN).
      */
     bool hasNAN()
     {
-        const auto it = std::find_if(this->begin(),
-                                     this->end(),
-                                     [](const_reference value)
-                                     { return std::isnan(value); });
+        const auto it =
+            std::find_if(this->begin(), this->end(), [](const_reference value) { return std::isnan(value); });
         return it == this->end() ? false : true;
     }
     /**
@@ -613,33 +567,25 @@ public:
      */
     bool isZero(int ulp = 2)
     {
-        const auto it = std::find_if_not(
-            this->begin(),
-            this->end(),
-            [&](const_reference value)
-            {
-                return (std::fabs(value - 0) <=
-                            std::numeric_limits<value_type>::epsilon() *
-                                std::fabs(value + 0) * ulp ||
-                        std::fabs(value - 0) <
-                            std::numeric_limits<value_type>::min());
-            });
+        const auto it =
+            std::find_if_not(this->begin(),
+                             this->end(),
+                             [&](const_reference value)
+                             {
+                                 return (std::fabs(value - 0) <=
+                                             std::numeric_limits<value_type>::epsilon() * std::fabs(value + 0) * ulp ||
+                                         std::fabs(value - 0) < std::numeric_limits<value_type>::min());
+                             });
         return it == this->end() ? true : false;
     }
     /**
      * @return the maximum of all coefficients of *this.
      */
-    value_type maxCoeff() const
-    {
-        return *std::max_element(this->begin(), this->end());
-    }
+    value_type maxCoeff() const { return *std::max_element(this->begin(), this->end()); }
     /**
      * @return the minimum of all coefficients of *this.
      */
-    value_type minCoeff() const
-    {
-        return *std::min_element(this->begin(), this->end());
-    }
+    value_type minCoeff() const { return *std::min_element(this->begin(), this->end()); }
     /**
      * @return an expression of the transpose of *this.
      */
@@ -681,12 +627,10 @@ public:
      */
     double norm() const
     {
-        return std::sqrt(
-            std::accumulate(this->begin(),
-                            this->end(),
-                            0.0,
-                            [](double result, const_reference value)
-                            { return result += value * value; }));
+        return std::sqrt(std::accumulate(this->begin(),
+                                         this->end(),
+                                         0.0,
+                                         [](double result, const_reference value) { return result += value * value; }));
     }
     /**
      * @return the trace of *this, i.e. the sum of the coefficients on the
@@ -800,8 +744,7 @@ public:
         return std::accumulate(this->begin(),
                                this->end(),
                                0.0,
-                               [](double result, const_reference value)
-                               { return result += value * value; });
+                               [](double result, const_reference value) { return result += value * value; });
     }
     /**
      * @return normalized vector, i.e. divides it by its own norm.
@@ -828,6 +771,8 @@ template <>
 const Matrix<3, 3, double> Matrix<3, 3, double>::getInversed() const;
 template <>
 const Matrix<4, 4, double> Matrix<4, 4, double>::getInversed() const;
+template <>
+const Matrix<2, 2, float> Matrix<2, 2, float>::getInversed() const;
 
 template <>
 double Matrix<2, 2, double>::det() const;
@@ -835,14 +780,14 @@ template <>
 double Matrix<3, 3, double>::det() const;
 template <>
 double Matrix<4, 4, double>::det() const;
+template <>
+double Matrix<2, 2, float>::det() const;
 
 template <>
-Matrix<3, 1, double> Matrix<3, 1, double>::cross(
-    const Matrix<3, 1, double>& other) const;
+Matrix<3, 1, double> Matrix<3, 1, double>::cross(const Matrix<3, 1, double>& other) const;
 
 template <>
-Matrix<1, 3, double> Matrix<1, 3, double>::cross(
-    const Matrix<1, 3, double>& other) const;
+Matrix<1, 3, double> Matrix<1, 3, double>::cross(const Matrix<1, 3, double>& other) const;
 
 template <>
 double Matrix<2, 1, double>::dot(const Matrix<2, 1, double>& other) const;
@@ -862,13 +807,9 @@ double Matrix<1, 3, double>::dot(const Matrix<1, 3, double>& other) const;
 template <>
 double Matrix<1, 4, double>::dot(const Matrix<1, 4, double>& other) const;
 
-template <std::size_t rows1,
-          std::size_t columns1_rows2,
-          std::size_t columns2,
-          typename Type>
-const Matrix<rows1, columns2, Type> operator*(
-    const Matrix<rows1, columns1_rows2, Type>&    a,
-    const Matrix<columns1_rows2, columns2, Type>& b)
+template <std::size_t rows1, std::size_t columns1_rows2, std::size_t columns2, typename Type>
+const Matrix<rows1, columns2, Type> operator*(const Matrix<rows1, columns1_rows2, Type>&    a,
+                                              const Matrix<columns1_rows2, columns2, Type>& b)
 {
     Matrix<rows1, columns2, Type> res;
     for (size_t i = 0; i < rows1; i++)
@@ -879,20 +820,19 @@ const Matrix<rows1, columns2, Type> operator*(
 }
 
 template <size_t rows, size_t columns, typename Type>
-const Matrix<rows, columns, Type> operator*(
-    const double& num, const Matrix<rows, columns, Type>& mat)
+const Matrix<rows, columns, Type> operator*(const double& num, const Matrix<rows, columns, Type>& mat)
 {
     return mat * num;
 }
 
-#define MATRIX_MAKE_TYPEDEFS(Type, TypeSuffix, Size, SizeSuffix)               \
-    using Matrix##SizeSuffix##TypeSuffix    = Matrix<Size, Size, Type>;        \
-    using Vector##SizeSuffix##TypeSuffix    = Matrix<Size, 1, Type>;           \
+#define MATRIX_MAKE_TYPEDEFS(Type, TypeSuffix, Size, SizeSuffix)                                                       \
+    using Matrix##SizeSuffix##TypeSuffix    = Matrix<Size, Size, Type>;                                                \
+    using Vector##SizeSuffix##TypeSuffix    = Matrix<Size, 1, Type>;                                                   \
     using RowVector##SizeSuffix##TypeSuffix = Matrix<1, Size, Type>;
 
-#define MATRIX_MAKE_TYPEDEFS_ALL_SIZES(Type, TypeSuffix)                       \
-    MATRIX_MAKE_TYPEDEFS(Type, TypeSuffix, 2, 2)                               \
-    MATRIX_MAKE_TYPEDEFS(Type, TypeSuffix, 3, 3)                               \
+#define MATRIX_MAKE_TYPEDEFS_ALL_SIZES(Type, TypeSuffix)                                                               \
+    MATRIX_MAKE_TYPEDEFS(Type, TypeSuffix, 2, 2)                                                                       \
+    MATRIX_MAKE_TYPEDEFS(Type, TypeSuffix, 3, 3)                                                                       \
     MATRIX_MAKE_TYPEDEFS(Type, TypeSuffix, 4, 4)
 
 MATRIX_MAKE_TYPEDEFS_ALL_SIZES(int, i)
@@ -902,12 +842,12 @@ MATRIX_MAKE_TYPEDEFS_ALL_SIZES(double, d)
 #undef MATRIX_MAKE_TYPEDEFS_ALL_SIZES
 #undef MATRIX_MAKE_TYPEDEFS
 
-#define MATRIX_MAKE_TYPEDEFS(Size, SizeSuffix)                                 \
-    template <typename Type>                                                   \
-    using Matrix##SizeSuffix = Matrix<Size, Size, Type>;                       \
-    template <typename Type>                                                   \
-    using Vector##SizeSuffix = Matrix<Size, 1, Type>;                          \
-    template <typename Type>                                                   \
+#define MATRIX_MAKE_TYPEDEFS(Size, SizeSuffix)                                                                         \
+    template <typename Type>                                                                                           \
+    using Matrix##SizeSuffix = Matrix<Size, Size, Type>;                                                               \
+    template <typename Type>                                                                                           \
+    using Vector##SizeSuffix = Matrix<Size, 1, Type>;                                                                  \
+    template <typename Type>                                                                                           \
     using RowVector##SizeSuffix = Matrix<1, Size, Type>;
 
 MATRIX_MAKE_TYPEDEFS(2, 2)
@@ -916,6 +856,40 @@ MATRIX_MAKE_TYPEDEFS(4, 4)
 
 template <typename Type, int Size>
 using Vector = Matrix<Size, 1, Type>;
+
+namespace std
+{
+template <>
+struct hash<Vector3f>
+{
+    std::size_t operator()(const Vector3f& vec3) const
+    {
+        std::size_t seed = vec3.size();
+        for (const auto& i : vec3)
+        {
+            seed ^= (std::size_t)(i + 0x9e3779b9 + (seed << 6) + (seed >> 2));
+        }
+        return seed;
+    }
+};
+} // namespace std
+
+namespace std
+{
+template <>
+struct hash<Vector2f>
+{
+    std::size_t operator()(const Vector2f& vec2) const
+    {
+        std::size_t seed = vec2.size();
+        for (const auto& i : vec2)
+        {
+            seed ^= (std::size_t)(i + 0x9e3779b9 + (seed << 6) + (seed >> 2));
+        }
+        return seed;
+    }
+};
+} // namespace std
 
 void to_json(nlohmann::json& json, const Vector3i& vector3i);
 
