@@ -15,7 +15,7 @@ Written specifically for the WG-Forge courses.
 
 ## About
 
-The game is a turn-based strategy game based on the original World of tanks game. The game can be played by 3 people, under the control of which there are 5 different types of equipment with their own characteristics.
+The game is a turn-based strategy game based on the original World of Tanks game. The game can be played by 3 people, under the control of which there are 5 different types of equipment with their own characteristics.
 The battlefield is a hexagonal grid with some special cells (obstacles).
 
 **There are two ways to win:**
@@ -103,7 +103,7 @@ In the future, it is planned to add all input to the GUI.
 
 Now you can enjoy how the bot is playing in real time.
 
-![GUI](https://user-images.githubusercontent.com/39442984/155409635-25975026-7c08-4b2c-a22f-1245f43a48da.png)
+![unknown](https://user-images.githubusercontent.com/39442984/155417865-e2601d82-cbdb-4ad2-bb18-0292d3b124d1.png)
 
 ## Third party
 
