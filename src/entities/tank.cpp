@@ -54,6 +54,13 @@ Tank::Tank(const ecs::EntityId&   entityId,
             this->textureComponent = this->AddComponent<TextureComponent>("textures/at_spg.png");
             break;
         }
+        case TankType::NO_TYPE:
+        {
+            break;
+        }
+        default:
+        {
+        }
     }
     this->healthComponent   = AddComponent<HealthComponent>(this->ttcComponent->GetMaxHealth());
     this->materialComponent = this->AddComponent<MaterialComponent>(

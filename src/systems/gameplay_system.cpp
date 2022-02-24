@@ -271,41 +271,45 @@ bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
 
 bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
 {
-    bool shoot    = false;
-    auto distance = GameplaySystem::GetDistance(playerTank->GetComponent<TransformComponent>()->GetPosition(),
+    bool shoot            = false;
+    auto distance         = GameplaySystem::GetDistance(playerTank->GetComponent<TransformComponent>()->GetPosition(),
                                                 enemyTank->GetComponent<TransformComponent>()->GetPosition());
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto standartRange    = componentManager->GetComponent<TtcComponent>(playerTank->GetEntityID())->GetStandartRange();
+
     switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
     {
 
         case TankType::MEDIUM:
         {
-            shoot = distance == MEDIUM_TANK_DAMAGE_DISTANCE;
+            shoot = distance == standartRange;
             break;
         }
         case TankType::AT_SPG:
         {
             auto tankPosition = playerTank->GetComponent<TransformComponent>()->GetPosition();
             auto point        = enemyTank->GetComponent<TransformComponent>()->GetPosition();
-            shoot             = distance <= AT_SPG_TANK_DAMAGE_DISTANCE &&
+            shoot             = distance <= standartRange &&
                     (point.x() == tankPosition.x() || point.y() == tankPosition.y() || point.z() == tankPosition.z());
 
             break;
         }
         case TankType::HEAVY:
         {
-            shoot = distance <= HEAVY_TANK_DAMAGE_DISTANCE && distance > 0;
+            shoot = distance <= standartRange && distance > 0;
             break;
         }
         case TankType::LIGHT:
         {
-            shoot = distance == LIGHT_TANK_DAMAGE_DISTANCE;
+            shoot = distance == standartRange;
             break;
         }
         case TankType::SPG:
         {
             shoot = GameplaySystem::GetDistance(enemyTank->GetComponent<TransformComponent>()->GetPosition(),
                                                 playerTank->GetComponent<TransformComponent>()->GetPosition()) ==
-                    MEDIUM_TANK_DAMAGE_DISTANCE;
+                    standartRange;
             break;
         }
         default:
