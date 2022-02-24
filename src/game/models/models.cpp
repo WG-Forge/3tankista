@@ -272,6 +272,9 @@ void from_json(const nlohmann::json& json, MapModel& mapModel)
         nlohmann::json jsonContent = json.at("content");
         jsonContent.at("base").get_to<std::vector<Vector3i>>(mapModel.base);
         jsonContent.at("obstacle").get_to<std::vector<Vector3i>>(mapModel.obstacle);
+        jsonContent.at("light_repair").get_to<std::vector<Vector3i>>(mapModel.lightRepair);
+        jsonContent.at("hard_repair").get_to<std::vector<Vector3i>>(mapModel.hardRepair);
+        jsonContent.at("catapult").get_to<std::vector<Vector3i>>(mapModel.catapult);
         json.at("spawn_points").get_to<std::vector<SpawnPointsModel>>(mapModel.mapSpawnPoints);
     }
     catch (nlohmann::json::type_error& exception)

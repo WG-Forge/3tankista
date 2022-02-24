@@ -154,6 +154,9 @@ struct MapModel
     std::vector<SpawnPointsModel> mapSpawnPoints;
     std::vector<Vector3i>         obstacle;
     std::vector<Vector3i>         base;
+    std::vector<Vector3i>         catapult;
+    std::vector<Vector3i>         lightRepair;
+    std::vector<Vector3i>         hardRepair;
     int                           size;
     std::string                   name;
 };

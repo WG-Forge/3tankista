@@ -6,5 +6,8 @@ enum class CellState
     ENEMY,
     FRIEND,
     ENEMY_SPAWN,
-    OBSTACLE
+    OBSTACLE,
+    CATAPULT,
+    LIGHT_REPAIR,
+    HARD_REPAIR
 };
