@@ -20,8 +20,6 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
 {
     auto               entityManager    = ecs::ecsEngine->GetEntityManager();
     auto               componentManager = ecs::ecsEngine->GetComponentManager();
-    std::set<uint64_t> attackset{};
-    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
 
     for (auto& action : event->actions)
     {

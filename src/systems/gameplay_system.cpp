@@ -1,11 +1,11 @@
 #include "gameplay_system.h"
 #include "components/attack_matrix_component.h"
-#include "components/base_id_component.h"
 #include "components/main_player_component.h"
 #include "components/observer_component.h"
-#include "components/obstacle_id_component.h"
 #include "components/order_component.h"
 #include "components/turn_component.h"
+#include "entities/map/content.h"
+#include "entities/map/map.h"
 #include "entities/tank.h"
 #include "win_system.h"
 #include <queue>
@@ -134,6 +134,9 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     auto gameArea         = componentManager->begin<HexMapComponent>().operator->();
     auto mainPlayerId     = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
 
+    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
+    auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
+
     auto turnComponent = componentManager->begin<TurnComponent>().operator->();
     uint64_t                                                      currentPlayerId;
     for (auto it = componentManager->begin<OrderComponent>(); componentManager->end<OrderComponent>() != it; ++it)
@@ -198,14 +201,13 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                 // Move to the nearest base
                 pathFinder.SetHexMapComponent(gameArea);
                 pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
-                auto     it = componentManager->begin<BaseIdComponent>();
+                auto     baseVectorId = content->GetBase();
                 Vector3i nearestBasePos =
-                    entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
-                ++it;
-                for (; componentManager->end<BaseIdComponent>() != it; ++it)
+                    entityManager->GetEntity(baseVectorId[0])->GetComponent<TransformComponent>()->GetPosition();
+                for (auto& baseId : baseVectorId)
                 {
                     auto basePosition =
-                        entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
+                        entityManager->GetEntity(baseId)->GetComponent<TransformComponent>()->GetPosition();
                     if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
                         (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
                          pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
@@ -280,7 +282,6 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
 
     switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
     {
-
         case TankType::MEDIUM:
         {
             shoot = distance == standartRange;
@@ -292,7 +293,6 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
             auto point        = enemyTank->GetComponent<TransformComponent>()->GetPosition();
             shoot             = distance <= standartRange &&
                     (point.x() == tankPosition.x() || point.y() == tankPosition.y() || point.z() == tankPosition.z());
-
             break;
         }
         case TankType::HEAVY:

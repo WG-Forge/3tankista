@@ -1,6 +1,5 @@
 #include "win_system.h"
 #include "components/attack_matrix_component.h"
-#include "components/base_id_component.h"
 #include "components/capture_points_component.h"
 #include "components/hex_map_component.h"
 #include "components/kill_points_component.h"

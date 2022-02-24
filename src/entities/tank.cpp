@@ -21,6 +21,7 @@ Tank::Tank(const ecs::EntityId&   entityId,
     this->playerIdComponent      = AddComponent<PlayerIdComponent>(0);
     this->vehicleIdComponent     = AddComponent<VehicleIdComponent>(0);
     this->tankTypeComponent      = AddComponent<TankTypeComponent>(type);
+    this->shootRangeBonus        = AddComponent<ShootRangeBonusComponent>(0);
     switch (type)
     {
         case TankType::MEDIUM:

@@ -16,5 +16,4 @@ Obstacle::Obstacle(const ecs::EntityId& entityId, ecs::ComponentManager* compone
 
     this->material   = this->AddComponent<MaterialComponent>(MaterialGenerator::CreateMaterial<DefaultMaterial>(),
                                                            Color{ 0.2f, 0.2f, 0.2f, 1.0f });
-    this->obstacleId = AddComponent<ObstacleIdComponent>();
 }
