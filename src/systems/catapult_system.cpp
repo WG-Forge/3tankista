@@ -27,17 +27,12 @@ void CatapultSystem::OnMoveResponse(const MoveResponseEvent* event)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto world            = entityManager->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
-    auto hexMapComponent  = world->GetComponent<HexMapComponent>();
+
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
-    auto catapultVectorId = content->GetCatapult();
-    std::vector<Vector3i> catapultVector3i;
-    for (auto& entityId : catapultVectorId)
-    {
-        catapultVector3i.push_back(
-            entityManager->GetEntity(entityId)->GetComponent<TransformComponent>()->GetPosition());
-    }
+    auto catapultVectorId = content->GetVectorCatapultId();
+    auto catapultVector3i = content->GetVectorV3i(catapultVectorId);
+
     for (auto& action : event->actions)
     {
         auto tank = entityManager->GetEntity(action.vehicleId);
@@ -61,15 +56,12 @@ void CatapultSystem::OnShootResponse(const ShootResponseEvent* event)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
+
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
-    auto catapultVectorId = content->GetCatapult();
-    std::vector<Vector3i> catapultVector3i;
-    for (auto& entityId : catapultVectorId)
-    {
-        catapultVector3i.push_back(
-            entityManager->GetEntity(entityId)->GetComponent<TransformComponent>()->GetPosition());
-    }
+    auto catapultVectorId = content->GetVectorCatapultId();
+    auto catapultVector3i=content->GetVectorV3i(catapultVectorId);
+
     for (auto& action : event->actions)
     {
         auto tank       = entityManager->GetEntity(action.vehicleId);

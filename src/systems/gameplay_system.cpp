@@ -201,7 +201,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                 // Move to the nearest base
                 pathFinder.SetHexMapComponent(gameArea);
                 pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
-                auto     baseVectorId = content->GetBase();
+                auto     baseVectorId = content->GetVectorBaseId();
                 Vector3i nearestBasePos =
                     entityManager->GetEntity(baseVectorId[0])->GetComponent<TransformComponent>()->GetPosition();
                 for (auto& baseId : baseVectorId)
@@ -243,28 +243,16 @@ bool GameplaySystem::CheckNeutrality(Tank* playerTank, Tank* enemyTank)
     auto attackMatrixComponent = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>();
     auto tankPlayerId          = playerTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
     auto enemyPlayerId         = enemyTank->GetComponent<PlayerIdComponent>()->GetPlayerId();
-    std::cout << "gameplay: "
-              << ", tank: " << tankPlayerId << ", enemy: " << enemyPlayerId << "\n";
-    for (auto& [key, value] : attackMatrixComponent->GetAttackMatrix())
-    {
-        std::cout << key << " {";
-        for (auto& id : value)
-        {
-            std::cout << id << ", ";
-        }
-        std::cout << "}\n";
-    }
+
     // If he attacked us
     if (attackMatrixComponent->IsAttacked(enemyPlayerId, tankPlayerId))
         return true;
-    std::cout << "after\n";
     // If he attacked by somebody else
     auto attackMatrix = attackMatrixComponent->GetAttackMatrix();
     for (auto& [who, whom] : attackMatrix)
     {
         if (who == tankPlayerId)
             continue;
-        std::cout << "aaafter: " << who << "\n";
         if (whom.find(enemyPlayerId) != whom.end())
             return false;
     }
@@ -279,64 +267,63 @@ bool GameplaySystem::CanShoot(Tank* playerTank, Tank* enemyTank)
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto standartRange    = componentManager->GetComponent<TtcComponent>(playerTank->GetEntityID())->GetStandartRange();
-
+    auto shootRangeBonus =
+        componentManager->GetComponent<ShootRangeBonusComponent>(playerTank->GetEntityID())->GetShootRangeBonus();
+    std::cout << shootRangeBonus << " " << playerTank->GetComponent<VehicleIdComponent>()->GetVehicleId() << "\n";
     switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
     {
         case TankType::MEDIUM:
         {
-            shoot = distance == standartRange;
+            std::cout << distance << " " << standartRange << "\n";
+            shoot = standartRange <= distance && distance <= standartRange + shootRangeBonus;
+            std::cout << "medium " << shoot << "\n";
             break;
         }
         case TankType::AT_SPG:
         {
             auto tankPosition = playerTank->GetComponent<TransformComponent>()->GetPosition();
             auto point        = enemyTank->GetComponent<TransformComponent>()->GetPosition();
-            shoot             = distance <= standartRange &&
+            shoot             = distance <= standartRange + shootRangeBonus &&
                     (point.x() == tankPosition.x() || point.y() == tankPosition.y() || point.z() == tankPosition.z());
             break;
         }
         case TankType::HEAVY:
         {
-            shoot = distance <= standartRange && distance > 0;
+            shoot = distance <= standartRange + shootRangeBonus && distance > 0;
             break;
         }
         case TankType::LIGHT:
         {
-            shoot = distance == standartRange;
+            shoot = standartRange <= distance && distance <= standartRange + shootRangeBonus;
             break;
         }
         case TankType::SPG:
         {
-            shoot = GameplaySystem::GetDistance(enemyTank->GetComponent<TransformComponent>()->GetPosition(),
-                                                playerTank->GetComponent<TransformComponent>()->GetPosition()) ==
-                    standartRange;
+            shoot = standartRange <= distance && distance <= standartRange + shootRangeBonus;
             break;
         }
         default:
             break;
     }
-
+    std::cout << shoot << "\n";
     return shoot;
 }
 
 Vector3i GameplaySystem::GetShootPosition(Tank* tank, Tank* enemyTank)
 {
-
     auto enemyPosition = enemyTank->GetComponent<TransformComponent>()->GetPosition();
     auto tankPosition  = tank->GetComponent<TransformComponent>()->GetPosition();
+
     switch (tank->GetComponent<TankTypeComponent>()->GetTankType())
     {
-
         case TankType::AT_SPG:
         {
             int      distance = GameplaySystem::GetDistance(enemyPosition, tankPosition);
             Vector3i delta    = enemyPosition - tankPosition;
             enemyPosition     = tankPosition + delta / distance;
-
             break;
         }
         default:
-
             break;
     }
 
@@ -350,7 +337,7 @@ bool GameplaySystem::IsCorrectShootPosition(Tank* tank, Tank* enemy)
     auto position = enemy->GetComponent<TransformComponent>()->GetPosition();
     if (tank->GetComponent<TankTypeComponent>()->GetTankType() == TankType::AT_SPG)
     {
-        if (pathFinder.GetDistance(position) != -1 &&
+        if (pathFinder.GetDistance(position) != PathFinder::NO_PATH &&
             pathFinder.GetDistance(position) ==
                 GameplaySystem::GetDistance(tank->GetComponent<TransformComponent>()->GetPosition(), position))
         {
