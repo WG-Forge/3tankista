@@ -186,6 +186,7 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                                                      enemy->GetComponent<HealthComponent>()->GetHealth())
                         {
                             target = enemy;
+                            break;
                         }
                     }
                 }
