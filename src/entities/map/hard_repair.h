@@ -2,6 +2,7 @@
 
 #include "components/material_component.h"
 #include "components/shape_component.h"
+#include "components/texture_component.h"
 #include "components/transform_component.h"
 #include "game/game_object.h"
 #include "render/materials/default_material.h"
@@ -19,4 +20,5 @@ public:
 private:
     TransformComponent* transform;
     MaterialComponent*  material;
+    TextureComponent*   textureComponent;
 };

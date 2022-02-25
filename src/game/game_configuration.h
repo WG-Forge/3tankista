@@ -5,11 +5,11 @@
 
 static constexpr float DELTA_TIME_STEP{ 1.0f / 60.0f };
 
-constexpr Ttc SPG_TANK_TTC                = { 1, 1, TankType::SPG, 1, 3 };
-constexpr Ttc LIGHT_TANK_TTC              = { 3, 1, TankType::LIGHT, 1, 2 };
-constexpr Ttc HEAVY_TANK_TTC              = { 1, 3, TankType::HEAVY, 1, 2 };
-constexpr Ttc MEDIUM_TANK_TTC             = { 2, 2, TankType::MEDIUM, 1, 2 };
-constexpr Ttc AT_SPG_TANK_TTC             = { 1, 2, TankType::NO_TYPE, 1, 3 };
+constexpr Ttc SPG_TANK_TTC    = { 1, 1, TankType::SPG, 1, 3 };
+constexpr Ttc LIGHT_TANK_TTC  = { 3, 1, TankType::LIGHT, 1, 2 };
+constexpr Ttc HEAVY_TANK_TTC  = { 1, 3, TankType::HEAVY, 1, 2 };
+constexpr Ttc MEDIUM_TANK_TTC = { 2, 2, TankType::MEDIUM, 1, 2 };
+constexpr Ttc AT_SPG_TANK_TTC = { 1, 2, TankType::NO_TYPE, 1, 3 };
 
 static constexpr unsigned int GAME_WINDOW_WIDTH{ 1920 };
 
@@ -55,3 +55,7 @@ inline static const std::string MEDIUM_HEALTH_BAR_BLUE_TEXTURE_NAME{ "textures/m
 inline static const std::string FRIEND_HP_TEXTURE_NAME{ "textures/friend_hp.png" };
 inline static const std::string ENEMY_HP_TEXTURE_NAME{ "textures/enemy_hp.png" };
 inline static const std::string NEUTRAL_HP_TEXTURE_NAME{ "textures/neutral_hp.png" };
+
+inline static const std::string HARD_REPAIR_TEXTURE_NAME("textures/hard_repair.png");
+inline static const std::string LIGHT_REPAIR_TEXTURE_NAME("textures/light_repair.png");
+inline static const std::string CATAPULT_TEXTURE_NAME("textures/catapult.png");

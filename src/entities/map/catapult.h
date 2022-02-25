@@ -2,9 +2,12 @@
 
 #include "components/material_component.h"
 #include "components/shape_component.h"
+#include "components/texture_component.h"
 #include "components/transform_component.h"
 #include "components/usage_component.h"
+
 #include "game/game_object.h"
+
 #include "render/materials/default_material.h"
 #include "render/materials/material_generator.h"
 #include "render/shapes/hex_shape.h"
@@ -21,4 +24,5 @@ private:
     TransformComponent* transform;
     UsageComponent*     usage;
     MaterialComponent*  material;
+    TextureComponent*   textureComponent;
 };
