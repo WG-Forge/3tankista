@@ -1,9 +1,9 @@
 #include "game_state_system.h"
 
-#include "components/turn_component.h"
 #include "components/adapter_player_id_component.h"
 #include "components/name_component.h"
 #include "components/ttc_factories/ttc_component_factory.h"
+#include "components/turn_component.h"
 
 #include "entities/map/map.h"
 #include "entities/player.h"
@@ -13,6 +13,7 @@
 
 #include "systems/adapter_system.h"
 #include "systems/gameplay_system.h"
+#include "utility/map_utility.h"
 
 #include <algorithm>
 
@@ -154,15 +155,15 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         auto tank = (Tank*)entityManager->GetEntity(it->GetVehicleId());
         if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
         {
-            GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
-                                                   tank->GetComponent<TransformComponent>()->GetPosition(),
-                                                   CellState::FRIEND);
+            MapUtility::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+                                               tank->GetComponent<TransformComponent>()->GetPosition(),
+                                               CellState::FRIEND);
         }
         else
         {
-            GameplaySystem::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
-                                                   tank->GetComponent<TransformComponent>()->GetPosition(),
-                                                   CellState::ENEMY);
+            MapUtility::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+                                               tank->GetComponent<TransformComponent>()->GetPosition(),
+                                               CellState::ENEMY);
         }
     }
 }

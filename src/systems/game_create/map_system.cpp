@@ -1,4 +1,5 @@
 #include "map_system.h"
+#include "utility/map_utility.h"
 
 MapSystem::MapSystem()
 {
@@ -57,7 +58,7 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
          ++it)
     {
-        GameplaySystem::SetHexMapComponentCell(
+        MapUtility::SetHexMapComponentCell(
             world->GetComponent<HexMapComponent>(),
             entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition(),
             CellState::OBSTACLE);

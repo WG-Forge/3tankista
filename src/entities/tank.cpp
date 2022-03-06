@@ -5,7 +5,7 @@
 #include "render/shapes/quad_shape.h"
 #include "render/shapes/shape.h"
 #include "render/shapes/shape_generator.h"
-#include "components/states/stay_state.h"
+#include "components/states/medium_tank_states.h"
 
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
@@ -23,38 +23,42 @@ Tank::Tank(const ecs::EntityId&   entityId,
     this->vehicleIdComponent     = AddComponent<VehicleIdComponent>(0);
     this->tankTypeComponent      = AddComponent<TankTypeComponent>(type);
     this->stateComponent         = AddComponent<StateComponent>();
-    this->stateComponent->ChangeState<StayState>();
+    // TODO: Change tank states
     switch (type)
     {
         case TankType::MEDIUM:
         {
             this->ttcComponent     = factory.CreateMediumTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/medium.png");
+            this->stateComponent->ChangeState<MediumTankInitState>();
             break;
         }
         case TankType::HEAVY:
         {
             this->ttcComponent     = factory.CreateHeavyTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/heavy.png");
+            this->stateComponent->ChangeState<MediumTankInitState>();
             break;
         }
         case TankType::LIGHT:
         {
             this->ttcComponent     = factory.CreateLightTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/light.png");
-
+            this->stateComponent->ChangeState<MediumTankInitState>();
             break;
         }
         case TankType::SPG:
         {
             this->ttcComponent     = factory.CreateSpgTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/spg.png");
+            this->stateComponent->ChangeState<MediumTankInitState>();
             break;
         }
         case TankType::AT_SPG:
         {
             this->ttcComponent     = factory.CreateAtSpgTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/at_spg.png");
+            this->stateComponent->ChangeState<MediumTankInitState>();
             break;
         }
     }

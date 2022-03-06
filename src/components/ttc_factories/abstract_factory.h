@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ecs.h"
 #include "components/ttc_component.h"
 #include "game/game_events.h"
 #include "ttc.h"
