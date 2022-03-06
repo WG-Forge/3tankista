@@ -59,12 +59,26 @@ public:
 
     static inline void SetHexMapComponentCell(HexMapComponent* component,
                                               const Vector3i&  position,
-                                              const CellState& state)
+                                              const int32_t&   state)
     {
-
         component->SetCell(Shift(Cube2Hex(position), component->GetSize()), state);
     }
-    static inline CellState GetHexMapComponentCell(HexMapComponent* component, const Vector3i& position)
+
+    static inline void AddHexMapComponentCell(HexMapComponent* component,
+                                              const Vector3i&  position,
+                                              const CellState& state)
+    {
+        component->AddToCell(Shift(Cube2Hex(position), component->GetSize()), state);
+    }
+
+    static inline void RemoveHexMapComponentCell(HexMapComponent* component,
+                                                 const Vector3i&  position,
+                                                 const CellState& state)
+    {
+        component->RemoveFromCell(Shift(Cube2Hex(position), component->GetSize()), state);
+    }
+
+    static inline int32_t GetHexMapComponentCell(HexMapComponent* component, const Vector3i& position)
     {
         return component->GetCell(Shift(Cube2Hex(position), component->GetSize()));
     }

@@ -155,13 +155,13 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         auto tank = (Tank*)entityManager->GetEntity(it->GetVehicleId());
         if (tank->GetComponent<PlayerIdComponent>()->GetPlayerId() == mainPlayerId)
         {
-            MapUtility::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+            MapUtility::AddHexMapComponentCell(world->GetComponent<HexMapComponent>(),
                                                tank->GetComponent<TransformComponent>()->GetPosition(),
                                                CellState::FRIEND);
         }
         else
         {
-            MapUtility::SetHexMapComponentCell(world->GetComponent<HexMapComponent>(),
+            MapUtility::AddHexMapComponentCell(world->GetComponent<HexMapComponent>(),
                                                tank->GetComponent<TransformComponent>()->GetPosition(),
                                                CellState::ENEMY);
         }

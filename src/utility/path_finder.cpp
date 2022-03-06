@@ -20,7 +20,7 @@ void PathFinder::Bfs(const Vector2i& from)
         for (int i = 0; i < HEX_DIRECTIONS.size(); i++)
         {
             auto destination = now + HEX_DIRECTIONS[i];
-            if (!MapUtility::IsValid(destination, area->GetSize()) || area->GetCell(destination) != CellState::EMPTY)
+            if (!MapUtility::IsValid(destination, area->GetSize()) || !IS_REACHABLE(area->GetCell(destination)))
                 continue;
             if (!this->used[destination.x()][destination.y()])
             {

@@ -58,7 +58,7 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     for (auto it = componentManager->begin<ObstacleIdComponent>(); componentManager->end<ObstacleIdComponent>() != it;
          ++it)
     {
-        MapUtility::SetHexMapComponentCell(
+        MapUtility::AddHexMapComponentCell(
             world->GetComponent<HexMapComponent>(),
             entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition(),
             CellState::OBSTACLE);

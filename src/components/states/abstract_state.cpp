@@ -1,4 +1,5 @@
 #include "abstract_state.h"
+#include "components/base_id_component.h"
 #include "utility/map_utility.h"
 #include "utility/path_finder.h"
 
@@ -85,9 +86,10 @@ bool AbstractState::IsCorrectShootPosition(HexMapComponent* map, Tank* tank, Tan
     }
     else
     {
-        result = MapUtility::GetHexMapComponentCell(
-                     ecs::ecsEngine->GetComponentManager()->begin<HexMapComponent>().operator->(), position) !=
-                 CellState::OBSTACLE;
+        result =
+            CELL_CONTAINS(MapUtility::GetHexMapComponentCell(
+                              ecs::ecsEngine->GetComponentManager()->begin<HexMapComponent>().operator->(), position),
+                          CellState::OBSTACLE);
     }
     return result;
 }
@@ -114,4 +116,61 @@ Vector3i AbstractState::GetShootPosition(Tank* tank, Tank* enemyTank)
     }
 
     return enemyPosition;
+}
+
+Tank* AbstractState::GetEnemyInShootArea(GameplaySystem::Context& context, Tank* tank)
+{
+    Tank* target = nullptr;
+    for (auto& enemy : context.enemies)
+    {
+        if (CanShoot(tank, enemy))
+        {
+            if (IsCorrectShootPosition(context.hexMap, tank, enemy) &&
+                CheckNeutrality(context.attackMatrix, tank, enemy))
+            {
+                if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
+                                             enemy->GetComponent<HealthComponent>()->GetHealth())
+                {
+                    target = enemy;
+                }
+            }
+        }
+    }
+    return target;
+}
+
+bool AbstractState::IsOnTheBase(GameplaySystem::Context& context, Tank* tank)
+{
+    return CELL_CONTAINS(
+        MapUtility::GetHexMapComponentCell(context.hexMap, tank->GetComponent<TransformComponent>()->GetPosition()),
+        CellState::BASE);
+}
+
+std::vector<Vector3i> AbstractState::GetPathToBase(GameplaySystem::Context& context, Tank* tank)
+{
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+
+    PathFinder pathFinder;
+    pathFinder.SetHexMapComponent(context.hexMap);
+    pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
+
+    auto     it = componentManager->begin<BaseIdComponent>();
+    Vector3i nearestBasePos =
+        entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
+    ++it;
+    for (; componentManager->end<BaseIdComponent>() != it; ++it)
+    {
+        auto basePosition = entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
+        if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
+            (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
+             pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
+        {
+            nearestBasePos = basePosition;
+        }
+    }
+    if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH)
+        return {};
+    auto path = pathFinder.GetShortestPath(nearestBasePos);
+    return path;
 }
