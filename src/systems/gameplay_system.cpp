@@ -64,12 +64,6 @@ bool GameplaySystem::IsValid(const Vector3i& point, const int size)
     return IsValid(Shift(Cube2Hex(point), size), size);
 }
 
-void GameplaySystem::SetHexMapComponentCell(HexMapComponent* component,
-                                            const Vector3i&  position,
-                                            const CellState& state)
-{
-    component->SetCell(Shift(Cube2Hex(position), component->GetSize()), state);
-}
 
 CellState GameplaySystem::GetHexMapComponentCell(HexMapComponent* component, const Vector3i& position)
 {
@@ -171,63 +165,9 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                   });
         for (auto tank : currentPlayerTanks)
         {
-            // Can attack someone?
-            Tank* target = nullptr;
-            for (auto& enemy : enemies)
-            {
-                if (CanShoot(tank, enemy))
-                {
-                    if (IsCorrectShootPosition(tank, enemy) && CheckNeutrality(tank, enemy))
-                    {
-                        if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
-                                                     enemy->GetComponent<HealthComponent>()->GetHealth())
-                        {
-                            target = enemy;
-                        }
-                    }
-                }
-            }
-
-            if (target != nullptr)
-            {
-                ecs::ecsEngine->SendEvent<ShootRequestEvent>(ShootModel{
-                    tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
-            }
-            else
-            {
-                // Move to the nearest base
-                pathFinder.SetHexMapComponent(gameArea);
-                pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
-                auto     it = componentManager->begin<BaseIdComponent>();
-                Vector3i nearestBasePos =
-                    entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
-                ++it;
-                for (; componentManager->end<BaseIdComponent>() != it; ++it)
-                {
-                    auto basePosition =
-                        entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
-                    if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
-                        (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
-                         pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
-                    {
-                        nearestBasePos = basePosition;
-                    }
-                }
-                if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH)
-                    continue; // STAY
-                auto path = pathFinder.GetShortestPath(nearestBasePos);
-                if (path.empty())
-                    continue; // STAY
-                SetHexMapComponentCell(
-                    gameArea, tank->GetComponent<TransformComponent>()->GetPosition(), CellState::EMPTY);
-                SetHexMapComponentCell(
-                    gameArea,
-                    path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],
-                    CellState::FRIEND);
-                ecs::ecsEngine->SendEvent<MoveRequestEvent>(
-                    MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(),
-                               path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1] });
-            }
+            auto state = tank->GetComponent<StateComponent>();
+            state->GetState()->UpdateState();
+            state->GetState()->Play();
         }
     }
     auto attackMatrix = componentManager->begin<AttackMatrixComponent>().operator->();

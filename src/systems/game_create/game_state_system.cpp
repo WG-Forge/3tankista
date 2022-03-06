@@ -1,6 +1,6 @@
 #include "game_state_system.h"
 
-#include "components//turn_component.h"
+#include "components/turn_component.h"
 #include "components/adapter_player_id_component.h"
 #include "components/name_component.h"
 #include "components/ttc_factories/ttc_component_factory.h"
@@ -12,6 +12,7 @@
 #include "entities/world.h"
 
 #include "systems/adapter_system.h"
+#include "systems/gameplay_system.h"
 
 #include <algorithm>
 
@@ -126,6 +127,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     auto playersNum      = event->gameState.numberPlayers;
     auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
     componentManager->begin<MainPlayerComponent>()->SetMainPlayerId(adapterPlayerId->Get(mainPlayerIndex));
+    // FIXME: What if index is less then playersNum?
     for (int i = index; i > -1; --i)
     {
         componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))

@@ -51,9 +51,13 @@ public:
     static inline Vector3i Shift(const Vector3i& position, int value);
     static inline Vector2i Shift(const Vector2i& position, int value);
 
-    static inline void      SetHexMapComponentCell(HexMapComponent* component,
-                                                   const Vector3i&  position,
-                                                   const CellState& state);
+    static inline void SetHexMapComponentCell(HexMapComponent* component,
+                                              const Vector3i&  position,
+                                              const CellState& state)
+    {
+
+        component->SetCell(Shift(Cube2Hex(position), component->GetSize()), state);
+    }
     static inline CellState GetHexMapComponentCell(HexMapComponent* component, const Vector3i& position);
 
     /**

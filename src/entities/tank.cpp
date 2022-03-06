@@ -5,6 +5,7 @@
 #include "render/shapes/quad_shape.h"
 #include "render/shapes/shape.h"
 #include "render/shapes/shape_generator.h"
+#include "components/states/stay_state.h"
 
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
@@ -21,6 +22,8 @@ Tank::Tank(const ecs::EntityId&   entityId,
     this->playerIdComponent      = AddComponent<PlayerIdComponent>(0);
     this->vehicleIdComponent     = AddComponent<VehicleIdComponent>(0);
     this->tankTypeComponent      = AddComponent<TankTypeComponent>(type);
+    this->stateComponent         = AddComponent<StateComponent>();
+    this->stateComponent->ChangeState<StayState>();
     switch (type)
     {
         case TankType::MEDIUM:
