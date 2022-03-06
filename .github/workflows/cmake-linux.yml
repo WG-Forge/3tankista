@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - dev
-      - feature_crossplatofm_compilation
+      - feature_crossplatform_compilation
 
 env:
   BUILD_TYPE: Release
