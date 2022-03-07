@@ -67,7 +67,7 @@ void Game::InitializeGLFW()
     {
         const char* description;
         int         code = glfwGetError(&description);
-        LogFatal("Failed to initialize GLFW ", code, ", ", description);
+        LogFatal("Failed to initialize GLFW %s, %s", code, description);
         glfwTerminate();
         return;
     }
@@ -80,7 +80,7 @@ void Game::InitializeGLFW()
     {
         const char* description;
         int         code = glfwGetError(&description);
-        LogFatal("Failed to create GLFW window ", code, ", ", description);
+        LogFatal("Failed to create GLFW window %d, %s", code, description);
         glfwTerminate();
         return;
     }
