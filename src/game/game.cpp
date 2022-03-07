@@ -1,5 +1,4 @@
 #include "game.h"
-
 #include <utility>
 
 #include "game_configuration.h"
@@ -14,6 +13,7 @@ Game::Game(std::string title)
     , windowWidth(-1)
     , windowHeight(-1)
 {
+    DEFINE_LOGGER("GAME")
     this->RegisterEventCallbacks();
 }
 
@@ -67,7 +67,7 @@ void Game::InitializeGLFW()
     {
         const char* description;
         int         code = glfwGetError(&description);
-        LogFatal("Failed to initialize GLFW " + code + ", " + description);
+        LogFatal("Failed to initialize GLFW ", code, ", ", description);
         glfwTerminate();
         return;
     }
@@ -80,7 +80,7 @@ void Game::InitializeGLFW()
     {
         const char* description;
         int         code = glfwGetError(&description);
-        LogFatal("Failed to create GLFW window " + code + ", " + description);
+        LogFatal("Failed to create GLFW window ", code, ", ", description);
         glfwTerminate();
         return;
     }
