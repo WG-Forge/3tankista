@@ -5,6 +5,7 @@
 
 class AdapterSystem : public ecs::System<AdapterSystem>, public ecs::event::IEventListener
 {
+    DECLARE_LOGGER
 public:
     AdapterSystem();
     ~AdapterSystem() override;

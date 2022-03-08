@@ -1,0 +1,33 @@
+name: Check build on linux
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install packages
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+
+      - uses: actions/checkout@v2
+
+      - name: download submodules
+        run: |
+          git submodule update --init --recursive
+#          git submodule update --remote --checkout --recursive
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

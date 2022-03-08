@@ -14,6 +14,7 @@ private:
     static constexpr uint8_t messageSizeBytes = 4;
 
 public:
+    DECLARE_LOGGER
     ServerSystem(const std::string& host, const std::string& port);
     ~ServerSystem();
 

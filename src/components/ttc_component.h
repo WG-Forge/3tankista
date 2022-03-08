@@ -5,10 +5,11 @@
 class TtcComponent : public ecs::Component<TtcComponent>
 {
 public:
-    TtcComponent(const int speed, const int maxHealth, const int damage)
+    TtcComponent(const int speed, const int maxHealth, const int damage, const int standartRange)
         : speed(speed)
         , maxHealth(maxHealth)
         , damage(damage)
+        , standartRange(standartRange)
 
     {
     }
@@ -24,8 +25,12 @@ public:
     void SetMaxHealth(const int maxHealth) { this->maxHealth = maxHealth; }
     auto GetMaxHealth() const { return this->maxHealth; }
 
+    void SetStandartRange(const int standartRange) { this->standartRange = standartRange; }
+    auto GetStandartRange() const { return this->standartRange; }
+
 private:
     int speed;
     int maxHealth;
     int damage;
+    int standartRange;
 };

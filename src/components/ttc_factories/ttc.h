@@ -8,4 +8,5 @@ struct Ttc
     int      maxHealth;
     TankType tankType;
     int      damage;
+    int      standartRange;
 };

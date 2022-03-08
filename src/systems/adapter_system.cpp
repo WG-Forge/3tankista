@@ -5,6 +5,7 @@
 
 AdapterSystem::AdapterSystem()
 {
+    DEFINE_LOGGER("AdapterSystem")
     RegisterEventCallbacks();
 }
 
@@ -32,8 +33,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::LOGOUT:
             {
-                std::cout << "Logout is successful\n";
-                break;
+                LogInfo("Logout is successful") break;
             }
             case Action::MAP:
             {
@@ -90,15 +90,21 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::MOVE:
             {
                 auto sentJson = nlohmann::json::parse(event->sentData).get<MoveModel>();
-                std::cout << "MOVE: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
-                          << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
+                LogInfo("MOVE: %d => (%d, %d, %d)",
+                        sentJson.vehicleId,
+                        sentJson.target.x(),
+                        sentJson.target.y(),
+                        sentJson.target.z());
                 break;
             }
             case Action::SHOOT:
             {
                 auto sentJson = nlohmann::json::parse(event->sentData).get<ShootModel>();
-                std::cout << "SHOOT: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
-                          << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
+                LogInfo("SHOOT: %d => (%d, %d, %d)",
+                        sentJson.vehicleId,
+                        sentJson.target.x(),
+                        sentJson.target.y(),
+                        sentJson.target.z());
                 break;
             }
         }
@@ -106,15 +112,10 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     else if (event->result == Result::TIMEOUT)
     {
         ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
-        std::cout << "timeout\n";
     }
     else if (event->result != Result::OKEY && event->action == Action::LOGIN)
     {
         // ecs::ecsEngine->SendEvent<GameLoginEvent>();
-    }
-    else
-    {
-        std::cout << "Response: " << static_cast<int>(event->result) << " " << event->data << "\n\n\n";
     }
 }
 

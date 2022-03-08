@@ -14,6 +14,7 @@
 TextRenderer::TextRenderer()
     : shader(nullptr)
 {
+    DEFINE_LOGGER("TextRenderer")
     this->shader = std::make_unique<Shader>("shaders/text.vert", "shaders/text.frag");
 
     Matrix4f projection =
@@ -42,13 +43,13 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
     {
-        std::cout << "ERRPR::FREETYPE: Could not init FreeType Library" << std::endl << std::flush;
+        LogError("Could not init FreeType Library")
     }
 
     FT_Face face;
     if (FT_New_Face(ft, font.c_str(), 0, &face))
     {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl << std::flush;
+        LogError("Failed to load font")
     }
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
@@ -59,8 +60,7 @@ void TextRenderer::Load(const std::string& font, unsigned int fontSize)
     {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER))
         {
-            std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl << std::flush;
-            continue;
+            LogError("Failed to load Glyph") continue;
         }
 
         unsigned int texture;

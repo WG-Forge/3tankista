@@ -10,6 +10,8 @@
 #include "render/utility/buffers.h"
 #include "render/utility/shader.hpp"
 
+#include "ecs.h"
+
 struct Character
 {
     unsigned int textureID;
@@ -45,7 +47,7 @@ class TextRenderer
 {
 
     static constexpr size_t TEXT_VERTEX_BUFFER_SIZE{ 8388608 /* 8 MB */ };
-
+    DECLARE_LOGGER
 public:
     TextRenderer();
 

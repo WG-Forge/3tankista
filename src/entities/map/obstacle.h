@@ -1,7 +1,6 @@
 #pragma once
 
 #include "components/material_component.h"
-#include "components/obstacle_id_component.h"
 #include "components/transform_component.h"
 #include "game/game_object.h"
 
@@ -14,7 +13,6 @@ public:
     ~Obstacle() override = default;
 
 private:
-    ObstacleIdComponent* obstacleId;
-    TransformComponent*  transform;
-    MaterialComponent*   material;
+    TransformComponent* transform;
+    MaterialComponent*  material;
 };

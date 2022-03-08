@@ -9,6 +9,7 @@
 #include "entities/map/content.h"
 #include "entities/map/map.h"
 #include "systems/gameplay_system.h"
+#include "utility/map_utility.h"
 #include "win_system.h"
 #include <algorithm>
 
@@ -33,26 +34,22 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
     {
         auto entity             = entityManager->GetEntity(action.vehicleId);
         auto transformComponent = entity->GetComponent<TransformComponent>();
-        auto cellType = GameplaySystem::GetHexMapComponentCell(hexMapComponent, transformComponent->GetPosition());
-        if (cellType == CellState::FRIEND)
+        auto cellType = MapUtility::GetHexMapComponentCell(hexMapComponent, transformComponent->GetPosition());
+        if (CELL_CONTAINS(cellType, CellState::FRIEND))
         {
-            GameplaySystem::SetHexMapComponentCell(
-                hexMapComponent, transformComponent->GetPosition(), CellState::EMPTY);
-            GameplaySystem::SetHexMapComponentCell(hexMapComponent, action.target, CellState::FRIEND);
+            MapUtility::RemoveHexMapComponentCell(
+                hexMapComponent, transformComponent->GetPosition(), CellState::FRIEND);
+            MapUtility::AddHexMapComponentCell(hexMapComponent, action.target, CellState::FRIEND);
         }
-        else if (cellType == CellState::ENEMY)
+        else if (CELL_CONTAINS(cellType, CellState::ENEMY))
         {
             if (entity->GetComponent<SpawnPositionComponent>()->GetSpawnPosition() == transformComponent->GetPosition())
             {
-                GameplaySystem::SetHexMapComponentCell(
+                MapUtility::AddHexMapComponentCell(
                     hexMapComponent, transformComponent->GetPosition(), CellState::ENEMY_SPAWN);
             }
-            else
-            {
-                GameplaySystem::SetHexMapComponentCell(
-                    hexMapComponent, transformComponent->GetPosition(), CellState::EMPTY);
-            }
-            GameplaySystem::SetHexMapComponentCell(hexMapComponent, action.target, CellState::ENEMY);
+            MapUtility::RemoveHexMapComponentCell(hexMapComponent, transformComponent->GetPosition(), CellState::ENEMY);
+            MapUtility::AddHexMapComponentCell(hexMapComponent, action.target, CellState::ENEMY);
         }
         transformComponent->SetPosition(action.target);
     }
