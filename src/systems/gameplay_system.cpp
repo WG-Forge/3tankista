@@ -12,9 +12,6 @@
 #include "win_system.h"
 #include <queue>
 
-const std::vector<Vector2i> GameplaySystem::PathFinder::HEX_DIRECTIONS = { { 1, 0 },  { 1, -1 }, { 0, -1 },
-                                                                           { -1, 0 }, { -1, 1 }, { 0, 1 } };
-
 GameplaySystem::GameplaySystem()
 {
     RegisterEventCallbacks();

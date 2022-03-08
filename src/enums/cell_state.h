@@ -1,6 +1,6 @@
 #pragma once
 
-#define IS_REACHABLE(cell) (!((cell) & 0xf))
+#define IS_REACHABLE(cell) (!((cell)&0xf))
 #define CELL_CONTAINS(a, b) (!!((int32_t)(a) & (int32_t)(b)))
 
 enum class CellState

@@ -30,6 +30,6 @@ protected:
     const auto& GetMap() const { return this->map; }
 
 private:
-    int                                size;
-    std::vector<std::vector<int32_t>>  map;
+    int                               size;
+    std::vector<std::vector<int32_t>> map;
 };

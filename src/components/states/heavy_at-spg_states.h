@@ -1,7 +1,6 @@
 #pragma once
 
 #include "abstract_state.h"
-#include "components/base_id_component.h"
 #include "systems/gameplay_system.h"
 #include "utility/path_finder.h"
 

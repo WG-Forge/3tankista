@@ -1,4 +1,8 @@
 #include "map_system.h"
+#include "entities/map/hard_repair.h"
+#include "entities/map/light_repair.h"
+#include "utility/map_utility.h"
+#include "entities/map/catapult.h"
 
 MapSystem::MapSystem()
 {
@@ -20,8 +24,10 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(mapEntityId));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
 
-    auto world = entityManager->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
-    world->GetComponent<HexMapComponent>()->SetSize(map->GetComponent<SizeComponent>()->GetSize());
+    auto world           = entityManager->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
+    auto hexMapComponent = world->GetComponent<HexMapComponent>();
+
+    hexMapComponent->SetSize(map->GetComponent<SizeComponent>()->GetSize());
 
     // creating base entities
     auto                      baseVectorV3i = event->mapModel.base;
@@ -29,6 +35,7 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     for (auto& base : baseVectorV3i)
     {
         auto tempBaseId = entityManager->CreateEntity<Base>(base);
+        MapUtility::AddHexMapComponentCell(hexMapComponent, base, CellState::BASE);
         baseVectorId.emplace_back(tempBaseId);
     }
     content->SetBase(baseVectorId);
@@ -39,7 +46,7 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     for (auto& obstacle : obstacleVectorV3i)
     {
         auto tempObstacleId = entityManager->CreateEntity<Obstacle>(obstacle);
-        GameplaySystem::AddHexMapComponentCell(world->GetComponent<HexMapComponent>(), obstacle, CellState::OBSTACLE);
+        MapUtility::AddHexMapComponentCell(hexMapComponent, obstacle, CellState::OBSTACLE);
         obstacleVectorId.emplace_back(tempObstacleId);
     }
     content->SetObstacle(obstacleVectorId);
@@ -49,8 +56,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     std::vector<GameObjectId> lightRepairVectorId;
     for (auto& lightRepair : lightRepairVectorV3i)
     {
-        auto tempLightRepair =
-            entityManager->CreateEntity<LightRepair>(lightRepair);
+        auto tempLightRepair = entityManager->CreateEntity<LightRepair>(lightRepair);
+        MapUtility::AddHexMapComponentCell(hexMapComponent, lightRepair, CellState::LIGHT_REPAIR);
         lightRepairVectorId.emplace_back(tempLightRepair);
     }
     content->SetLightRepair(lightRepairVectorId);
@@ -60,8 +67,9 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     std::vector<GameObjectId> hardRepairVectorId;
     for (auto& hardRepair : hardRepairVectorV3i)
     {
-        //purple color
+        // purple color
         auto temphardRepair = entityManager->CreateEntity<HardRepair>(hardRepair);
+        MapUtility::AddHexMapComponentCell(hexMapComponent, hardRepair, CellState::HARD_REPAIR);
         hardRepairVectorId.emplace_back(temphardRepair);
     }
     content->SetHardRepair(hardRepairVectorId);
@@ -71,8 +79,9 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     std::vector<GameObjectId> catapultVectorId;
     for (auto& catapult : catapultVectorV3i)
     {
-        //orange color
+        // orange color
         auto tempcatapult = entityManager->CreateEntity<Catapult>(catapult);
+        MapUtility::AddHexMapComponentCell(hexMapComponent, catapult, CellState::CATAPULT);
         catapultVectorId.emplace_back(tempcatapult);
     }
     content->SetCatapult(catapultVectorId);
@@ -86,9 +95,7 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
         spawnEntity->SetModel(mapSpawnPoint);
         spawnPoints.emplace_back(spawnPointsId);
     }
-
     map->SetSpawnPoints(spawnPoints);
-    // TODO: Add hard and light repair
 }
 
 void MapSystem::RegisterEventCallbacks()

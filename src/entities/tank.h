@@ -4,7 +4,9 @@
 #include "components/health_component.h"
 #include "components/material_component.h"
 #include "components/player_id_component.h"
+#include "components/shoot_range_bonus.h"
 #include "components/spawn_position_component.h"
+#include "components/state_component.h"
 #include "components/tank_type_component.h"
 #include "components/texture_component.h"
 #include "components/transform_component.h"
@@ -24,18 +26,18 @@ public:
     ~Tank() override = default;
 
 private:
-    PlayerIdComponent*      playerIdComponent;
-    VehicleIdComponent*     vehicleIdComponent;
-    SpawnPositionComponent* spawnPositionComponent;
-    TransformComponent*     transformComponent;
-    TtcComponent*           ttcComponent;
-    CapturePointsComponent* capturePointsComponent;
-    TankTypeComponent*      tankTypeComponent;
-    HealthComponent*        healthComponent;
-    MaterialComponent*      materialComponent;
-    TextureComponent*       textureComponent;
+    PlayerIdComponent*        playerIdComponent;
+    VehicleIdComponent*       vehicleIdComponent;
+    SpawnPositionComponent*   spawnPositionComponent;
+    TransformComponent*       transformComponent;
+    TtcComponent*             ttcComponent;
+    CapturePointsComponent*   capturePointsComponent;
+    TankTypeComponent*        tankTypeComponent;
+    HealthComponent*          healthComponent;
+    MaterialComponent*        materialComponent;
+    TextureComponent*         textureComponent;
     ShootRangeBonusComponent* shootRangeBonus;
-    StateComponent*         stateComponent;
+    StateComponent*           stateComponent;
 
     // можно привязать к танку Spawn + HealthBar
     // танк будет сам рисовать Spawn, а так же текстуру танка и Spawn для HealthBar +

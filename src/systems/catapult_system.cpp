@@ -60,7 +60,7 @@ void CatapultSystem::OnShootResponse(const ShootResponseEvent* event)
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
     auto catapultVectorId = content->GetVectorCatapultId();
-    auto catapultVector3i=content->GetVectorV3i(catapultVectorId);
+    auto catapultVector3i = content->GetVectorV3i(catapultVectorId);
 
     for (auto& action : event->actions)
     {

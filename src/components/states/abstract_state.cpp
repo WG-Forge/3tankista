@@ -1,5 +1,5 @@
 #include "abstract_state.h"
-#include "components/base_id_component.h"
+#include "entities/map/map.h"
 #include "utility/map_utility.h"
 #include "utility/path_finder.h"
 
@@ -25,46 +25,51 @@ bool AbstractState::CheckNeutrality(AttackMatrixComponent* attackMatrixComponent
 
 bool AbstractState::CanShoot(Tank* playerTank, Tank* enemyTank)
 {
-    bool shoot    = false;
-    auto distance = MapUtility::GetDistance(playerTank->GetComponent<TransformComponent>()->GetPosition(),
+    bool shoot            = false;
+    auto distance         = MapUtility::GetDistance(playerTank->GetComponent<TransformComponent>()->GetPosition(),
                                             enemyTank->GetComponent<TransformComponent>()->GetPosition());
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto standartRange    = componentManager->GetComponent<TtcComponent>(playerTank->GetEntityID())->GetStandartRange();
+    auto shootRangeBonus =
+        componentManager->GetComponent<ShootRangeBonusComponent>(playerTank->GetEntityID())->GetShootRangeBonus();
+    std::cout << shootRangeBonus << " " << playerTank->GetComponent<VehicleIdComponent>()->GetVehicleId() << "\n";
     switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
     {
-
         case TankType::MEDIUM:
         {
-            shoot = distance == MEDIUM_TANK_DAMAGE_DISTANCE;
+            std::cout << distance << " " << standartRange << "\n";
+            shoot = standartRange <= distance && distance <= standartRange + shootRangeBonus;
+            std::cout << "medium " << shoot << "\n";
             break;
         }
         case TankType::AT_SPG:
         {
             auto tankPosition = playerTank->GetComponent<TransformComponent>()->GetPosition();
             auto point        = enemyTank->GetComponent<TransformComponent>()->GetPosition();
-            shoot             = distance <= AT_SPG_TANK_DAMAGE_DISTANCE &&
+            shoot             = distance <= standartRange + shootRangeBonus &&
                     (point.x() == tankPosition.x() || point.y() == tankPosition.y() || point.z() == tankPosition.z());
-
             break;
         }
         case TankType::HEAVY:
         {
-            shoot = distance <= HEAVY_TANK_DAMAGE_DISTANCE && distance > 0;
+            shoot = distance <= standartRange + shootRangeBonus && distance > 0;
             break;
         }
         case TankType::LIGHT:
         {
-            shoot = distance == LIGHT_TANK_DAMAGE_DISTANCE;
+            shoot = standartRange <= distance && distance <= standartRange + shootRangeBonus;
             break;
         }
         case TankType::SPG:
         {
-            shoot = MapUtility::GetDistance(enemyTank->GetComponent<TransformComponent>()->GetPosition(),
-                                            playerTank->GetComponent<TransformComponent>()->GetPosition()) ==
-                    MEDIUM_TANK_DAMAGE_DISTANCE;
+            shoot = standartRange <= distance && distance <= standartRange + shootRangeBonus;
             break;
         }
         default:
             break;
     }
+    std::cout << shoot << "\n";
     return shoot;
 }
 
@@ -152,17 +157,19 @@ std::vector<Vector3i> AbstractState::GetPathToBase(GameplaySystem::Context& cont
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
 
+    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
+    auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
+
     PathFinder pathFinder;
     pathFinder.SetHexMapComponent(context.hexMap);
     pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
-
-    auto     it = componentManager->begin<BaseIdComponent>();
+    auto     baseVectorId = content->GetVectorBaseId();
     Vector3i nearestBasePos =
-        entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
-    ++it;
-    for (; componentManager->end<BaseIdComponent>() != it; ++it)
+        entityManager->GetEntity(baseVectorId[0])->GetComponent<TransformComponent>()->GetPosition();
+    for (int i = 1; i < baseVectorId.size(); i++)
     {
-        auto basePosition = entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
+        auto basePosition =
+            entityManager->GetEntity(baseVectorId[i])->GetComponent<TransformComponent>()->GetPosition();
         if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
             (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
              pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
@@ -181,13 +188,17 @@ bool AbstractState::IsPathToBaseExists(GameplaySystem::Context& context, Tank* t
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
 
+    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
+    auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
+
     PathFinder pathFinder;
     pathFinder.SetHexMapComponent(context.hexMap);
     pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
 
-    for (auto it = componentManager->begin<BaseIdComponent>(); componentManager->end<BaseIdComponent>() != it; ++it)
+    auto baseVectorId = content->GetVectorBaseId();
+    for (auto& baseId : baseVectorId)
     {
-        auto basePosition = entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
+        auto basePosition = entityManager->GetEntity(baseId)->GetComponent<TransformComponent>()->GetPosition();
         if (pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH)
             return true;
     }

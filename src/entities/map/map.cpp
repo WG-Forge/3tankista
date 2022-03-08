@@ -6,7 +6,7 @@
 #include "render/shapes/shape.h"
 #include "render/shapes/shape_generator.h"
 
-Map::Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int size,std::string name)
+Map::Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int size, std::string name)
     : GameObject<Map>(entityId, componentManager)
 {
     this->content = ecs::ecsEngine->GetEntityManager()->CreateEntity<Content>();

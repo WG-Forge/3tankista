@@ -13,6 +13,6 @@ public:
     ~Obstacle() override = default;
 
 private:
-    TransformComponent*  transform;
-    MaterialComponent*   material;
+    TransformComponent* transform;
+    MaterialComponent*  material;
 };
