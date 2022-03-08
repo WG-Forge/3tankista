@@ -84,10 +84,10 @@ git submodule update --remote --checkout --recursive
 ### For linux users
 
 Before build, you should install following packages:
--```libxrandr-dev```
--```libxinerama-dev``` 
--```libxcursor-dev``` 
--```libxi-dev```
+- ```libxrandr-dev```
+- ```libxinerama-dev``` 
+- ```libxcursor-dev``` 
+- ```libxi-dev```
 
 You can do this by running the following commands: 
 ```shell
