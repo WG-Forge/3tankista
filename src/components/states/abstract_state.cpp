@@ -78,6 +78,7 @@ bool AbstractState::IsCorrectShootPosition(HexMapComponent* map, Tank* tank, Tan
     PathFinder pathFinder;
     pathFinder.SetHexMapComponent(map);
     pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
+
     bool result   = false;
     auto position = enemy->GetComponent<TransformComponent>()->GetPosition();
     if (tank->GetComponent<TankTypeComponent>()->GetTankType() == TankType::AT_SPG)
@@ -92,9 +93,9 @@ bool AbstractState::IsCorrectShootPosition(HexMapComponent* map, Tank* tank, Tan
     else
     {
         result =
-            CELL_CONTAINS(MapUtility::GetHexMapComponentCell(
-                              ecs::ecsEngine->GetComponentManager()->begin<HexMapComponent>().operator->(), position),
-                          CellState::OBSTACLE);
+            !CELL_CONTAINS(MapUtility::GetHexMapComponentCell(
+                               ecs::ecsEngine->GetComponentManager()->begin<HexMapComponent>().operator->(), position),
+                           CellState::OBSTACLE);
     }
     return result;
 }
@@ -130,6 +131,8 @@ Tank* AbstractState::GetEnemyInShootArea(GameplaySystem::Context& context, Tank*
     {
         if (CanShoot(tank, enemy))
         {
+            std::cerr << "THERE IS AN ENEMY! " << IsCorrectShootPosition(context.hexMap, tank, enemy) << " "
+                      << CheckNeutrality(context.attackMatrix, tank, enemy);
             if (IsCorrectShootPosition(context.hexMap, tank, enemy) &&
                 CheckNeutrality(context.attackMatrix, tank, enemy))
             {
@@ -140,6 +143,9 @@ Tank* AbstractState::GetEnemyInShootArea(GameplaySystem::Context& context, Tank*
                 }
             }
         }
+    }
+    if (target != nullptr)
+    {
     }
     return target;
 }

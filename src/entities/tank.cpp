@@ -1,13 +1,13 @@
 #include "tank.h"
 #include "components/shape_component.h"
+#include "components/states/heavy_at-spg_states.h"
+#include "components/states/light_spg_states.h"
+#include "components/states/medium_tank_states.h"
 #include "render/materials/default_material.h"
 #include "render/materials/material_generator.h"
 #include "render/shapes/quad_shape.h"
 #include "render/shapes/shape.h"
 #include "render/shapes/shape_generator.h"
-#include "components/states/medium_tank_states.h"
-#include "components/states/heavy_at-spg_states.h"
-#include "components/states/light_spg_states.h"
 
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,

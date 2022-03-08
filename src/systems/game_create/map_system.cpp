@@ -1,8 +1,8 @@
 #include "map_system.h"
+#include "entities/map/catapult.h"
 #include "entities/map/hard_repair.h"
 #include "entities/map/light_repair.h"
 #include "utility/map_utility.h"
-#include "entities/map/catapult.h"
 
 MapSystem::MapSystem()
 {

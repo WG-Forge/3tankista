@@ -52,14 +52,14 @@ public:
         bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                          tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
         Vector3i position{};
-        if (needHeal && HardRepairInMoveArea(context, tank, position))
-        {
-            ChangeState<HeavyAtSpgTankHealState>();
-            return;
-        }
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
             ChangeState<HeavyAtSpgTankShootState>();
+            return;
+        }
+        if (needHeal && HardRepairInMoveArea(context, tank, position))
+        {
+            ChangeState<HeavyAtSpgTankHealState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
