@@ -9,11 +9,6 @@ class LightSpgTankStayState;
 class LightSpgTankMoveState;
 class LightSpgTankShootState;
 
-/**
- * Initial state. Should be assigned when tank destroyed or spawned.
- * Transitions:
- *      Move => anyway we should go to the base
- */
 class LightSpgTankInitState : public AbstractState
 {
 public:
@@ -27,21 +22,22 @@ public:
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
             ChangeState<LightSpgTankShootState>();
+            return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
+        {
             ChangeState<LightSpgTankMoveState>();
+            return;
+        }
         else
+        {
             ChangeState<LightSpgTankStayState>();
+            return;
+        }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-/**
- * Tank is on the base and earn capturePoints
- * Transitions:
- *      Shoot => if there is an enemy
- *      Move => if we are not on the base
- */
 class LightSpgTankStayState : public AbstractState
 {
 public:
@@ -55,19 +51,17 @@ public:
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
             ChangeState<LightSpgTankShootState>();
+            return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
+        {
             ChangeState<LightSpgTankMoveState>();
+            return;
+        }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-/**
- * Tank is not on the base and there is no enemy
- * Transitions:
- *      Shoot => if there is an enemy
- *      Stay => if tank is on the base or there is no path
- */
 class LightSpgTankMoveState : public AbstractState
 {
 public:
@@ -81,9 +75,13 @@ public:
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
             ChangeState<LightSpgTankShootState>();
+            return;
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
+        {
             ChangeState<LightSpgTankStayState>();
+            return;
+        }
     }
 
     void Play(GameplaySystem::Context& context) override
@@ -102,12 +100,6 @@ public:
     }
 };
 
-/**
- * There is an enemy in Area(attack)
- * Transitions:
- *      Move -> no enemy
- *      Stay -> is on the base
- */
 class LightSpgTankShootState : public AbstractState
 {
 public:
@@ -122,9 +114,15 @@ public:
         if (GetEnemyInShootArea(context, tank) == nullptr)
         {
             if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
+            {
                 ChangeState<LightSpgTankMoveState>();
+                return;
+            }
             else
+            {
                 ChangeState<LightSpgTankStayState>();
+                return;
+            }
         }
     }
 
