@@ -30,6 +30,8 @@ protected:
     static bool     IsOnTheBase(GameplaySystem::Context& context, Tank* tank);
     static bool     IsPathToBaseExists(GameplaySystem::Context& context, Tank* tank);
     static std::vector<Vector3i> GetPathToBase(GameplaySystem::Context& context, Tank* tank);
+    static bool LightRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position);
+    static bool HardRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position);
 
 private:
     StateComponent* stateComponent;

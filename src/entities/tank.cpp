@@ -1,11 +1,13 @@
 #include "tank.h"
 #include "components/shape_component.h"
+#include "components/states/heavy_at-spg_states.h"
+#include "components/states/light_spg_states.h"
+#include "components/states/medium_tank_states.h"
 #include "render/materials/default_material.h"
 #include "render/materials/material_generator.h"
 #include "render/shapes/quad_shape.h"
 #include "render/shapes/shape.h"
 #include "render/shapes/shape_generator.h"
-#include "components/states/medium_tank_states.h"
 
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
@@ -23,7 +25,6 @@ Tank::Tank(const ecs::EntityId&   entityId,
     this->vehicleIdComponent     = AddComponent<VehicleIdComponent>(0);
     this->tankTypeComponent      = AddComponent<TankTypeComponent>(type);
     this->stateComponent         = AddComponent<StateComponent>();
-    // TODO: Change tank states
     switch (type)
     {
         case TankType::MEDIUM:
@@ -37,28 +38,28 @@ Tank::Tank(const ecs::EntityId&   entityId,
         {
             this->ttcComponent     = factory.CreateHeavyTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/heavy.png");
-            this->stateComponent->ChangeState<MediumTankInitState>();
+            this->stateComponent->ChangeState<HeavyAtSpgTankInitState>();
             break;
         }
         case TankType::LIGHT:
         {
             this->ttcComponent     = factory.CreateLightTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/light.png");
-            this->stateComponent->ChangeState<MediumTankInitState>();
+            this->stateComponent->ChangeState<LightSpgTankInitState>();
             break;
         }
         case TankType::SPG:
         {
             this->ttcComponent     = factory.CreateSpgTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/spg.png");
-            this->stateComponent->ChangeState<MediumTankInitState>();
+            this->stateComponent->ChangeState<LightSpgTankInitState>();
             break;
         }
         case TankType::AT_SPG:
         {
             this->ttcComponent     = factory.CreateAtSpgTankTtc(this->entityId);
             this->textureComponent = this->AddComponent<TextureComponent>("textures/at_spg.png");
-            this->stateComponent->ChangeState<MediumTankInitState>();
+            this->stateComponent->ChangeState<HeavyAtSpgTankInitState>();
             break;
         }
     }

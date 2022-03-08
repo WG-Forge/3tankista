@@ -148,6 +148,7 @@ bool AbstractState::IsOnTheBase(GameplaySystem::Context& context, Tank* tank)
 
 std::vector<Vector3i> AbstractState::GetPathToBase(GameplaySystem::Context& context, Tank* tank)
 {
+    // TODO: add check if exists path through the catapult
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
 
@@ -190,5 +191,16 @@ bool AbstractState::IsPathToBaseExists(GameplaySystem::Context& context, Tank* t
         if (pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH)
             return true;
     }
+    return false;
+}
+
+bool AbstractState::LightRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position)
+{
+    // if MapUtility::Getdistance < tank speed
+    return false;
+}
+bool AbstractState::HardRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position)
+{
+    // if MapUtility::GetDistance < tank speed
     return false;
 }

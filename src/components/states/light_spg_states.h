@@ -5,20 +5,20 @@
 #include "systems/gameplay_system.h"
 #include "utility/path_finder.h"
 
-class MediumTankInitState;
-class MediumTankStayState;
-class MediumTankMoveState;
-class MediumTankShootState;
+class LightSpgTankInitState;
+class LightSpgTankStayState;
+class LightSpgTankMoveState;
+class LightSpgTankShootState;
 
 /**
  * Initial state. Should be assigned when tank destroyed or spawned.
  * Transitions:
  *      Move => anyway we should go to the base
  */
-class MediumTankInitState : public AbstractState
+class LightSpgTankInitState : public AbstractState
 {
 public:
-    explicit MediumTankInitState(StateComponent* component)
+    explicit LightSpgTankInitState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -27,12 +27,12 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<MediumTankShootState>();
+            ChangeState<LightSpgTankShootState>();
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
-            ChangeState<MediumTankMoveState>();
+            ChangeState<LightSpgTankMoveState>();
         else
-            ChangeState<MediumTankStayState>();
+            ChangeState<LightSpgTankStayState>();
     }
     void Play(GameplaySystem::Context& context) override {}
 };
@@ -43,10 +43,10 @@ public:
  *      Shoot => if there is an enemy
  *      Move => if we are not on the base
  */
-class MediumTankStayState : public AbstractState
+class LightSpgTankStayState : public AbstractState
 {
 public:
-    explicit MediumTankStayState(StateComponent* component)
+    explicit LightSpgTankStayState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -55,10 +55,10 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<MediumTankShootState>();
+            ChangeState<LightSpgTankShootState>();
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
-            ChangeState<MediumTankMoveState>();
+            ChangeState<LightSpgTankMoveState>();
     }
     void Play(GameplaySystem::Context& context) override {}
 };
@@ -69,10 +69,10 @@ public:
  *      Shoot => if there is an enemy
  *      Stay => if tank is on the base or there is no path
  */
-class MediumTankMoveState : public AbstractState
+class LightSpgTankMoveState : public AbstractState
 {
 public:
-    explicit MediumTankMoveState(StateComponent* component)
+    explicit LightSpgTankMoveState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -81,10 +81,10 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<MediumTankShootState>();
+            ChangeState<LightSpgTankShootState>();
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
-            ChangeState<MediumTankStayState>();
+            ChangeState<LightSpgTankStayState>();
     }
 
     void Play(GameplaySystem::Context& context) override
@@ -109,10 +109,10 @@ public:
  *      Move -> no enemy
  *      Stay -> is on the base
  */
-class MediumTankShootState : public AbstractState
+class LightSpgTankShootState : public AbstractState
 {
 public:
-    explicit MediumTankShootState(StateComponent* component)
+    explicit LightSpgTankShootState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -123,9 +123,9 @@ public:
         if (GetEnemyInShootArea(context, tank) == nullptr)
         {
             if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
-                ChangeState<MediumTankMoveState>();
+                ChangeState<LightSpgTankMoveState>();
             else
-                ChangeState<MediumTankStayState>();
+                ChangeState<LightSpgTankStayState>();
         }
     }
 
@@ -135,18 +135,5 @@ public:
         auto target = GetEnemyInShootArea(context, tank);
         ecs::ecsEngine->SendEvent<ShootRequestEvent>(
             ShootModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
-    }
-};
-
-class MediumTankHealState : public AbstractState
-{
-public:
-    explicit MediumTankHealState(StateComponent* component)
-        : AbstractState(component)
-    {
-    }
-    void UpdateState(GameplaySystem::Context& context) override {}
-    void Play(GameplaySystem::Context& context) override {
-
     }
 };
