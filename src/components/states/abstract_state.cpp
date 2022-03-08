@@ -174,3 +174,21 @@ std::vector<Vector3i> AbstractState::GetPathToBase(GameplaySystem::Context& cont
     auto path = pathFinder.GetShortestPath(nearestBasePos);
     return path;
 }
+
+bool AbstractState::IsPathToBaseExists(GameplaySystem::Context& context, Tank* tank)
+{
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+
+    PathFinder pathFinder;
+    pathFinder.SetHexMapComponent(context.hexMap);
+    pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
+
+    for (auto it = componentManager->begin<BaseIdComponent>(); componentManager->end<BaseIdComponent>() != it; ++it)
+    {
+        auto basePosition = entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
+        if (pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH)
+            return true;
+    }
+    return false;
+}

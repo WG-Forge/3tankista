@@ -29,15 +29,12 @@ public:
         {
             ChangeState<MediumTankShootState>();
         }
-        if (!IsOnTheBase(context, tank) && !GetPathToBase(context, tank).empty())
+        if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
             ChangeState<MediumTankMoveState>();
         else
             ChangeState<MediumTankStayState>();
     }
-    void Play(GameplaySystem::Context& context) override
-    {
-        std::cerr << "INIT: " << GetCurrentTank()->GetEntityID() << "\n";
-    }
+    void Play(GameplaySystem::Context& context) override {}
 };
 
 /**
@@ -60,13 +57,10 @@ public:
         {
             ChangeState<MediumTankShootState>();
         }
-        if (!IsOnTheBase(context, tank) && !GetPathToBase(context, tank).empty())
+        if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
             ChangeState<MediumTankMoveState>();
     }
-    void Play(GameplaySystem::Context& context) override
-    {
-        std::cerr << "STAY: " << GetCurrentTank()->GetEntityID() << "\n";
-    }
+    void Play(GameplaySystem::Context& context) override {}
 };
 
 /**
@@ -89,13 +83,12 @@ public:
         {
             ChangeState<MediumTankShootState>();
         }
-        if (IsOnTheBase(context, tank) || GetPathToBase(context, tank).empty())
+        if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
             ChangeState<MediumTankStayState>();
     }
 
     void Play(GameplaySystem::Context& context) override
     {
-        std::cerr << "MOVE: " << GetCurrentTank()->GetEntityID() << "\n";
         auto tank = GetCurrentTank();
         auto path = GetPathToBase(context, tank);
         MapUtility::RemoveHexMapComponentCell(
@@ -129,7 +122,7 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) == nullptr)
         {
-            if (!IsOnTheBase(context, tank) && !GetPathToBase(context, tank).empty())
+            if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
                 ChangeState<MediumTankMoveState>();
             else
                 ChangeState<MediumTankStayState>();
@@ -138,7 +131,6 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
-        std::cerr << "SHOOT: " << GetCurrentTank()->GetEntityID() << "\n";
         auto tank   = GetCurrentTank();
         auto target = GetEnemyInShootArea(context, tank);
         ecs::ecsEngine->SendEvent<ShootRequestEvent>(

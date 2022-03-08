@@ -63,6 +63,14 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
             entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition(),
             CellState::OBSTACLE);
     }
+    for (auto it = componentManager->begin<BaseIdComponent>(); componentManager->end<BaseIdComponent>() != it; ++it)
+    {
+        MapUtility::AddHexMapComponentCell(
+            world->GetComponent<HexMapComponent>(),
+            entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition(),
+            CellState::BASE);
+    }
+    // TODO: Add hard and light repair
 }
 
 void MapSystem::RegisterEventCallbacks()
