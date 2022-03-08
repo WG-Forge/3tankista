@@ -5,7 +5,6 @@
 #include "components/material_component.h"
 #include "components/player_id_component.h"
 #include "components/spawn_position_component.h"
-#include "components/state_component.h"
 #include "components/tank_type_component.h"
 #include "components/texture_component.h"
 #include "components/transform_component.h"
@@ -35,6 +34,7 @@ private:
     HealthComponent*        healthComponent;
     MaterialComponent*      materialComponent;
     TextureComponent*       textureComponent;
+    ShootRangeBonusComponent* shootRangeBonus;
     StateComponent*         stateComponent;
 
     // можно привязать к танку Spawn + HealthBar

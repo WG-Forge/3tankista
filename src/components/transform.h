@@ -36,6 +36,13 @@ public:
                                     { 1.0f, 1.0f, 1.0f, 1.0f } };
     }
 
+    void SetScale(const Vector3f& scale)
+    {
+        this->transform(0, 0) = scale.x();
+        this->transform(1, 1) = scale.y();
+        this->transform(2, 2) = scale.z();
+    }
+
     void SetPosition(const Vector3f& position);
     void SetPosition(const Vector3i& position);
 

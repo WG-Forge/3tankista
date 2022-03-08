@@ -1,8 +1,5 @@
 #include "tank.h"
 #include "components/shape_component.h"
-#include "components/states/heavy_at-spg_states.h"
-#include "components/states/light_spg_states.h"
-#include "components/states/medium_tank_states.h"
 #include "render/materials/default_material.h"
 #include "render/materials/material_generator.h"
 #include "render/shapes/quad_shape.h"
@@ -24,6 +21,7 @@ Tank::Tank(const ecs::EntityId&   entityId,
     this->playerIdComponent      = AddComponent<PlayerIdComponent>(0);
     this->vehicleIdComponent     = AddComponent<VehicleIdComponent>(0);
     this->tankTypeComponent      = AddComponent<TankTypeComponent>(type);
+    this->shootRangeBonus        = AddComponent<ShootRangeBonusComponent>(0);
     this->stateComponent         = AddComponent<StateComponent>();
     switch (type)
     {
@@ -61,6 +59,13 @@ Tank::Tank(const ecs::EntityId&   entityId,
             this->textureComponent = this->AddComponent<TextureComponent>("textures/at_spg.png");
             this->stateComponent->ChangeState<HeavyAtSpgTankInitState>();
             break;
+        }
+        case TankType::NO_TYPE:
+        {
+            break;
+        }
+        default:
+        {
         }
     }
     this->healthComponent   = AddComponent<HealthComponent>(this->ttcComponent->GetMaxHealth());

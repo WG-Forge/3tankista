@@ -5,17 +5,13 @@
 #include "render/shapes/hex_shape.h"
 #include "render/shapes/shape_generator.h"
 
-Base::Base(const ecs::EntityId&   entityId,
-           ecs::ComponentManager* componentManager,
-           const std::size_t      size,
-           const Vector3i&        position,
-           const Color&           color)
+Base::Base(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const Vector3i& position)
     : GameObject<Base>(entityId, componentManager)
 {
-    Shape shape = ShapeGenerator::CreateShape<HexShape>(size);
+    Shape shape = ShapeGenerator::CreateShape<HexShape>(1);
 
-    this->baseId = AddComponent<BaseIdComponent>();
     this->AddComponent<ShapeComponent>(shape);
     this->transform = this->AddComponent<TransformComponent>(position);
-    this->material = this->AddComponent<MaterialComponent>(MaterialGenerator::CreateMaterial<DefaultMaterial>(), color);
+    this->material  = this->AddComponent<MaterialComponent>(MaterialGenerator::CreateMaterial<DefaultMaterial>(),
+                                                           Color(0.55f, 0.84f, 0.56f, 1.0f));
 }

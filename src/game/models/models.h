@@ -9,9 +9,6 @@
 #include "nlohmann/json.hpp"
 #include "utility/matrix.hpp"
 
-using GameObjectId     = ecs::EntityId;
-using GameObjectTypeId = ecs::EntityTypeId;
-
 struct LoginRequestModel
 {
     std::string name;
@@ -56,6 +53,7 @@ struct TankModel
     Vector3i spawnPosition;
     Vector3i position;
     int      capturePoints;
+    int      shootRangeBonus;
 };
 
 void to_json(nlohmann::json& json, const TankModel& tankModel);
@@ -85,6 +83,7 @@ struct GameStateModel
     std::unordered_map<int, std::vector<int>> attackMatrix;
     int                                       winner;
     std::unordered_map<int, WinPointsModel>   winPoints;
+    std::vector<Vector3i>                     catapultUsage;
 };
 
 void to_json(nlohmann::json& json, const GameStateModel& gameStateModel);
@@ -154,6 +153,9 @@ struct MapModel
     std::vector<SpawnPointsModel> mapSpawnPoints;
     std::vector<Vector3i>         obstacle;
     std::vector<Vector3i>         base;
+    std::vector<Vector3i>         catapult;
+    std::vector<Vector3i>         lightRepair;
+    std::vector<Vector3i>         hardRepair;
     int                           size;
     std::string                   name;
 };

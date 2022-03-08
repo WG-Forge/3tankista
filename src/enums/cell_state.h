@@ -12,5 +12,6 @@ enum class CellState
     OBSTACLE     = 8,
     BASE         = 16,
     HARD_REPAIR  = 32,
-    LIGHT_REPAIR = 64
+    LIGHT_REPAIR = 64,
+    CATAPULT     = 128
 };

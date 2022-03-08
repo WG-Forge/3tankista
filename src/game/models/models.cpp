@@ -54,11 +54,13 @@ void from_json(const nlohmann::json& json, PlayerModel& playerModel)
 void to_json(nlohmann::json& json, const TankModel& tankModel)
 {
     EnumParser<TankType> enumParser;
-    json = nlohmann::json{
-        { "player_id", tankModel.playerId }, { "vehicle_type", enumParser.Enum2String(tankModel.vehicleType) },
-        { "health", tankModel.health },      { "spawn_position", tankModel.spawnPosition },
-        { "position", tankModel.position },  { "capture_points", tankModel.capturePoints }
-    };
+    json = nlohmann::json{ { "player_id", tankModel.playerId },
+                           { "vehicle_type", enumParser.Enum2String(tankModel.vehicleType) },
+                           { "health", tankModel.health },
+                           { "spawn_position", tankModel.spawnPosition },
+                           { "position", tankModel.position },
+                           { "capture_points", tankModel.capturePoints },
+                           { "shoot_range_bonus", tankModel.shootRangeBonus } };
 }
 
 void from_json(const nlohmann::json& json, TankModel& tankModel)
@@ -70,6 +72,7 @@ void from_json(const nlohmann::json& json, TankModel& tankModel)
     json.at("spawn_position").get_to(tankModel.spawnPosition);
     json.at("position").get_to(tankModel.position);
     json.at("capture_points").get_to(tankModel.capturePoints);
+    json.at("shoot_range_bonus").get_to(tankModel.shootRangeBonus);
 }
 
 void to_json(nlohmann::json& json, const WinPointsModel& winPointsModel)
@@ -103,6 +106,7 @@ void from_json(const nlohmann::json& json, GameStateModel& gameStateModel)
     json.at("players").get_to(gameStateModel.players);
     json.at("observers").get_to(gameStateModel.observers);
     json.at("finished").get_to(gameStateModel.finished);
+    json.at("catapult_usage").get_to(gameStateModel.catapultUsage);
     std::vector<std::pair<int, TankModel>> vehicles;
     for (const auto& [key, value] : json["vehicles"].items())
     {
@@ -272,6 +276,9 @@ void from_json(const nlohmann::json& json, MapModel& mapModel)
         nlohmann::json jsonContent = json.at("content");
         jsonContent.at("base").get_to<std::vector<Vector3i>>(mapModel.base);
         jsonContent.at("obstacle").get_to<std::vector<Vector3i>>(mapModel.obstacle);
+        jsonContent.at("light_repair").get_to<std::vector<Vector3i>>(mapModel.lightRepair);
+        jsonContent.at("hard_repair").get_to<std::vector<Vector3i>>(mapModel.hardRepair);
+        jsonContent.at("catapult").get_to<std::vector<Vector3i>>(mapModel.catapult);
         json.at("spawn_points").get_to<std::vector<SpawnPointsModel>>(mapModel.mapSpawnPoints);
     }
     catch (nlohmann::json::type_error& exception)

@@ -4,7 +4,10 @@
 #include "components/player_id_component.h"
 #include "components/transform_component.h"
 #include "components/ttc_component.h"
+#include "components/turn_component.h"
 #include "components/vehicle_id_component.h"
+#include "entities/map/content.h"
+#include "entities/map/map.h"
 
 HealthSystem::HealthSystem()
 {
@@ -18,10 +21,8 @@ HealthSystem::~HealthSystem()
 
 void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
 {
-    auto               entityManager    = ecs::ecsEngine->GetEntityManager();
-    auto               componentManager = ecs::ecsEngine->GetComponentManager();
-    std::set<uint64_t> attackset{};
-    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
 
     for (auto& action : event->actions)
     {
@@ -47,6 +48,57 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
                         currentEntity->GetComponent<VehicleIdComponent>()->GetVehicleId(),
                         health->GetHealth(),
                         currentEntity->GetComponent<TtcComponent>()->GetMaxHealth());
+                }
+            }
+        }
+    }
+}
+
+void HealthSystem::HealTanks()
+{
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+
+    auto turnComponent = componentManager->begin<TurnComponent>().operator->();
+    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
+    auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
+
+    auto lightRepairVector         = content->GetVectorBaseId();
+    auto lightRepairPositionVector = content->GetVectorV3i(lightRepairVector);
+    auto hardRepairVector          = content->GetVectorBaseId();
+    auto hardRepairPositionVector  = content->GetVectorV3i(hardRepairVector);
+
+    std::set<uint64_t> players;
+
+    if ((turnComponent->GetCurrentTurn()) % turnComponent->GetPlayersNumber() == 0 ||
+        turnComponent->GetPlayersNumber() == 1)
+    {
+        std::cout<<"heal turn "<<turnComponent->GetCurrentTurn()<<"\n";
+        for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
+             ++it)
+        {
+            auto position = entityManager->GetEntity(it->GetOwner())->GetComponent<TransformComponent>()->GetPosition();
+            auto tankType = entityManager->GetEntity(it->GetOwner())->GetComponent<TankTypeComponent>()->GetTankType();
+            if (tankType == TankType::MEDIUM)
+            {
+                auto findIt = std::find(lightRepairPositionVector.begin(), lightRepairPositionVector.end(), position);
+                if (findIt != lightRepairPositionVector.end())
+                {
+                    entityManager->GetEntity(it->GetOwner())
+                        ->GetComponent<HealthComponent>()
+                        ->SetHealth(
+                            entityManager->GetEntity(it->GetOwner())->GetComponent<TtcComponent>()->GetMaxHealth());
+                }
+            }
+            else if (tankType == TankType::HEAVY || tankType == TankType::AT_SPG)
+            {
+                auto findIt = std::find(hardRepairPositionVector.begin(), hardRepairPositionVector.end(), position);
+                if (findIt != hardRepairPositionVector.end())
+                {
+                    entityManager->GetEntity(it->GetOwner())
+                        ->GetComponent<HealthComponent>()
+                        ->SetHealth(
+                            entityManager->GetEntity(it->GetOwner())->GetComponent<TtcComponent>()->GetMaxHealth());
                 }
             }
         }

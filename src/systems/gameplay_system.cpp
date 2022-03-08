@@ -1,16 +1,19 @@
 #include "gameplay_system.h"
 #include "components/attack_matrix_component.h"
-#include "components/base_id_component.h"
 #include "components/main_player_component.h"
 #include "components/observer_component.h"
-#include "components/obstacle_id_component.h"
 #include "components/order_component.h"
 #include "components/states/abstract_state.h"
 #include "components/turn_component.h"
+#include "entities/map/content.h"
+#include "entities/map/map.h"
 #include "entities/tank.h"
 #include "utility/map_utility.h"
 #include "win_system.h"
 #include <queue>
+
+const std::vector<Vector2i> GameplaySystem::PathFinder::HEX_DIRECTIONS = { { 1, 0 },  { 1, -1 }, { 0, -1 },
+                                                                           { -1, 0 }, { -1, 1 }, { 0, 1 } };
 
 GameplaySystem::GameplaySystem()
 {

@@ -11,6 +11,7 @@ public:
     ~HealthSystem() override;
 
     void OnShootResponse(const ShootResponseEvent* event);
+    static void HealTanks();
 
 private:
     void RegisterEventCallbacks();
