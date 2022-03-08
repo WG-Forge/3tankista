@@ -3,15 +3,16 @@
 #include "components/kill_points_component.h"
 #include "components/turn_component.h"
 #include "game.h"
+#include "systems/health_system.h"
 #include "systems/win_system.h"
 
 void Game::GS_RUNNING()
 {
 
     WinSystem::UpdateCapturePoints();
+    HealthSystem::HealTanks();
     auto                                                  players          = std::move(WinSystem::GetWinPoints());
     auto                                                  componentManager = ecs::ecsEngine->GetComponentManager();
-    auto                                                  entityManager    = ecs::ecsEngine->GetEntityManager();
     bool                                                  isFinished       = false;
     std::vector<std::pair<uint64_t, std::pair<int, int>>> winners;
     if (!componentManager->begin<TurnComponent>()->isFinished())

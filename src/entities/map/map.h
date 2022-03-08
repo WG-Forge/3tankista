@@ -11,7 +11,7 @@
 class Map : public GameObject<Map>
 {
 public:
-    Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int size);
+    Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int size, std::string name);
     ~Map() override = default;
 
     void        SetContent(const GameObjectId& content) { this->content = content; }

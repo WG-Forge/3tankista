@@ -67,7 +67,7 @@ void Game::InitializeGLFW()
     {
         const char* description;
         int         code = glfwGetError(&description);
-        LogFatal("Failed to initialize GLFW %s, %s", code, description);
+        LogFatal("Failed to initialize GLFW " + code + ", " + description);
         glfwTerminate();
         return;
     }

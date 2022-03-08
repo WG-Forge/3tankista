@@ -5,6 +5,7 @@
 #include "components/ttc_component.h"
 #include "components/turn_component.h"
 #include "gameplay_system.h"
+#include "utility/map_utility.h"
 
 RespawnSystem::RespawnSystem()
 {
@@ -22,17 +23,17 @@ void RespawnSystem::OnTankDestroyedEvent(const TankDestroyedEvent* event)
     auto world = ecs::ecsEngine->GetEntityManager()->GetEntity(componentManager->begin<TurnComponent>()->GetOwner());
     auto hexMapComponent = world->GetComponent<HexMapComponent>();
     auto position        = componentManager->GetComponent<TransformComponent>(event->entityId);
-    auto cellType        = GameplaySystem::GetHexMapComponentCell(hexMapComponent, position->GetPosition());
+    auto cellType        = MapUtility::GetHexMapComponentCell(hexMapComponent, position->GetPosition());
     auto spawnPosition   = componentManager->GetComponent<SpawnPositionComponent>(event->entityId);
-    if (cellType == CellState::FRIEND)
+    if (CELL_CONTAINS(cellType, CellState::FRIEND))
     {
-        GameplaySystem::SetHexMapComponentCell(hexMapComponent, position->GetPosition(), CellState::EMPTY);
-        GameplaySystem::SetHexMapComponentCell(hexMapComponent, spawnPosition->GetSpawnPosition(), CellState::FRIEND);
+        MapUtility::RemoveHexMapComponentCell(hexMapComponent, position->GetPosition(), CellState::FRIEND);
+        MapUtility::AddHexMapComponentCell(hexMapComponent, spawnPosition->GetSpawnPosition(), CellState::FRIEND);
     }
-    else if (cellType == CellState::ENEMY)
+    else if (CELL_CONTAINS(cellType, CellState::ENEMY))
     {
-        GameplaySystem::SetHexMapComponentCell(hexMapComponent, position->GetPosition(), CellState::EMPTY);
-        GameplaySystem::SetHexMapComponentCell(hexMapComponent, spawnPosition->GetSpawnPosition(), CellState::ENEMY);
+        MapUtility::RemoveHexMapComponentCell(hexMapComponent, position->GetPosition(), CellState::ENEMY);
+        MapUtility::AddHexMapComponentCell(hexMapComponent, spawnPosition->GetSpawnPosition(), CellState::ENEMY);
     }
     position->SetPosition(spawnPosition->GetSpawnPosition());
     auto healthComponent = componentManager->GetComponent<HealthComponent>(event->entityId);

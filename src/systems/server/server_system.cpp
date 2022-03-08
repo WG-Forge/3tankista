@@ -55,7 +55,6 @@ std::string ServerSystem::ReceiveResult(Result& result)
 
 void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
 {
-    // std::cout << "Request: " << static_cast<int>(event->action) << " " << event->data << '\n';
     LogInfo("Request to server: %d, %s", event->action, event->data.c_str());
     auto sent = SendAction(event->action, event->data);
     if (!sent)
@@ -65,7 +64,6 @@ void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
     }
     Result result   = Result::OKEY;
     auto   response = ReceiveResult(result);
-    // std::cout << "Response: " << static_cast<int>(result) << " " << response << "\n\n\n";
     LogInfo("Response from server: %d, %s", result, response.c_str());
     if (result != Result::OKEY)
     {
