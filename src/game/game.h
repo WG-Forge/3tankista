@@ -12,6 +12,7 @@
 class Game : public ecs::event::IEventListener, public SimpleFSM
 {
 public:
+    DECLARE_LOGGER
     explicit Game(std::string title = "Game Name");
     ~Game();
 
