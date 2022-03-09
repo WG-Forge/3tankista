@@ -78,6 +78,7 @@ Clone this repository and update submodules.
 git clone https://github.com/MedoviyKeksik/3tankista.git
 cd 3tankista
 git submodule update --init --recursive
+git submodule update --remote --checkout --recursive
 ```
 
 ### For linux users

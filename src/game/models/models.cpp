@@ -269,6 +269,8 @@ void to_json(nlohmann::json& json, const MapModel& mapModel)
 
 void from_json(const nlohmann::json& json, MapModel& mapModel)
 {
+    DECLARE_LOGGER
+    DEFINE_LOGGER("MapModel")
     try
     {
         mapModel.size = json.at("size");
@@ -283,14 +285,14 @@ void from_json(const nlohmann::json& json, MapModel& mapModel)
     }
     catch (nlohmann::json::type_error& exception)
     {
-        std::cout << exception.what() << std::endl << std::flush;
+        LogError("%s", exception.what())
     }
     catch (nlohmann::json::out_of_range& exception)
     {
-        std::cout << exception.what() << std::endl << std::flush;
+        LogError("%s", exception.what())
     }
     catch (nlohmann::json::parse_error& exception)
     {
-        std::cout << exception.what() << std::endl << std::flush;
+        LogError("%s", exception.what())
     }
 }

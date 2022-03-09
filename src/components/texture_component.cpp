@@ -10,6 +10,7 @@ TextureComponent::TextureComponent(const std::string& textureFileName)
     : textureFileName(textureFileName)
     , textureId(-1)
 {
+    DEFINE_LOGGER("TextureComponent")
     this->Initialize();
 }
 
@@ -50,7 +51,7 @@ void TextureComponent::Initialize()
     }
     else
     {
-        std::cout << "Failed to load texture" << std::endl;
+        LogError("Failed to load texture")
     }
     stbi_image_free(data);
 }

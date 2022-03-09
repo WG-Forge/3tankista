@@ -33,14 +33,11 @@ bool AbstractState::CanShoot(Tank* playerTank, Tank* enemyTank)
     auto standartRange    = componentManager->GetComponent<TtcComponent>(playerTank->GetEntityID())->GetStandartRange();
     auto shootRangeBonus =
         componentManager->GetComponent<ShootRangeBonusComponent>(playerTank->GetEntityID())->GetShootRangeBonus();
-    std::cout << shootRangeBonus << " " << playerTank->GetComponent<VehicleIdComponent>()->GetVehicleId() << "\n";
     switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
     {
         case TankType::MEDIUM:
         {
-            std::cout << distance << " " << standartRange << "\n";
             shoot = standartRange <= distance && distance <= standartRange + shootRangeBonus;
-            std::cout << "medium " << shoot << "\n";
             break;
         }
         case TankType::AT_SPG:
@@ -69,7 +66,6 @@ bool AbstractState::CanShoot(Tank* playerTank, Tank* enemyTank)
         default:
             break;
     }
-    std::cout << shoot << "\n";
     return shoot;
 }
 
@@ -131,8 +127,6 @@ Tank* AbstractState::GetEnemyInShootArea(GameplaySystem::Context& context, Tank*
     {
         if (CanShoot(tank, enemy))
         {
-            std::cerr << "THERE IS AN ENEMY! " << IsCorrectShootPosition(context.hexMap, tank, enemy) << " "
-                      << CheckNeutrality(context.attackMatrix, tank, enemy);
             if (IsCorrectShootPosition(context.hexMap, tank, enemy) &&
                 CheckNeutrality(context.attackMatrix, tank, enemy))
             {
@@ -159,7 +153,6 @@ bool AbstractState::IsOnTheBase(GameplaySystem::Context& context, Tank* tank)
 
 std::vector<Vector3i> AbstractState::GetPathToBase(GameplaySystem::Context& context, Tank* tank)
 {
-    // TODO: add check if exists path through the catapult
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
 

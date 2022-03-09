@@ -9,9 +9,11 @@
 
 #include "utility/matrix.hpp"
 
+#include "ecs.h"
+
 class Shader
 {
-
+    DECLARE_LOGGER
 public:
     void       SetID(const std::size_t id) { this->id = id; }
     auto       GetID() { return this->id; }
@@ -22,6 +24,7 @@ public:
     // ------------------------------------------------------------------------
     Shader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath = "")
     {
+        DEFINE_LOGGER("Shader")
         // 1. retrieve the vertex/fragment source code from filePath
         std::string   vertexCode;
         std::string   fragmentCode;
@@ -60,7 +63,7 @@ public:
         }
         catch (std::ifstream::failure& e)
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+            LogError("FILE_NOT_SUCCESSFULLY_READ")
         }
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
@@ -119,7 +122,7 @@ public:
         }
         catch (std::ifstream::failure& e)
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+            LogError("FILE_NOT_SUCCESSFULLY_READ")
         }
         std::size_t compute;
 
@@ -240,12 +243,7 @@ private:
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
-                          << infoLog
-                          << "\n -- "
-                             "---------------------------------------------------"
-                             " -- "
-                          << std::endl;
+                LogError("SHADER_COMPILATION_ERROR of type: %s %s", type.c_str(), infoLog)
             }
         }
         else
@@ -254,12 +252,7 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
-                          << infoLog
-                          << "\n -- "
-                             "---------------------------------------------------"
-                             " -- "
-                          << std::endl;
+                LogError("PROGRAM_LINKING_ERROR of type: %s %s", type.c_str(), infoLog)
             }
         }
     }

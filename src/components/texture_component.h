@@ -5,7 +5,7 @@
 class TextureComponent : public ecs::Component<TextureComponent>
 {
     using TextureID = unsigned int;
-
+    DECLARE_LOGGER
 public:
     TextureComponent() = default;
     TextureComponent(const std::string& textureFileName);

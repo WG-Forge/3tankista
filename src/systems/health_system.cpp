@@ -73,7 +73,6 @@ void HealthSystem::HealTanks()
     if ((turnComponent->GetCurrentTurn()) % turnComponent->GetPlayersNumber() == 0 ||
         turnComponent->GetPlayersNumber() == 1)
     {
-        std::cout << "heal turn " << turnComponent->GetCurrentTurn() << "\n";
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
              ++it)
         {

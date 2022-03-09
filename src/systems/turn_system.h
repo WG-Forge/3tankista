@@ -5,6 +5,7 @@
 
 class TurnSystem : public ecs::System<TurnSystem>, public ecs::event::IEventListener
 {
+    DECLARE_LOGGER
 public:
     TurnSystem();
     ~TurnSystem() override;
