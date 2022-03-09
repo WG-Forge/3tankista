@@ -1,6 +1,10 @@
 # 3tankista #
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/MedoviyKeksik/3tankista/test-clang-format?label=clang-format)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/MedoviyKeksik/3tankista/Clang%20format%20lint?label=clang-format)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/MedoviyKeksik/3tankista/Check%20build%20on%20Windows?label=Windows)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/MedoviyKeksik/3tankista/Check%20build%20on%20macos?label=macos)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/MedoviyKeksik/3tankista/Check%20build%20on%20linux?label=linux)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/MedoviyKeksik/3tankista)
 
 This project is a bot for turn-based strategy game based on World of Tanks.\
 Written specifically for the WG-Forge courses.
