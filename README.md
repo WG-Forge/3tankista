@@ -62,7 +62,12 @@ All sprites are rendered using the **RenderSystem**, and text is rendered using 
 
 ### AI algorithm 
 
-The algorithm of artificial intelligence at this stage of development is very simple. All tanks, regardless of their type, are going to capture the base. At the same time, if an enemy tank gets into their zone of destruction, then the movement stops and they will start shooting at the enemy.
+Artificial intelligence is a state machine for each type of tank. At this stage, the simplest states are implemented:
+- Init
+- Stay
+- Move
+- Shoot
+- Heal
 
 ## Install
 
@@ -75,8 +80,28 @@ cd 3tankista
 git submodule update --init --recursive
 ```
 
+### For linux users
+
+Before build, you should install following packages:
+-```libxrandr-dev```
+-```libxinerama-dev``` 
+-```libxcursor-dev``` 
+-```libxi-dev```
+
+You can do this by running the following commands: 
+```shell
+sudo apt-get update -y
+sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+```
+
 ### Build
 
+#### Supported compilers
+- [MinGW v9.0.0](https://www.mingw-w64.org/)
+- [Clang v13.0.0](https://clang.llvm.org/)
+- [GCC v11.2.0](https://gcc.gnu.org/)
+
+#### Cmake
 Run CMake configure:
 ```shell
 cmake -B build
