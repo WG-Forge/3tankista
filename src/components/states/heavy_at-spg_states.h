@@ -57,7 +57,7 @@ public:
             ChangeState<HeavyAtSpgTankShootState>();
             return;
         }
-        if (needHeal && HardRepairInMoveArea(context, tank, position))
+        if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
         {
             ChangeState<HeavyAtSpgTankHealState>();
             return;
@@ -84,7 +84,7 @@ public:
         bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                          tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
         Vector3i position{};
-        if (needHeal && HardRepairInMoveArea(context, tank, position))
+        if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
         {
             ChangeState<HeavyAtSpgTankHealState>();
             return;
@@ -133,7 +133,7 @@ public:
             bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                              tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
             Vector3i position{};
-            if (needHeal && HardRepairInMoveArea(context, tank, position))
+            if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
             {
                 ChangeState<HeavyAtSpgTankHealState>();
                 return;
@@ -191,7 +191,7 @@ public:
     {
         auto     tank = GetCurrentTank();
         Vector3i position{};
-        HardRepairInMoveArea(context, tank, position);
+        RepairInMoveArea(context, tank, position, Repair::HARD);
 
         MapUtility::RemoveHexMapComponentCell(
             context.hexMap, tank->GetComponent<TransformComponent>()->GetPosition(), CellState::FRIEND);

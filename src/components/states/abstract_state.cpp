@@ -204,7 +204,10 @@ bool AbstractState::IsPathToBaseExists(GameplaySystem::Context& context, Tank* t
     return false;
 }
 
-bool AbstractState::LightRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position)
+bool AbstractState::RepairInMoveArea(GameplaySystem::Context& context,
+                                     Tank*                    tank,
+                                     Vector3i&                position,
+                                     const Repair             type)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
@@ -216,44 +219,23 @@ bool AbstractState::LightRepairInMoveArea(GameplaySystem::Context& context, Tank
     pathFinder.SetHexMapComponent(context.hexMap);
     pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
 
-    auto tankSpeed = tank->GetComponent<TtcComponent>()->GetSpeed();
-
-    auto lightRepairVector = content->GetVectorLightRepairId();
-    for (auto& lightRepairId : lightRepairVector)
+    auto                  tankSpeed = tank->GetComponent<TtcComponent>()->GetSpeed();
+    std::vector<uint64_t> repairVector;
+    if (type == Repair::LIGHT)
     {
-        auto lightRepairPosition =
-            entityManager->GetEntity(lightRepairId)->GetComponent<TransformComponent>()->GetPosition();
-        if (pathFinder.GetDistance(lightRepairPosition) <= tankSpeed)
-        {
-            position = lightRepairPosition;
-            return true;
-        }
+        repairVector = content->GetVectorLightRepairId();
     }
-    return false;
-}
-
-bool AbstractState::HardRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position)
-{
-    auto entityManager    = ecs::ecsEngine->GetEntityManager();
-    auto componentManager = ecs::ecsEngine->GetComponentManager();
-
-    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
-    auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
-
-    PathFinder pathFinder;
-    pathFinder.SetHexMapComponent(context.hexMap);
-    pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
-
-    auto tankSpeed = tank->GetComponent<TtcComponent>()->GetSpeed();
-
-    auto hardRepairVector = content->GetVectorHardRepairId();
-    for (auto& lightRepairId : hardRepairVector)
+    else
     {
-        auto hardRepairPosition =
-            entityManager->GetEntity(lightRepairId)->GetComponent<TransformComponent>()->GetPosition();
-        if (pathFinder.GetDistance(hardRepairPosition) <= tankSpeed)
+        repairVector = content->GetVectorHardRepairId();
+    }
+    for (auto& repairId : repairVector)
+    {
+        auto repairPosition = entityManager->GetEntity(repairId)->GetComponent<TransformComponent>()->GetPosition();
+        if (pathFinder.GetDistance(repairPosition) <= tankSpeed &&
+            pathFinder.GetDistance(repairPosition) != PathFinder::NO_PATH)
         {
-            position = hardRepairPosition;
+            position = repairPosition;
             return true;
         }
     }

@@ -57,7 +57,7 @@ public:
             ChangeState<MediumTankShootState>();
             return;
         }
-        if (needHeal && LightRepairInMoveArea(context, tank, position))
+        if (needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
         {
             ChangeState<MediumTankHealState>();
             return;
@@ -84,7 +84,7 @@ public:
         bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                          tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
         Vector3i position{};
-        if (needHeal && LightRepairInMoveArea(context, tank, position))
+        if (needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
         {
             ChangeState<MediumTankHealState>();
             return;
@@ -133,7 +133,7 @@ public:
             bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                              tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
             Vector3i position{};
-            if (needHeal && LightRepairInMoveArea(context, tank, position))
+            if (needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
             {
                 ChangeState<MediumTankHealState>();
                 return;
@@ -191,8 +191,7 @@ public:
     {
         auto     tank = GetCurrentTank();
         Vector3i position{};
-        LightRepairInMoveArea(context, tank, position);
-
+        RepairInMoveArea(context, tank, position, Repair::LIGHT);
         MapUtility::RemoveHexMapComponentCell(
             context.hexMap, tank->GetComponent<TransformComponent>()->GetPosition(), CellState::FRIEND);
         MapUtility::AddHexMapComponentCell(context.hexMap, position, CellState::FRIEND);

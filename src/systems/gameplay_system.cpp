@@ -31,6 +31,9 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
     auto turnComponent    = componentManager->begin<TurnComponent>().operator->();
     auto attackMatrix     = componentManager->begin<AttackMatrixComponent>().operator->();
 
+    if(turnComponent->GetCurrentTurn()==9){
+        int a=5;
+    }
     uint64_t currentPlayerId;
     for (auto it = componentManager->begin<OrderComponent>(); componentManager->end<OrderComponent>() != it; ++it)
     {

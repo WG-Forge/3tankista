@@ -2,6 +2,7 @@
 
 #include "components/state_component.h"
 #include "ecs.h"
+#include "enums/repair.h"
 #include "game/models/models.h"
 #include "systems/gameplay_system.h"
 
@@ -30,8 +31,7 @@ protected:
     static bool     IsOnTheBase(GameplaySystem::Context& context, Tank* tank);
     static bool     IsPathToBaseExists(GameplaySystem::Context& context, Tank* tank);
     static std::vector<Vector3i> GetPathToBase(GameplaySystem::Context& context, Tank* tank);
-    static bool LightRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position);
-    static bool HardRepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position);
+    static bool RepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position, const Repair type);
 
 private:
     StateComponent* stateComponent;
