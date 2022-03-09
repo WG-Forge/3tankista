@@ -19,5 +19,7 @@ int main(int argc, char** argv)
 
     gameInstance->Run();
 
+    delete gameInstance;
+    
     return 0;
 }
