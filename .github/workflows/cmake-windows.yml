@@ -44,7 +44,9 @@ jobs:
         name: Checkout source code
 
       - name: download submodules
-        run: git submodule update --init --recursive
+        run: |
+          git submodule update --init --recursive
+          git submodule update --remote --checkout --recursive
 
       - name: CMake configure
         run: cmake -B build
