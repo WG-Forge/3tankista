@@ -8,10 +8,10 @@ void Game::GS_GAMEOVER()
 
 void Game::GS_GAMEOVER_ENTER()
 {
-    RegisterEventCallback(&Game::OnQuitGame);
+    //    RegisterEventCallback(&Game::OnQuitGame);
 }
 
 void Game::GS_RUNNING_LEAVE()
 {
-    UnregisterEventCallback(&Game::OnQuitGame);
+    //    UnregisterEventCallback(&Game::OnQuitGame);
 }

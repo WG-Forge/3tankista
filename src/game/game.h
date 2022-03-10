@@ -81,6 +81,13 @@ public:
     TRANSITION_ENTRY(
         Game::GS_RESTARTED, Game::GS_STARTED, Game::GS_STARTED_ENTER, Game::GS_RESTARTED_LEAVE, GameState::STARTED)
 
+    // Transition to 'TERMINATED'
+    TRANSITION_ENTRY(Game::GS_RESTARTED,
+                     Game::GS_TERMINATED,
+                     Game::GS_TERMINATED_ENTER,
+                     Game::GS_RESTARTED_LEAVE,
+                     GameState::TERMINATED)
+
     // Transition to 'RUNNING'
     TRANSITION_ENTRY(
         Game::GS_STARTED, Game::GS_RUNNING, Game::GS_RUNNING_ENTER, Game::GS_STARTED_LEAVE, GameState::RUNNING)
