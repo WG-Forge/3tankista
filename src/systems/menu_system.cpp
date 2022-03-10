@@ -10,6 +10,8 @@
 #include "ecs.h"
 #include "game/game_events.h"
 
+#include <nana/gui.hpp>
+
 MenuSystem::MenuSystem()
 {
     this->RegisterEventCallbacks();
@@ -44,9 +46,56 @@ const LoginRequestModel MenuSystem::RequestLoginCredentials()
 
 void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
 {
-    const auto& credentials = this->RequestLoginCredentials();
 
-    ecs::ecsEngine->SendEvent<LoginRequestEvent>(credentials);
+    using namespace nana;
+
+    internationalization i18n;
+    //Translate these 2 words into Chinese.
+    i18n.set("NANA_BUTTON_OK", "\u2714 OK");
+    i18n.set("NANA_BUTTON_CANCEL", "\u2718 CANCEL");
+
+    inputbox::text nickname("Nickname");
+    inputbox::text password("Password");
+    inputbox::text gameName("Game name");
+    inputbox::integer turns("Turns", 45, 0, 9999, 1);
+    inputbox::integer players("Players", 1, 0, 6, 1);
+    inputbox::boolean observer("Observer", false);
+
+    nickname.tip_string("Input nickname...");
+    password.tip_string("Input password...");
+    gameName.tip_string("Input game name...");
+
+    password.mask_character('*');
+
+    inputbox inbox(form(), "Please input <bold>login information</>.", "Sign up");
+
+    inbox.verify([&nickname, &gameName, &password](window handle)
+    {
+        if (nickname.value().empty())
+        {
+            msgbox mb(handle, "Invalid input");
+            mb << "Nickname should not be empty, Please input your nickname.";
+            mb.show();
+            return false; //verification failedr
+        } else if(gameName.value().empty()) {
+            msgbox mb(handle, "Invalid input");
+            mb << "Game name should not be empty, Please input game name.";
+            mb.show();
+            return false; //verification failed
+        }
+        return true; //verified successfully
+    });
+
+    if(inbox.show(nickname, password, gameName, turns, players, observer))
+    {
+        auto n = nickname.value();          //nana::string
+    }
+
+    exec();
+
+//    const auto& credentials = this->RequestLoginCredentials();
+
+//    ecs::ecsEngine->SendEvent<LoginRequestEvent>(credentials);
 }
 
 void MenuSystem::OnGameOver(const GameOverEvent* event)
