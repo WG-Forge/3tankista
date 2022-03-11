@@ -88,6 +88,18 @@ void Game::InitializeGLFW()
     glfwSetFramebufferSizeCallback(this->window,
                                    [](GLFWwindow* window, int width, int height)
                                    { ecs::ecsEngine->SendEvent<WindowResizedEvent>(width, height); });
+
+    this->HideWindow();
+}
+
+void Game::HideWindow()
+{
+    glfwHideWindow(this->window);
+}
+
+void Game::ShowWindow()
+{
+    glfwShowWindow(this->window);
 }
 
 void Game::OnStartGame(const StartGameEvent* event)

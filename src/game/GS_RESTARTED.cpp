@@ -4,6 +4,7 @@
 
 void Game::GS_RESTARTED()
 {
+    this->ShowWindow();
     ChangeState(GameState::STARTED);
 }
 

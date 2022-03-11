@@ -106,10 +106,6 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
     {
         ecs::ecsEngine->SendEvent<QuitGameEvent>();
     }
-
-    //    const auto& credentials = this->RequestLoginCredentials();
-
-    //    ecs::ecsEngine->SendEvent<LoginRequestEvent>(credentials);
 }
 
 void MenuSystem::OnGameOver(const GameOverEvent* event)
@@ -135,6 +131,12 @@ void MenuSystem::OnGameOver(const GameOverEvent* event)
                   << winner->GetComponent<NameComponent>()->GetName() << "\n"
                   << "Capture points: " << event->winners[0].second.first << "\n"
                   << "Kill points: " << event->winners[0].second.second << "\n";
+
+        nana::form fm;
+
+        fm.show();
+
+        nana::exec();
     }
 }
 

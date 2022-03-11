@@ -149,6 +149,10 @@ private:
 
     void InitializeGLFW();
 
+    void HideWindow();
+
+    void ShowWindow();
+
     void ProcessWindowEvent();
 
     void RegisterEventCallbacks();
