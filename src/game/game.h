@@ -92,16 +92,19 @@ public:
     TRANSITION_ENTRY(
         Game::GS_STARTED, Game::GS_RUNNING, Game::GS_RUNNING_ENTER, Game::GS_STARTED_LEAVE, GameState::RUNNING)
 
-    // Transition to 'GAMEOVER'
-    TRANSITION_ENTRY(
-        Game::GS_RUNNING, Game::GS_GAMEOVER, Game::GS_GAMEOVER_ENTER, Game::GS_RUNNING_LEAVE, GameState::GAMEOVER)
+    // Transition to 'GAMEFINISHED'
+    TRANSITION_ENTRY(Game::GS_RUNNING,
+                     Game::GS_GAMEFINISHED,
+                     Game::GS_GAMEFINISHED_ENTER,
+                     Game::GS_RUNNING_LEAVE,
+                     GameState::GAMEFINISHED)
 
-    // Transitions to 'TERMINATED'
-    TRANSITION_ENTRY(Game::GS_GAMEOVER,
-                     Game::GS_TERMINATED,
-                     Game::GS_TERMINATED_ENTER,
-                     Game::GS_GAMEOVER_LEAVE,
-                     GameState::TERMINATED)
+    // Transitions to 'RESTARTED'
+    TRANSITION_ENTRY(Game::GS_GAMEFINISHED,
+                     Game::GS_RESTARTED,
+                     Game::GS_RESTARTED_ENTER,
+                     Game::GS_GAMEFINISHED_LEAVE,
+                     GameState::RESTARTED)
 
     END_TRANSITION_TABLE
 
@@ -125,14 +128,14 @@ public:
     void GS_STARTED_LEAVE();
 
     // 'GAMEOVER' gamestate
-    void GS_GAMEOVER();
-    void GS_GAMEOVER_ENTER();
+    void GS_GAMEFINISHED();
+    void GS_GAMEFINISHED_ENTER();
     void GS_RUNNING_LEAVE();
 
     // 'TERMINATED' gamestate
     void GS_TERMINATED();
     void GS_TERMINATED_ENTER();
-    void GS_GAMEOVER_LEAVE();
+    void GS_GAMEFINISHED_LEAVE();
 
     void OnLoginGame(const GameLoginEvent* event);
     void OnStartGame(const StartGameEvent* event);

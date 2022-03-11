@@ -57,7 +57,7 @@ void Game::GS_RUNNING()
     {
         ecs::ecsEngine->SendEvent<GameOverEvent>(winners);
         ecs::ecsEngine->SendEvent<LogoutRequestEvent>();
-        ChangeState(GameState::GAMEOVER);
+        ChangeState(GameState::GAMEFINISHED);
     }
 }
 

@@ -1,12 +1,14 @@
 #include "game.h"
 #include "game_object.h"
 
-void Game::GS_GAMEOVER()
+void Game::GS_GAMEFINISHED()
 {
-    ecs::ecsEngine->SendEvent<QuitGameEvent>();
+    //    ecs::ecsEngine->SendEvent<QuitGameEvent>();
+    this->HideWindow();
+    ChangeState(GameState::RESTARTED);
 }
 
-void Game::GS_GAMEOVER_ENTER()
+void Game::GS_GAMEFINISHED_ENTER()
 {
     //    RegisterEventCallback(&Game::OnQuitGame);
 }

@@ -9,7 +9,7 @@ enum GameState
     RESTARTED,
     STARTED,
     RUNNING,
-    GAMEOVER,
+    GAMEFINISHED,
     TERMINATED,
     MAX_GAMESTATES
 }; // enum GameState

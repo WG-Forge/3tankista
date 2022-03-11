@@ -7,10 +7,13 @@
 #include "components/kill_points_component.h"
 #include "components/name_component.h"
 #include "components/turn_component.h"
-#include "ecs.h"
 #include "game/game_events.h"
 
+#include "ecs.h"
+
 #include "nana/gui.hpp"
+#include "nana/gui/widgets/button.hpp"
+#include "nana/gui/widgets/label.hpp"
 
 MenuSystem::MenuSystem()
 {
@@ -67,7 +70,7 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
 
     password.mask_character('*');
 
-    inputbox inbox(form(), "Please input <bold>login information</>.", "Sign up");
+    inputbox inbox(form{}, "Please input <bold>login information</>.", "Sign up");
 
     inbox.verify(
         [&nickname, &gameName, &password](window handle)
@@ -131,13 +134,48 @@ void MenuSystem::OnGameOver(const GameOverEvent* event)
                   << winner->GetComponent<NameComponent>()->GetName() << "\n"
                   << "Capture points: " << event->winners[0].second.first << "\n"
                   << "Kill points: " << event->winners[0].second.second << "\n";
-
-        nana::form fm;
-
-        fm.show();
-
-        nana::exec();
     }
+
+    nana::form fm{ nana::rectangle{ nana::API::make_center(300, 250) } };
+    fm.caption("Results");
+
+    nana::label  nameTitle{ fm, "Name" };
+    nana::label  capturePointsTitle{ fm, "Capture points" };
+    nana::label  killPointsTitle{ fm, "Kill points" };
+    nana::button buttonOk{ fm, "\u2714 OK" };
+
+    nana::place plc{ fm };
+
+    plc.div("<><weight=80% vertical<>"
+            "<weight=80% vertical "
+            "<information grid=[3,4] gap=10>  "
+            "<weight=25 gap=20 buttons> ><>><>");
+
+    plc.field("information") << nameTitle.handle() << capturePointsTitle.handle() << killPointsTitle.handle();
+
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    for (auto it = componentManager->begin<KillPointsComponent>(); componentManager->end<KillPointsComponent>() != it;
+         ++it)
+    {
+        auto player = entityManager->GetEntity(it->GetOwner());
+
+        nana::label* name = new nana::label{ fm, player->GetComponent<NameComponent>()->GetName() };
+        nana::label* capturePoints =
+            new nana::label{ fm, std::to_string(player->GetComponent<CapturePointsComponent>()->GetCapturePoints()) };
+        nana::label* killPoints =
+            new nana::label{ fm, std::to_string(player->GetComponent<KillPointsComponent>()->GetKillPoints()) };
+
+        plc.field("information") << name->handle() << capturePoints->handle() << killPoints->handle();
+    }
+
+    plc.field("buttons") << buttonOk.handle();
+
+    plc.collocate();
+
+    fm.show();
+
+    nana::exec();
 }
 
 void MenuSystem::RegisterEventCallbacks()
