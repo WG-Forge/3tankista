@@ -26,6 +26,12 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
 
     for (auto& action : event->actions)
     {
+        if (componentManager->begin<TurnComponent>()->GetCurrentTurn() == 15)
+        {
+            int a = 5;
+        }
+        std::cout << componentManager->GetComponent<HealthComponent>(action.vehicleId)->GetHealth() << " "
+                  << action.vehicleId << " \n";
         auto damage = entityManager->GetEntity(action.vehicleId)->GetComponent<TtcComponent>()->GetDamage();
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
              ++it)
@@ -63,9 +69,9 @@ void HealthSystem::HealTanks()
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
 
-    auto lightRepairVector         = content->GetVectorBaseId();
+    auto lightRepairVector         = content->GetVectorLightRepairId();
     auto lightRepairPositionVector = content->GetVectorV3i(lightRepairVector);
-    auto hardRepairVector          = content->GetVectorBaseId();
+    auto hardRepairVector          = content->GetVectorHardRepairId();
     auto hardRepairPositionVector  = content->GetVectorV3i(hardRepairVector);
 
     std::set<uint64_t> players;
@@ -83,6 +89,9 @@ void HealthSystem::HealTanks()
                 auto findIt = std::find(lightRepairPositionVector.begin(), lightRepairPositionVector.end(), position);
                 if (findIt != lightRepairPositionVector.end())
                 {
+                    std::cout << "heal"
+                              << entityManager->GetEntity(it->GetOwner())->GetComponent<TtcComponent>()->GetMaxHealth()
+                              << "\n";
                     entityManager->GetEntity(it->GetOwner())
                         ->GetComponent<HealthComponent>()
                         ->SetHealth(

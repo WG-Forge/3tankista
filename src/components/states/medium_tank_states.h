@@ -197,5 +197,7 @@ public:
         MapUtility::AddHexMapComponentCell(context.hexMap, position, CellState::FRIEND);
         ecs::ecsEngine->SendEvent<MoveRequestEvent>(
             MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), position });
+        std::cout << tank->GetComponent<VehicleIdComponent>()->GetVehicleId() << " " << position.x() << " "
+                  << position.y() << " " << position.z() << "\n";
     }
 };
