@@ -25,7 +25,6 @@ void ServerSystem::UnregisterEventCallbacks()
 bool ServerSystem::SendAction(const Action action, const std::string& data)
 {
     std::size_t dataSize = data.size();
-    std::cout<<data<<std::endl;
     if (this->GetBuffer().size() < actionSizeBytes + messageSizeBytes + dataSize)
     {
         this->GetBuffer().resize(actionSizeBytes + messageSizeBytes + dataSize);
@@ -57,7 +56,7 @@ std::string ServerSystem::ReceiveResult(Result& result)
 void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
 {
     LogInfo("Request to server: %d, %s", event->action, event->data.c_str());
-    std::cout << "Request: " << static_cast<int>(event->action) << " " << event->data << '\n';
+
     auto sent = SendAction(event->action, event->data);
     if (!sent)
     {
@@ -67,7 +66,6 @@ void ServerSystem::OnSendActionEvent(const SendActionEvent* event)
     Result result   = Result::OKEY;
     auto   response = ReceiveResult(result);
     LogInfo("Response from server: %d, %s", result, response.c_str());
-    std::cout << "Response: " << static_cast<int>(result) << " " << response << "\n\n\n";
     if (result != Result::OKEY)
     {
         LogWarning("Result status is not OKEY: %d", static_cast<int>(result));

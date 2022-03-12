@@ -1,7 +1,4 @@
 #include "adapter_system.h"
-#include "components/adapter_player_id_component.h"
-#include "components/adapter_vehicle_id_component.h"
-#include "components/turn_component.h"
 
 AdapterSystem::AdapterSystem()
 {

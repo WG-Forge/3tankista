@@ -31,14 +31,6 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
     for (auto& action : event->actions)
     {
         std::vector<Vector3i> possiblePositions;
-        std::cout << "type: "
-                  << static_cast<int>(
-                         entityManager->GetEntity(action.vehicleId)->GetComponent<TankTypeComponent>()->GetTankType())
-                  << "\n";
-        /*if(componentManager->begin<TurnComponent>()->GetCurrentTurn()==20){
-            int a =5;
-        }
-        auto b=entityManager->GetEntity(action.vehicleId)->GetComponent<TankTypeComponent>()->GetTankType();*/
         if (entityManager->GetEntity(action.vehicleId)->GetComponent<TankTypeComponent>()->GetTankType() ==
             TankType::AT_SPG)
         {
@@ -124,9 +116,6 @@ void HealthSystem::HealTanks()
                 auto findIt = std::find(lightRepairPositionVector.begin(), lightRepairPositionVector.end(), position);
                 if (findIt != lightRepairPositionVector.end())
                 {
-                    std::cout << "heal"
-                              << entityManager->GetEntity(it->GetOwner())->GetComponent<TtcComponent>()->GetMaxHealth()
-                              << "\n";
                     entityManager->GetEntity(it->GetOwner())
                         ->GetComponent<HealthComponent>()
                         ->SetHealth(

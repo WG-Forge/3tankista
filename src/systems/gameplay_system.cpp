@@ -67,19 +67,11 @@ void GameplaySystem::OnPlayEvent(const PlayEvent* event)
                   });
 
         Context gameplayContext = { currentPlayerTanks, enemies, attackMatrix, gameArea };
-        if (turnComponent->GetCurrentTurn() == 27)
-        {
-            int a = 3;
-        }
         for (auto tank : currentPlayerTanks)
         {
-            if (tank->GetComponent<TankTypeComponent>()->GetTankType() == TankType::AT_SPG)
-            {
-                auto a     = tank->GetComponent<TransformComponent>()->GetPosition();
-                auto state = tank->GetComponent<StateComponent>();
-                state->GetState()->UpdateState(gameplayContext);
-                state->GetState()->Play(gameplayContext);
-            }
+            auto state = tank->GetComponent<StateComponent>();
+            state->GetState()->UpdateState(gameplayContext);
+            state->GetState()->Play(gameplayContext);
         }
     }
     attackMatrix->ClearUserAttacks(currentPlayerId);
