@@ -71,7 +71,7 @@ private:
         //        auto     second  = (inversedHexBasis.getRow(1).x() * pixel.x() * GAME_WINDOW_WIDTH +
         //                       inversedHexBasis.getRow(1).y() * pixel.y() * GAME_WINDOW_HEIGHT);
         //        Vector3i loooool = { first, second, -first - second };
-        return Vector3i{ mulResult.x(), mulResult.y(), -mulResult.x() - mulResult.y() };
+        return Vector3i{ (int)mulResult.x(), (int)mulResult.y(), (int)(-mulResult.x() - mulResult.y()) };
     }
 
     Vector3f Hex2Pixel(const Vector3i& hex)
