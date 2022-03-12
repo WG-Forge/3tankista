@@ -1,13 +1,16 @@
 #include "health_system.h"
 #include "components/attack_matrix_component.h"
 #include "components/health_component.h"
+#include "components/hex_map_component.h"
 #include "components/player_id_component.h"
+#include "components/shoot_range_bonus.h"
 #include "components/transform_component.h"
 #include "components/ttc_component.h"
 #include "components/turn_component.h"
 #include "components/vehicle_id_component.h"
 #include "entities/map/content.h"
 #include "entities/map/map.h"
+#include "utility/map_utility.h"
 
 HealthSystem::HealthSystem()
 {
@@ -23,21 +26,53 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
 {
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto mapComponent     = componentManager->begin<HexMapComponent>().operator->();
 
     for (auto& action : event->actions)
     {
-        if (componentManager->begin<TurnComponent>()->GetCurrentTurn() == 15)
-        {
-            int a = 5;
+        std::vector<Vector3i> possiblePositions;
+        std::cout << "type: "
+                  << static_cast<int>(
+                         entityManager->GetEntity(action.vehicleId)->GetComponent<TankTypeComponent>()->GetTankType())
+                  << "\n";
+        /*if(componentManager->begin<TurnComponent>()->GetCurrentTurn()==20){
+            int a =5;
         }
-        std::cout << componentManager->GetComponent<HealthComponent>(action.vehicleId)->GetHealth() << " "
-                  << action.vehicleId << " \n";
+        auto b=entityManager->GetEntity(action.vehicleId)->GetComponent<TankTypeComponent>()->GetTankType();*/
+        if (entityManager->GetEntity(action.vehicleId)->GetComponent<TankTypeComponent>()->GetTankType() ==
+            TankType::AT_SPG)
+        {
+            auto     at_spg = entityManager->GetEntity(action.vehicleId);
+            auto     range  = at_spg->GetComponent<TtcComponent>()->GetStandartRange();
+            auto     bonus  = at_spg->GetComponent<ShootRangeBonusComponent>()->GetShootRangeBonus();
+            Vector3i delta  = action.target - at_spg->GetComponent<TransformComponent>()->GetPosition();
+            for (int i = 1; i <= range + bonus; i++)
+            {
+                if (mapComponent->GetCell(MapUtility::Shift(
+                        MapUtility::Cube2Hex(at_spg->GetComponent<TransformComponent>()->GetPosition() + delta * i),
+                        mapComponent->GetSize())) != static_cast<int32_t>(CellState::OBSTACLE))
+                {
+                    possiblePositions.push_back(at_spg->GetComponent<TransformComponent>()->GetPosition() + delta * i);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            possiblePositions.push_back(action.target);
+        }
         auto damage = entityManager->GetEntity(action.vehicleId)->GetComponent<TtcComponent>()->GetDamage();
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
              ++it)
         {
             auto currentEntity = entityManager->GetEntity(it->GetOwner());
-            if (currentEntity->GetComponent<TransformComponent>()->GetPosition() == action.target)
+            auto it_f          = std::find(possiblePositions.begin(),
+                                  possiblePositions.end(),
+                                  currentEntity->GetComponent<TransformComponent>()->GetPosition());
+            if (it_f != possiblePositions.end())
             {
                 auto health = currentEntity->GetComponent<HealthComponent>();
                 if (health->GetHealth() != 0) // Already destroyed

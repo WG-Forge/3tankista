@@ -16,6 +16,7 @@
 #include "systems/turn_system.h"
 #include "systems/uisystem.h"
 #include "systems/win_system.h"
+#include "systems/catapult_system.h"
 
 void Game::GS_INITIALIZED()
 {
@@ -25,6 +26,7 @@ void Game::GS_INITIALIZED()
     auto* SeS           = systemManager->AddSystem<ServerSystem>("wgforge-srv.wargaming.net", "443");
     auto* MaS           = systemManager->AddSystem<MapSystem>();
     auto* HeS           = systemManager->AddSystem<HealthSystem>();
+    auto* CaS           = systemManager->AddSystem<CatapultSystem>();
     auto* MoS           = systemManager->AddSystem<MoveSystem>();
     auto* GpS           = systemManager->AddSystem<GameplaySystem>();
     auto* GsS           = systemManager->AddSystem<GameStateSystem>();

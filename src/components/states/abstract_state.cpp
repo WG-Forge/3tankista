@@ -28,7 +28,6 @@ bool AbstractState::CanShoot(Tank* playerTank, Tank* enemyTank)
     bool shoot            = false;
     auto distance         = MapUtility::GetDistance(playerTank->GetComponent<TransformComponent>()->GetPosition(),
                                             enemyTank->GetComponent<TransformComponent>()->GetPosition());
-    auto entityManager    = ecs::ecsEngine->GetEntityManager();
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto standartRange    = componentManager->GetComponent<TtcComponent>(playerTank->GetEntityID())->GetStandartRange();
     auto shootRangeBonus =
@@ -75,13 +74,34 @@ bool AbstractState::IsCorrectShootPosition(HexMapComponent* map, Tank* tank, Tan
     pathFinder.SetHexMapComponent(map);
     pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
 
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+
+    auto mapComponent = componentManager->begin<HexMapComponent>().operator->();
+
     bool result   = false;
     auto position = enemy->GetComponent<TransformComponent>()->GetPosition();
     if (tank->GetComponent<TankTypeComponent>()->GetTankType() == TankType::AT_SPG)
     {
-        if (pathFinder.GetDistance(position) != -1 &&
-            pathFinder.GetDistance(position) ==
-                MapUtility::GetDistance(tank->GetComponent<TransformComponent>()->GetPosition(), position))
+        std::vector<Vector3i> possiblePositions;
+        auto                  range = tank->GetComponent<TtcComponent>()->GetStandartRange();
+        auto                  bonus = tank->GetComponent<ShootRangeBonusComponent>()->GetShootRangeBonus();
+        Vector3i              delta = position - tank->GetComponent<TransformComponent>()->GetPosition();
+        for (int i = 1; i <= range + bonus; i++)
+        {
+            if (mapComponent->GetCell(MapUtility::Shift(
+                    MapUtility::Cube2Hex(tank->GetComponent<TransformComponent>()->GetPosition() + delta * i),
+                    mapComponent->GetSize())) != static_cast<int32_t>(CellState::OBSTACLE))
+            {
+                possiblePositions.push_back(tank->GetComponent<TransformComponent>()->GetPosition() + delta * i);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (std::find(possiblePositions.begin(), possiblePositions.end(), position) != possiblePositions.end())
         {
             result = true;
         }
@@ -125,15 +145,18 @@ Tank* AbstractState::GetEnemyInShootArea(GameplaySystem::Context& context, Tank*
     Tank* target = nullptr;
     for (auto& enemy : context.enemies)
     {
+        auto elem = enemy->GetComponent<TransformComponent>()->GetPosition();
         if (CanShoot(tank, enemy))
         {
-            if (IsCorrectShootPosition(context.hexMap, tank, enemy) &&
-                CheckNeutrality(context.attackMatrix, tank, enemy))
+            if (IsCorrectShootPosition(context.hexMap, tank, enemy))
             {
-                if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
-                                             enemy->GetComponent<HealthComponent>()->GetHealth())
+                if (CheckNeutrality(context.attackMatrix, tank, enemy))
                 {
-                    target = enemy;
+                    if (target == nullptr || target->GetComponent<HealthComponent>()->GetHealth() >
+                                                 enemy->GetComponent<HealthComponent>()->GetHealth())
+                    {
+                        target = enemy;
+                    }
                 }
             }
         }
