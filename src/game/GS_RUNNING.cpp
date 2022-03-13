@@ -11,9 +11,9 @@ void Game::GS_RUNNING()
 {
     WinSystem::UpdateCapturePoints();
     HealthSystem::HealTanks();
-    auto players = std::move(WinSystem::GetWinPoints());
+    auto                                                  players          = std::move(WinSystem::GetWinPoints());
     auto                                                  componentManager = ecs::ecsEngine->GetComponentManager();
-    bool                                                  isFinished = false;
+    bool                                                  isFinished       = false;
     std::vector<std::pair<uint64_t, std::pair<int, int>>> winners;
     if (!componentManager->begin<TurnComponent>()->isFinished())
     {

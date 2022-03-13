@@ -36,7 +36,7 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
     auto componentManager      = ecs::ecsEngine->GetComponentManager();
     auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
     auto mapComponent          = componentManager->begin<HexMapComponent>().operator->();
-    auto turn                  = componentManager->begin<TurnComponent>()->GetCurrentTurn();
+    auto               turn    = componentManager->begin<TurnComponent>()->GetCurrentTurn();
     std::set<uint64_t> attackedUsers;
     for (auto& action : event->actions)
     {
