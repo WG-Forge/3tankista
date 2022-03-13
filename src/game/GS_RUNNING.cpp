@@ -8,7 +8,6 @@
 
 void Game::GS_RUNNING()
 {
-
     WinSystem::UpdateCapturePoints();
     HealthSystem::HealTanks();
     auto                                                  players          = std::move(WinSystem::GetWinPoints());
@@ -22,7 +21,7 @@ void Game::GS_RUNNING()
         {
             if (player.second.first >= 5)
             {
-                winners.push_back({ player.first, player.second });
+                winners.emplace_back(player.first, player.second);
                 isFinished = true;
             }
         }
@@ -44,7 +43,7 @@ void Game::GS_RUNNING()
         {
             if (player.second.second == maxKillPoints)
             {
-                winners.push_back({ player.first, player.second });
+                winners.emplace_back(player.first, player.second);
             }
         }
         isFinished = true;

@@ -12,7 +12,6 @@
 #include "entities/world.h"
 
 #include "systems/adapter_system.h"
-#include "systems/gameplay_system.h"
 #include "utility/map_utility.h"
 
 #include <algorithm>
@@ -128,26 +127,18 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
     auto playersNum      = event->gameState.numberPlayers;
     auto mainPlayerIndex = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
     componentManager->begin<MainPlayerComponent>()->SetMainPlayerId(adapterPlayerId->Get(mainPlayerIndex));
-    // FIXME: What if index is less then playersNum?
-    for (int i = index; i > -1; --i)
+    for (int i = index; i >= 0; i--)
     {
         componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
             ->SetOrder(turn % playersNum);
         turn++;
     }
-
-    //    for (int i = index; i < playerHexPos.size(); i++)
-    //    {
-    //        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
-    //            ->SetOrder(turn % playersNum);
-    //        turn++;
-    //    }
-    //    for (int i = 0; i < index; i++)
-    //    {
-    //        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
-    //            ->SetOrder(turn % playersNum);
-    //        turn++;
-    //    }
+    for (int i = (int)playerHexPos.size() - 1; i > index; i--)
+    {
+        componentManager->GetComponent<OrderComponent>(adapterPlayerId->Get(playerHexPos[i].first))
+            ->SetOrder(turn % playersNum);
+        turn++;
+    }
     auto mainPlayerId = componentManager->begin<MainPlayerComponent>()->GetMainPlayerId();
     for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
          ++it)

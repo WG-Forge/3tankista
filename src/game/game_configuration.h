@@ -9,7 +9,7 @@ constexpr Ttc SPG_TANK_TTC    = { 1, 1, TankType::SPG, 1, 3 };
 constexpr Ttc LIGHT_TANK_TTC  = { 3, 1, TankType::LIGHT, 1, 2 };
 constexpr Ttc HEAVY_TANK_TTC  = { 1, 3, TankType::HEAVY, 1, 2 };
 constexpr Ttc MEDIUM_TANK_TTC = { 2, 2, TankType::MEDIUM, 1, 2 };
-constexpr Ttc AT_SPG_TANK_TTC = { 1, 2, TankType::NO_TYPE, 1, 3 };
+constexpr Ttc AT_SPG_TANK_TTC = { 1, 2, TankType::AT_SPG, 1, 3 };
 
 static constexpr unsigned int GAME_WINDOW_WIDTH{ 1920 };
 
