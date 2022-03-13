@@ -10,9 +10,11 @@
 class AbstractState
 {
 public:
+    DECLARE_LOGGER
     explicit AbstractState(StateComponent* component)
         : stateComponent(component)
     {
+        DEFINE_LOGGER("TankStateMachine")
     }
 
     virtual void UpdateState(GameplaySystem::Context& context) = 0;

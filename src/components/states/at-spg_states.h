@@ -84,14 +84,14 @@ public:
         bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                          tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
         Vector3i position{};
-        if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
-        {
-            ChangeState<AtSpgTankHealState>();
-            return;
-        }
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
             ChangeState<AtSpgTankShootState>();
+            return;
+        }
+        if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
+        {
+            ChangeState<AtSpgTankHealState>();
             return;
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
@@ -103,6 +103,7 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank = GetCurrentTank();
         auto path = GetPathToBase(context, tank);
         MapUtility::RemoveHexMapComponentCell(
@@ -153,6 +154,7 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank   = GetCurrentTank();
         auto target = GetEnemyInShootArea(context, tank);
         ecs::ecsEngine->SendEvent<ShootRequestEvent>(
@@ -189,6 +191,7 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto     tank = GetCurrentTank();
         Vector3i position{};
         RepairInMoveArea(context, tank, position, Repair::HARD);

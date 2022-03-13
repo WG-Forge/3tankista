@@ -37,7 +37,10 @@ public:
             return;
         }
     }
-    void Play(GameplaySystem::Context& context) override {}
+    void Play(GameplaySystem::Context& context) override
+    {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
+    }
 };
 
 class MediumTankStayState : public AbstractState
@@ -78,7 +81,10 @@ public:
             }
         }
     }
-    void Play(GameplaySystem::Context& context) override {}
+    void Play(GameplaySystem::Context& context) override
+    {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
+    }
 };
 
 class MediumTankMoveState : public AbstractState
@@ -90,18 +96,18 @@ public:
     }
     void UpdateState(GameplaySystem::Context& context) override
     {
-        auto     tank     = GetCurrentTank();
-        bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
+        auto tank     = GetCurrentTank();
+        bool needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                          tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
+        if (GetEnemyInShootArea(context, tank) != nullptr)
+        {
+            ChangeState<MediumTankShootState>();
+            return;
+        }
         Vector3i position{};
         if (needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
         {
             ChangeState<MediumTankHealState>();
-            return;
-        }
-        if (GetEnemyInShootArea(context, tank) != nullptr)
-        {
-            ChangeState<MediumTankShootState>();
             return;
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
@@ -121,10 +127,16 @@ public:
                 }
             }
         }
+        if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
+        {
+            ChangeState<MediumTankStayState>();
+            return;
+        }
     }
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank = GetCurrentTank();
         auto path = GetPathToBase(context, tank);
         MapUtility::RemoveHexMapComponentCell(
@@ -181,12 +193,18 @@ public:
                         return;
                     }
                 }
+                if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
+                {
+                    ChangeState<MediumTankStayState>();
+                    return;
+                }
             }
         }
     }
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank   = GetCurrentTank();
         auto target = GetEnemyInShootArea(context, tank);
         ecs::ecsEngine->SendEvent<ShootRequestEvent>(
@@ -230,12 +248,18 @@ public:
                     this->ChangeState<MediumTankAwayState>();
                     return;
                 }
+                if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
+                {
+                    ChangeState<MediumTankStayState>();
+                    return;
+                }
             }
         }
     }
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto     tank = GetCurrentTank();
         Vector3i position{};
         RepairInMoveArea(context, tank, position, Repair::LIGHT);
@@ -278,10 +302,16 @@ public:
                 this->ChangeState<MediumTankStayState>();
                 return;
             }
+            if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
+            {
+                ChangeState<MediumTankStayState>();
+                return;
+            }
         }
     }
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto     tank = GetCurrentTank();
         Vector3i position{};
         FarFreeReachableBasePosition(context, tank, position);

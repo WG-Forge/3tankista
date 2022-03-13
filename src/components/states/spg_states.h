@@ -35,7 +35,10 @@ public:
             return;
         }
     }
-    void Play(GameplaySystem::Context& context) override {}
+    void Play(GameplaySystem::Context& context) override
+    {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
+    }
 };
 
 class SpgTankStayState : public AbstractState
@@ -59,7 +62,10 @@ public:
             return;
         }
     }
-    void Play(GameplaySystem::Context& context) override {}
+    void Play(GameplaySystem::Context& context) override
+    {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
+    }
 };
 
 class SpgTankMoveState : public AbstractState
@@ -86,6 +92,7 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank = GetCurrentTank();
         auto path = GetPathToBase(context, tank);
         MapUtility::RemoveHexMapComponentCell(
@@ -128,6 +135,7 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank = GetCurrentTank();
         auto a =
             ecs::ecsEngine->GetComponentManager()->GetComponent<TransformComponent>(tank->GetEntityID())->GetPosition();
