@@ -15,7 +15,6 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
 {
     if (event->result == Result::OKEY)
     {
-        auto entityManager    = ecs::ecsEngine->GetEntityManager();
         auto componentManager = ecs::ecsEngine->GetComponentManager();
         auto playerAdapter    = componentManager->begin<AdapterPlayerIdComponent>();
         auto vehicleAdapter   = componentManager->begin<AdapterVehicleIdComponent>();
@@ -26,6 +25,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             {
                 auto model = json.get<LoginResponseModel>();
                 ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
+                ecs::ecsEngine->SendEvent<ChatRequestEvent>(ChatModel{ "GL HF!" });
                 LogInfo("Login is successful!") break;
             }
             case Action::LOGOUT:
