@@ -37,13 +37,6 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
     auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
     auto mapComponent          = componentManager->begin<HexMapComponent>().operator->();
     auto turn                  = componentManager->begin<TurnComponent>()->GetCurrentTurn();
-    std::cout << "fs " << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
-    std::cout << "num " << event->actions.size() << "\n";
-    int b;
-    if (turn == 23)
-    {
-        b = 123;
-    }
     std::set<uint64_t> attackedUsers;
     for (auto& action : event->actions)
     {

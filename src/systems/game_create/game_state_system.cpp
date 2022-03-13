@@ -51,7 +51,6 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         auto entity = entityManager->CreateEntity<Player>(now.idx, now.name, now.isObserver);
         adapterPlayerId->Add(now.idx, entity);
         entityManager->GetEntity(entity)->GetComponent<PlayerIdComponent>()->SetPlayerId(entity);
-        std::cout << now.idx << " " << entity << "\n";
     }
     // Create observers
     for (auto& now : event->gameState.observers)
