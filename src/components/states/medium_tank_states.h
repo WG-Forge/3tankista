@@ -107,10 +107,6 @@ public:
         auto path = GetPathToBase(context, tank);
         MapUtility::RemoveHexMapComponentCell(
             context.hexMap, tank->GetComponent<TransformComponent>()->GetPosition(), CellState::FRIEND);
-        std::cout << path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1].x() << " "
-                  << path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1].y() << " "
-                  << path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1].z() << "\n";
-        std::cout << (int)path.size() << " " << tank->GetComponent<TtcComponent>()->GetSpeed() << " \n";
         MapUtility::AddHexMapComponentCell(
             context.hexMap,
             path[std::min((int)path.size(), tank->GetComponent<TtcComponent>()->GetSpeed()) - 1],

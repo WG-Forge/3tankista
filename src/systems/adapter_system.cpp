@@ -26,7 +26,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             {
                 auto model = json.get<LoginResponseModel>();
                 ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
-                break;
+                LogInfo("Login is successful!") break;
             }
             case Action::LOGOUT:
             {
@@ -87,8 +87,6 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::MOVE:
             {
                 auto sentJson = nlohmann::json::parse(event->sentData).get<MoveModel>();
-                std::cout << "MOVE: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
-                          << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
                 LogInfo("MOVE: %d => (%d, %d, %d)",
                         sentJson.vehicleId,
                         sentJson.target.x(),
@@ -99,8 +97,6 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             case Action::SHOOT:
             {
                 auto sentJson = nlohmann::json::parse(event->sentData).get<ShootModel>();
-                std::cout << "SHOOT: " << sentJson.vehicleId << " => (" << sentJson.target.x() << ","
-                          << sentJson.target.y() << "," << sentJson.target.z() << ')' << std::endl;
                 LogInfo("SHOOT: %d => (%d, %d, %d)",
                         sentJson.vehicleId,
                         sentJson.target.x(),

@@ -260,3 +260,13 @@ bool AbstractState::RepairInMoveArea(GameplaySystem::Context& context,
     }
     return false;
 }
+
+bool AbstractState::IsUnderEnemyShootArea(GameplaySystem::Context& context, const Vector3i position)
+{
+    for (auto& enemy : context.enemies)
+    {
+        if (CanShoot(enemy, position))
+            return true;
+    }
+    return false;
+}

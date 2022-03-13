@@ -29,6 +29,7 @@ protected:
     static bool     IsCorrectShootPosition(HexMapComponent* map, Tank* tank, Tank* enemy);
     static Vector3i GetShootPosition(Tank* tank, Tank* enemyTank);
     static Tank*    GetEnemyInShootArea(GameplaySystem::Context& context, Tank* tank);
+    static bool     IsUnderEnemyShootArea(GameplaySystem::Context& context, const Vector3i position);
     static bool     IsOnTheBase(GameplaySystem::Context& context, Tank* tank);
     static bool     IsPathToBaseExists(GameplaySystem::Context& context, Tank* tank);
     static std::vector<Vector3i> GetPathToBase(GameplaySystem::Context& context, Tank* tank);
