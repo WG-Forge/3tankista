@@ -20,7 +20,7 @@ Written specifically for the WG-Forge courses.
 ## About
 
 The game is a turn-based strategy game based on the original World of Tanks game. The game can be played by 3 people, under the control of which there are 5 different types of equipment with their own characteristics.
-The battlefield is a hexagonal grid with some special cells (obstacles).
+The battlefield is a hexagonal grid with some special cells (obstacles, repairs, catapultas).
 
 **There are two ways to win:**
 1. Capture the central base (score 5 capture points);
@@ -59,15 +59,11 @@ Internally, the **ECS engine** itself is responsible for allocating memory for t
 
 The following technology stack was used to display the data: [OpenGL](https://www.khronos.org/) + [GLFW3](https://www.glfw.org/) + [Glad](https://glad.dav1d.de/), a set of [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h) and [FreeType](https://freetype.org/) libraries was used to display textures and text.
 All sprites are rendered using the **RenderSystem**, and text is rendered using the **TextRenderer**, which is part of the **RenderSystem**. Shaders are also written (vertex and fragment shaders for displaying sprites and also vertex and fragment shaders for displaying text) using the GLSL language on OpenGL 3.3 Core.
+And also [nana](http://nanapro.org/en-us/) library is used for UI.
 
 ### AI algorithm 
 
-Artificial intelligence is a state machine for each type of tank. At this stage, the simplest states are implemented:
-- Init
-- Stay
-- Move
-- Shoot
-- Heal
+Artificial intelligence is a state machine for each type of tank.
 
 ## Install
 
@@ -116,17 +112,13 @@ cmake --build build
 
 Just run ```client``` application in the ```build\src``` folder.
 
-> All text information is entered into the console!\
-Until all the information is entered, nothing will be displayed in the window.\
-In the future, it is planned to add all input to the GUI. 
-
 **Next you should enter:**
 1. Nickname;
 2. Password;
 3. Game name;
 4. Number of turns;
 5. Number of players;
-6. Is this client is observer (y/n).
+6. [CheckBox] Is this client is observer.
 
 ![LoginScreenshot](https://user-images.githubusercontent.com/39442984/155405501-141fd2c8-aa9b-46ae-8136-8ed232075196.png)
 
@@ -143,6 +135,7 @@ Now you can enjoy how the bot is playing in real time.
 - [GLFW3](https://www.glfw.org/)
 - [nlohmann/json](https://github.com/nlohmann/json)
 - [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
+- [nana](http://nanapro.org/en-us/)
 
 ## Team
 
