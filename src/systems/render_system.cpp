@@ -6,7 +6,7 @@
 
 RenderSystem::RenderSystem(GLFWwindow* window)
     : window(window)
-    , bufferedShapes(/*static_cast<ShapeID>(IShape::Type::MAX_SHAPES), nullptr*/)
+    , bufferedShapes()
 {
     this->InitializeOpenGL();
 
@@ -68,12 +68,6 @@ void RenderSystem::Update(ecs::f32 dt)
         if (renderableGroup.first.material.GetMaterialID() != lastUsedMaterial)
         {
             renderableGroup.first.material.Use();
-
-            // Set active camera's view and projection matrix
-            //            ((RenderableGroup)(renderableGroup.first))
-            //                .material.SetViewProjectionTransform(
-            //                    this->m_ActiveCamera->GetViewTransform(),
-            //                    this->m_ActiveCamera->GetProjectionTransform());
 
             lastUsedMaterial = renderableGroup.first.material.GetMaterialID();
         }
@@ -138,9 +132,6 @@ void RenderSystem::Update(ecs::f32 dt)
                 renderable.texture->Misapply();
             }
         }
-
-        // Check for errors
-        //        glGetLastError();
     }
 
     glBindVertexArray(0);

@@ -15,12 +15,6 @@ HealthBar::HealthBar(const ecs::EntityId&   entityId,
 
     this->vehicleId = vehicleId;
 
-    //    this->spawnEntityId = ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(Vector3i{ 0, 0, 0 },
-    //    spawnColor); Spawn* atSpgFirstPlayerSpawn =
-    //    (Spawn*)ecs::ecsEngine->GetEntityManager()->GetEntity(this->spawnEntityId);
-
-    //    atSpgFirstPlayerSpawn->GetComponent<TransformComponent>()->SetTransform(transform);
-
     this->tankEntityId =
         ecs::ecsEngine->GetEntityManager()->CreateEntity<Health>(Vector3i(0, 0, 0), tankTextureFileName);
     Health* tank = (Health*)ecs::ecsEngine->GetEntityManager()->GetEntity(this->tankEntityId);

@@ -38,8 +38,4 @@ private:
     TextureComponent*         textureComponent;
     ShootRangeBonusComponent* shootRangeBonus;
     StateComponent*           stateComponent;
-
-    // можно привязать к танку Spawn + HealthBar
-    // танк будет сам рисовать Spawn, а так же текстуру танка и Spawn для HealthBar +
-    // HealthBar будет создаваться в танке
 };

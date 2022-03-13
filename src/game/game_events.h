@@ -11,8 +11,6 @@
 
 #include "nlohmann/json.hpp"
 
-// ServerSystem events
-
 struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 {
     Action      action;

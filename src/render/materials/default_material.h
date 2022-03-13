@@ -40,10 +40,7 @@ public:
         }
     }
 
-    virtual void SetViewProjectionTransform(const Matrix4f& view, const Matrix4f& proj) override
-    {
-        // TODO: implement if it need
-    }
+    virtual void SetViewProjectionTransform(const Matrix4f& view, const Matrix4f& proj) override {}
 
     virtual const MaterialVertexAttributeLoc GetPositionVertexAttributeLocation() const override
     {
@@ -77,10 +74,6 @@ public:
     {
         if (this->shader != nullptr)
         {
-            //            glUniformMatrix4fv((*this->m_ShaderProgram)(uniformName),
-            //                               1,
-            //                               GL_FALSE,
-            //                               (const GLfloat*)mat4);
         }
     }
 

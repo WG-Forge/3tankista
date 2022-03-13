@@ -63,7 +63,4 @@ void Game::GS_RUNNING()
 
 void Game::GS_RUNNING_ENTER() {}
 
-void Game::GS_STARTED_LEAVE()
-{
-    // ecs::ecsEngine->GetSystemManager()->SetSystemPriority<WinSystem>(ecs::HIGH_SYSTEM_PRIORITY);
-}
+void Game::GS_STARTED_LEAVE() {}

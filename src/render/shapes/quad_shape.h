@@ -53,17 +53,17 @@ private:
     inline static constexpr float scaleFactor = 1.5;
 
     inline static const std::vector<VertexPositionData> vertexPositionData{
-        (float)SHORT_DIAGONAL /*/ GAME_WINDOW_HEIGHT*/ / scaleFactor,
-        (float)LONG_DIAGONAL /*/ GAME_WINDOW_HEIGHT */ / scaleFactor,
+        (float)SHORT_DIAGONAL / scaleFactor,
+        (float)LONG_DIAGONAL / scaleFactor,
         zCoord, // v0
-        (float)SHORT_DIAGONAL /*/ GAME_WINDOW_HEIGHT */ / scaleFactor,
-        -(float)LONG_DIAGONAL /*/ GAME_WINDOW_HEIGHT */ / scaleFactor,
+        (float)SHORT_DIAGONAL / scaleFactor,
+        -(float)LONG_DIAGONAL / scaleFactor,
         zCoord, // v1
-        -(float)SHORT_DIAGONAL /*/ GAME_WINDOW_HEIGHT */ / scaleFactor,
-        -(float)LONG_DIAGONAL /*/ GAME_WINDOW_HEIGHT */ / scaleFactor,
+        -(float)SHORT_DIAGONAL / scaleFactor,
+        -(float)LONG_DIAGONAL / scaleFactor,
         zCoord, // v2
-        -(float)SHORT_DIAGONAL /* / GAME_WINDOW_HEIGHT */ / scaleFactor,
-        (float)LONG_DIAGONAL /*/ GAME_WINDOW_HEIGHT */ / scaleFactor,
+        -(float)SHORT_DIAGONAL / scaleFactor,
+        (float)LONG_DIAGONAL / scaleFactor,
         zCoord // v3
     };
 
