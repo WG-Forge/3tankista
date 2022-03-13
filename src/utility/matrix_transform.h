@@ -60,9 +60,6 @@ Matrix4<T> ortho(T left, T right, T bottom, T top)
     Matrix4<T> result = Matrix4<T>::eye();
     result(0, 0)      = static_cast<T>(2) / (right - left);
     result(1, 1)      = static_cast<T>(2) / (top - bottom);
-    //    result(2, 2)      = -static_cast<T>(1);
-    //    result(0, 3)      = -(right + left) / (right - left);
-    //    result(1, 3)      = -(top + bottom) / (top - bottom);
     return result;
 }
 

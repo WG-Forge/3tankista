@@ -17,7 +17,7 @@ static constexpr unsigned int GAME_WINDOW_HEIGHT{ 1080 };
 
 static constexpr bool GAME_WINDOW_FULLSCREEN{ false };
 
-static constexpr std::size_t HEX_SIZE{ std::size_t(GAME_WINDOW_WIDTH / 80 /*32 * 1.75*/) };
+static constexpr std::size_t HEX_SIZE{ std::size_t(GAME_WINDOW_WIDTH / 80) };
 
 inline static const std::size_t LONG_DIAGONAL  = HEX_SIZE * std::sqrt(3) / 2.0; // 1/2 from short hex diagonal
 inline static const std::size_t SHORT_DIAGONAL = HEX_SIZE / 2.0;                // 1/4 from long hex diagonal

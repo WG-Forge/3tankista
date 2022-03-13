@@ -57,7 +57,6 @@ void WinSystem::OnMoveResponseEvent(const MoveResponseEvent* event)
     {
         auto entity             = entityManager->GetEntity(action.vehicleId);
         auto transformComponent = entity->GetComponent<TransformComponent>();
-        // TODO: REWRITE!
         if (std::find(basePositionVector.begin(), basePositionVector.end(), transformComponent->GetPosition()) !=
             basePositionVector.end())
         {

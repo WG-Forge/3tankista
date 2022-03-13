@@ -29,17 +29,8 @@ void UiSystem::OnHealthChanged(const HealthChanged* event)
                                  });
     if (it != this->healthBarsId.end())
     {
-        // изменять tansform matrix черновго квадрата в зависимости соотношения currHp/MaxHp
-        // currHp/MaxHp = 1      -> 0
-        // currHp/MaxHp = 999999 -> 100
-
-        // варианты: currHp == maxHp -> 0
-        //           currHp == 0     -> 100
-        //           (other)         x = currHp/maxHp && size = x * sizeHealthBar;
-
         HealthBar*  healthBar  = (HealthBar*)ecs::ecsEngine->GetEntityManager()->GetEntity(*it);
         std::string healthText = std::to_string(event->health) + " / " + std::to_string(event->maxHealth);
-        //        std::cerr << " New hp " << healthText << std::endl << std::flush;
         healthBar->SetHealth(healthText);
     }
 }
