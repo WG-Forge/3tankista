@@ -40,9 +40,15 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::GAME_STATE:
             {
-                auto model = json.get<GameStateModel>();
-                ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
-
+                if (count == 0)
+                {
+                    auto model = json.get<GameStateModel>();
+                    ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
+                }
+                else
+                {
+                    std::cout << json.dump() << "\n";
+                }
                 break;
             }
             case Action::GAME_ACTIONS:
@@ -114,6 +120,10 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     {
         // ecs::ecsEngine->SendEvent<GameLoginEvent>();
     }
+    else if (event->result == Result::INAPPROPRIATE_GAME_STATE)
+    {
+        ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
+    }
 }
 
 void AdapterSystem::OnLoginRequestEvent(const LoginRequestEvent* event)
@@ -133,6 +143,12 @@ void AdapterSystem::OnMapRequestEvent(const MapRequestEvent* event)
 
 void AdapterSystem::OnGameStateRequestEvent(const GameStateRequestEvent* event)
 {
+    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_STATE, std::string{}); // No special model
+}
+
+void AdapterSystem::OnGameStateEvent(const GameStateEvent* event)
+{
+    count++;
     ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_STATE, std::string{}); // No special model
 }
 
@@ -179,6 +195,7 @@ void AdapterSystem::RegisterEventCallbacks()
     RegisterEventCallback(&AdapterSystem::OnChatRequestEvent);
     RegisterEventCallback(&AdapterSystem::OnMoveRequestEvent);
     RegisterEventCallback(&AdapterSystem::OnShootRequestEvent);
+    RegisterEventCallback(&AdapterSystem::OnGameStateEvent);
 }
 
 void AdapterSystem::UnregisterEventCallbacks()
@@ -193,4 +210,5 @@ void AdapterSystem::UnregisterEventCallbacks()
     UnregisterEventCallback(&AdapterSystem::OnChatRequestEvent);
     UnregisterEventCallback(&AdapterSystem::OnMoveRequestEvent);
     UnregisterEventCallback(&AdapterSystem::OnShootRequestEvent);
+    UnregisterEventCallback(&AdapterSystem::OnGameStateEvent);
 }

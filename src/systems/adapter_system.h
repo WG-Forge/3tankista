@@ -23,8 +23,11 @@ public:
     void OnChatRequestEvent(const ChatRequestEvent* event);
     void OnMoveRequestEvent(const MoveRequestEvent* event);
     void OnShootRequestEvent(const ShootRequestEvent* event);
+    void OnGameStateEvent(const GameStateEvent* event);
 
 private:
+    int count;
     void RegisterEventCallbacks();
     void UnregisterEventCallbacks();
+
 };

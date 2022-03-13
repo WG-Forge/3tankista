@@ -313,3 +313,6 @@ struct StartGameEvent : public ecs::event::Event<StartGameEvent>
 struct BadRestartEvent : public ecs::event::Event<BadRestartEvent>
 {
 };
+struct GameStateEvent : public ecs::event::Event<GameStateEvent>
+{
+};

@@ -8,7 +8,17 @@
 
 void Game::GS_RUNNING()
 {
-
+    ecs::ecsEngine->SendEvent<GameStateEvent>();
+    auto map = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>()->GetAttackMatrix();
+    for (auto [key, value] : map)
+    {
+        std::cout << key << ": ";
+        for (auto& elem : value)
+        {
+            std::cout << elem << " ";
+        }
+        std::cout << "\n";
+    }
     WinSystem::UpdateCapturePoints();
     HealthSystem::HealTanks();
     auto                                                  players          = std::move(WinSystem::GetWinPoints());
