@@ -14,25 +14,23 @@ Matrix4<T> translate(const Matrix4<T>& m, const Vector3<T> v)
 template <typename T>
 Matrix4<T> rotate(const Matrix4<T>& m, T angle, const Vector3<T> v)
 {
-    const T a = angle;
-    const T c = std::cos(a);
-    const T s = std::cos(a);
+    Matrix3<T> rotate;
+    Vector3<T> sin_axis  = sin(angle) * v;
+    auto       c         = std::cos(angle);
+    Vector3<T> cos1_axis = (T(1) - c) * v;
 
-    Vector3<T> axis{ v.getNormalized() };
-    Vector3<T> tmp{ (T(1) - c) * axis };
+    double tmp;
+    tmp                   = cos1_axis.x() * v.y();
+    rotate.coeffRef(0, 1) = tmp - sin_axis.z();
+    rotate.coeffRef(1, 0) = tmp + sin_axis.z();
 
-    Matrix4<T> rotate;
-    rotate.getCol(0)[0] = c + tmp[0] * axis[0];
-    rotate.getCol(0)[1] = tmp[0] * axis[1] + s * axis[2];
-    rotate.getCol(0)[2] = tmp[0] * axis[2] - s * axis[1];
+    tmp                   = cos1_axis.x() * v.z();
+    rotate.coeffRef(0, 2) = tmp + sin_axis.y();
+    rotate.coeffRef(2, 0) = tmp - sin_axis.y();
 
-    rotate.getCol(1)[0] = tmp[1] * axis[0] - s * axis[2];
-    rotate.getCol(1)[1] = c + tmp[1] * axis[1];
-    rotate.getCol(1)[2] = tmp[1] * axis[2] + s * axis[0];
-
-    rotate.getCol(2)[0] = tmp[2] * axis[0] + s * axis[1];
-    rotate.getCol(2)[1] = tmp[2] * axis[1] - s * axis[0];
-    rotate.getCol(2)[2] = c + tmp[2] * axis[2];
+    tmp                   = cos1_axis.y() * v.z();
+    rotate.coeffRef(1, 2) = tmp - sin_axis.x();
+    rotate.coeffRef(2, 1) = tmp + sin_axis.x();
 
     Matrix4<T> result;
     result.replaceCol(

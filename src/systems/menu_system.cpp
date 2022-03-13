@@ -6,6 +6,7 @@
 #include "components/capture_points_component.h"
 #include "components/kill_points_component.h"
 #include "components/name_component.h"
+#include "components/player_id_component.h"
 #include "components/turn_component.h"
 #include "game/game_events.h"
 
@@ -113,63 +114,85 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
 
 void MenuSystem::OnGameOver(const GameOverEvent* event)
 {
-    if (event->winners.size() > 1)
-    {
-        std::cout << "It is draw for players:\n";
-        for (auto& winner : event->winners)
-        {
-            std::cout
-                << "Player:\n"
-                << ecs::ecsEngine->GetEntityManager()->GetEntity(winner.first)->GetComponent<NameComponent>()->GetName()
-                << "\n"
-                << "Capture points: " << winner.second.first << "\n"
-                << "Kill points: " << winner.second.second << "\n";
-        }
-        std::cout << "Other players lost\n";
-    }
-    else if (event->winners.size() == 1)
-    {
-        auto winner = ecs::ecsEngine->GetEntityManager()->GetEntity(event->winners[0].first);
-        std::cout << "Winner:\n"
-                  << winner->GetComponent<NameComponent>()->GetName() << "\n"
-                  << "Capture points: " << event->winners[0].second.first << "\n"
-                  << "Kill points: " << event->winners[0].second.second << "\n";
-    }
+    nana::form fm{ nana::API::make_center(300, 250) };
 
-    nana::form fm{ nana::rectangle{ nana::API::make_center(300, 250) } };
+    nana::place plc(fm);
+
     fm.caption("Results");
 
-    nana::label  nameTitle{ fm, "Name" };
-    nana::label  capturePointsTitle{ fm, "Capture points" };
-    nana::label  killPointsTitle{ fm, "Kill points" };
-    nana::button buttonOk{ fm, "\u2714 OK" };
+    plc.div("<><weight = 80 % vertical<>"
+            "<weight = 70 % vertical"
+            "<vertical title grid=[3,1]>"
+            "<vertical information grid=[3,3]>"
+            "<<margin=[0,0,0,200]>weight=25 gap=10 button>> <>> <> ");
+    std::shared_ptr<nana::label> playerTitle        = std::make_shared<nana::label>(fm, "Player");
+    std::shared_ptr<nana::label> capturePointsTitle = std::make_shared<nana::label>(fm, "Caption points");
+    std::shared_ptr<nana::label> killPointsTitle    = std::make_shared<nana::label>(fm, "Kill points");
 
-    nana::place plc{ fm };
+    plc.field("title") << playerTitle->handle() << capturePointsTitle->handle() << killPointsTitle->handle();
 
-    plc.div("<><weight=80% vertical<>"
-            "<weight=80% vertical "
-            "<information grid=[3,4] gap=10>  "
-            "<weight=25 gap=20 buttons> ><>><>");
+    std::cout << "It is draw for players:\n";
+    std::vector<std::shared_ptr<nana::label>> labels;
+    for (auto& winner : event->winners)
+    {
+        auto entity = ecs::ecsEngine->GetEntityManager()->GetEntity(winner.first);
+        std::cout << "Player: " << entity->GetComponent<NameComponent>()->GetName() << "\n"
+                  << "Capture points: " << winner.second.first << "\n"
+                  << "Kill points: " << winner.second.second << "\n";
 
-    plc.field("information") << nameTitle.handle() << capturePointsTitle.handle() << killPointsTitle.handle();
+        labels.emplace_back(new nana::label{ fm });
+        labels.back()->format(true);
+        labels.back()->caption(
+            ("<bold=true color=0x09943C>" + entity->GetComponent<NameComponent>()->GetName() + "</>"));
+        plc.field("information") << labels.back()->handle();
+        labels.emplace_back(new nana::label{ fm, std::to_string(winner.second.first) });
+        plc.field("information") << labels.back()->handle();
+        labels.emplace_back(new nana::label{ fm, std::to_string(winner.second.second) });
+        plc.field("information") << labels.back()->handle();
+    }
 
     auto componentManager = ecs::ecsEngine->GetComponentManager();
     auto entityManager    = ecs::ecsEngine->GetEntityManager();
     for (auto it = componentManager->begin<KillPointsComponent>(); componentManager->end<KillPointsComponent>() != it;
          ++it)
     {
-        auto player = entityManager->GetEntity(it->GetOwner());
+        auto player         = entityManager->GetEntity(it->GetOwner());
+        bool isPLayerWinner = false;
+        for (auto& winner : event->winners)
+        {
+            if (winner.first == player->GetComponent<PlayerIdComponent>()->GetPlayerId())
+            {
+                isPLayerWinner = true;
+                break;
+            }
+        }
 
-        nana::label* name = new nana::label{ fm, player->GetComponent<NameComponent>()->GetName() };
-        nana::label* capturePoints =
-            new nana::label{ fm, std::to_string(player->GetComponent<CapturePointsComponent>()->GetCapturePoints()) };
-        nana::label* killPoints =
-            new nana::label{ fm, std::to_string(player->GetComponent<KillPointsComponent>()->GetKillPoints()) };
-
-        plc.field("information") << name->handle() << capturePoints->handle() << killPoints->handle();
+        if (!isPLayerWinner)
+        {
+            std::pair<int, int> winPoints{ player->GetComponent<CapturePointsComponent>()->GetCapturePoints(),
+                                           it->GetKillPoints() };
+            labels.emplace_back(new nana::label{ fm });
+            labels.back()->format(true);
+            labels.back()->caption(
+                ("<bold=true color=0x8A0D0D>" + player->GetComponent<NameComponent>()->GetName() + "</>"));
+            plc.field("information") << labels.back()->handle();
+            labels.emplace_back(new nana::label{ fm, std::to_string(winPoints.first) });
+            plc.field("information") << labels.back()->handle();
+            labels.emplace_back(new nana::label{ fm, std::to_string(winPoints.second) });
+            plc.field("information") << labels.back()->handle();
+        }
     }
 
-    plc.field("buttons") << buttonOk.handle();
+    std::shared_ptr<nana::button> buttonOk = std::make_shared<nana::button>(fm, "\u2714 OK");
+
+    buttonOk->events().click(
+        [&]()
+        {
+            fm.close();
+            ecs::ecsEngine->SendEvent<QuitGameEvent>();
+        });
+
+    plc.field("button") << buttonOk->handle();
 
     plc.collocate();
 

@@ -9,6 +9,8 @@
 #include "render/shapes/shape.h"
 #include "render/shapes/shape_generator.h"
 
+#include "utility/matrix_transform.h"
+
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
            const Vector3i&        position,
@@ -26,6 +28,9 @@ Tank::Tank(const ecs::EntityId&   entityId,
     this->tankTypeComponent      = AddComponent<TankTypeComponent>(type);
     this->shootRangeBonus        = AddComponent<ShootRangeBonusComponent>(0);
     this->stateComponent         = AddComponent<StateComponent>();
+
+    const auto transform = GetComponent<TransformComponent>()->GetTransform();
+
     switch (type)
     {
         case TankType::MEDIUM:
@@ -74,4 +79,12 @@ Tank::Tank(const ecs::EntityId&   entityId,
     this->healthComponent   = AddComponent<HealthComponent>(this->ttcComponent->GetMaxHealth());
     this->materialComponent = this->AddComponent<MaterialComponent>(
         MaterialGenerator::CreateMaterial<DefaultMaterial>(), Color{ 1.0f, 1.0f, 1.0f, 1.0f });
+
+    static const auto aspectRatio = GAME_WINDOW_WIDTH / 1920.0f;
+
+    GetComponent<TransformComponent>()->SetTransform(
+        Matrix4f{ { 1.77f * aspectRatio * transform[0], transform[1], transform[2], transform[3] },
+                  { transform[4], aspectRatio * transform[5], transform[6], transform[7] },
+                  { transform[8], transform[9], transform[10], transform[11] },
+                  { transform[12], transform[13], transform[14], transform[15] } });
 }

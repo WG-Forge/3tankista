@@ -81,8 +81,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
         }
         // create spawn circle
         ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(tank.second.spawnPosition, BLUE_SPAWN_COLOR);
-        // problem with choosing spawn color and hp color
-
+        // problem with choosing spawn color
         // send event about tank creation
         ecs::ecsEngine->SendEvent<NewTankCreated>(entity);
     }
