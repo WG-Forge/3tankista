@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ecs.h"
-#include "game/game_events.h"
 #include "components/adapter_player_id_component.h"
 #include "components/adapter_vehicle_id_component.h"
 #include "components/turn_component.h"
+#include "ecs.h"
+#include "game/game_events.h"
 
 class AdapterSystem : public ecs::System<AdapterSystem>, public ecs::event::IEventListener
 {

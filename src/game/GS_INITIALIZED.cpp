@@ -3,6 +3,7 @@
 #include "systems/action_system.h"
 #include "systems/adapter_system.h"
 #include "systems/attack_matrix_system.h"
+#include "systems/catapult_system.h"
 #include "systems/game_create/game_state_system.h"
 #include "systems/game_create/map_system.h"
 #include "systems/gameplay_system.h"
@@ -16,7 +17,6 @@
 #include "systems/turn_system.h"
 #include "systems/uisystem.h"
 #include "systems/win_system.h"
-#include "systems/catapult_system.h"
 
 void Game::GS_INITIALIZED()
 {

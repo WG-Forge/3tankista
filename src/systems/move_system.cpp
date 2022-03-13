@@ -22,7 +22,7 @@ void MoveSystem::OnMoveResponse(const MoveResponseEvent* event)
     uint64_t currentPlayerId;
     for (auto it = componentManager->begin<OrderComponent>(); componentManager->end<OrderComponent>() != it; ++it)
     {
-        if (it->GetOrder() == (turnComponent->GetCurrentTurn()-1) % turnComponent->GetPlayersNumber())
+        if (it->GetOrder() == (turnComponent->GetCurrentTurn() - 1) % turnComponent->GetPlayersNumber())
         {
             currentPlayerId = it->GetOwner();
         }

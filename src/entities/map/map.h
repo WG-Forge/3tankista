@@ -14,7 +14,7 @@ public:
     Map(const ecs::EntityId& entityId, ecs::ComponentManager* componentManager, const int size, std::string name);
     ~Map() override = default;
 
-    void        SetContent(const uint64_t & content) { this->content = content; }
+    void        SetContent(const uint64_t& content) { this->content = content; }
     auto&       GetContent() { return this->content; }
     const auto& GetContent() const { return this->content; }
 
@@ -23,10 +23,10 @@ public:
     const auto& GetSpawnPoints() const { return this->spawnPoints; }
 
 private:
-    uint64_t             content;
+    uint64_t              content;
     std::vector<uint64_t> spawnPoints;
-    NameComponent*            nameComponent;
-    SizeComponent*            sizeComponent;
-    TransformComponent*       transform;
-    MaterialComponent*        material;
+    NameComponent*        nameComponent;
+    SizeComponent*        sizeComponent;
+    TransformComponent*   transform;
+    MaterialComponent*    material;
 };
