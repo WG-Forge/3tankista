@@ -4,6 +4,7 @@
 #include "components/hex_map_component.h"
 #include "components/player_id_component.h"
 #include "components/shoot_range_bonus.h"
+#include "components/states/abstract_state.h"
 #include "components/transform_component.h"
 #include "components/ttc_component.h"
 #include "components/turn_component.h"
@@ -24,9 +25,10 @@ HealthSystem::~HealthSystem()
 
 void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
 {
-    auto entityManager    = ecs::ecsEngine->GetEntityManager();
-    auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto mapComponent     = componentManager->begin<HexMapComponent>().operator->();
+    auto entityManager         = ecs::ecsEngine->GetEntityManager();
+    auto componentManager      = ecs::ecsEngine->GetComponentManager();
+    auto mapComponent          = componentManager->begin<HexMapComponent>().operator->();
+    auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
 
     for (auto& action : event->actions)
     {
@@ -67,7 +69,9 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
             auto playerId =
                 entityManager->GetEntity(action.vehicleId)->GetComponent<PlayerIdComponent>()->GetPlayerId();
             if (it_f != possiblePositions.end() &&
-                currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId() != playerId)
+                currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId() != playerId &&
+                AbstractState::CheckNeutrality(
+                    attackMatrixComponent, (Tank*)entityManager->GetEntity(action.vehicleId), (Tank*)currentEntity))
             {
                 auto health = currentEntity->GetComponent<HealthComponent>();
                 if (health->GetHealth() != 0) // Already destroyed
