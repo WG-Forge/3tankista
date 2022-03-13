@@ -1,5 +1,6 @@
 #include "components/attack_matrix_component.h"
 #include "components/capture_points_component.h"
+#include "components/health_component.h"
 #include "components/kill_points_component.h"
 #include "components/turn_component.h"
 #include "game.h"
@@ -9,7 +10,9 @@
 void Game::GS_RUNNING()
 {
     ecs::ecsEngine->SendEvent<GameStateEvent>();
-    auto map = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>()->GetAttackMatrix();
+    auto componentManager = ecs::ecsEngine->GetComponentManager();
+    auto entityManager    = ecs::ecsEngine->GetEntityManager();
+    auto map              = ecs::ecsEngine->GetComponentManager()->begin<AttackMatrixComponent>()->GetAttackMatrix();
     for (auto [key, value] : map)
     {
         std::cout << key << ": ";
@@ -19,11 +22,20 @@ void Game::GS_RUNNING()
         }
         std::cout << "\n";
     }
+    for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
+         ++it)
+    {
+        auto currentEntity = entityManager->GetEntity(it->GetOwner());
+        std::cout << currentEntity->GetComponent<TransformComponent>()->GetPosition().x() << " "
+                  << currentEntity->GetComponent<TransformComponent>()->GetPosition().y() << " "
+                  << currentEntity->GetComponent<TransformComponent>()->GetPosition().z() << " "
+                  << "health: " << currentEntity->GetComponent<HealthComponent>()->GetHealth() << "\n";
+    }
     WinSystem::UpdateCapturePoints();
     HealthSystem::HealTanks();
-    auto                                                  players          = std::move(WinSystem::GetWinPoints());
-    auto                                                  componentManager = ecs::ecsEngine->GetComponentManager();
-    bool                                                  isFinished       = false;
+    auto players = std::move(WinSystem::GetWinPoints());
+    // auto                                                  componentManager = ecs::ecsEngine->GetComponentManager();
+    bool                                                  isFinished = false;
     std::vector<std::pair<uint64_t, std::pair<int, int>>> winners;
     if (!componentManager->begin<TurnComponent>()->isFinished())
     {

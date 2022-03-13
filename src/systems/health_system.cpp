@@ -64,7 +64,10 @@ void HealthSystem::OnShootResponse(const ShootResponseEvent* event)
             auto it_f          = std::find(possiblePositions.begin(),
                                   possiblePositions.end(),
                                   currentEntity->GetComponent<TransformComponent>()->GetPosition());
-            if (it_f != possiblePositions.end())
+            auto playerId =
+                entityManager->GetEntity(action.vehicleId)->GetComponent<PlayerIdComponent>()->GetPlayerId();
+            if (it_f != possiblePositions.end() &&
+                currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId() != playerId)
             {
                 auto health = currentEntity->GetComponent<HealthComponent>();
                 if (health->GetHealth() != 0) // Already destroyed
