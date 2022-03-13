@@ -1,6 +1,8 @@
 #include "game.h"
 #include "game_object.h"
 
+#include "systems/render_system.h"
+
 void Game::GS_STARTED()
 {
     ChangeState(GameState::RUNNING);

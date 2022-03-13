@@ -14,6 +14,7 @@
 class WinSystem : public ecs::System<WinSystem>, public ecs::event::IEventListener
 {
 public:
+    DECLARE_STATIC_LOGGER
     WinSystem();
     ~WinSystem() override;
 

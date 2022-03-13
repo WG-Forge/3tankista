@@ -1,5 +1,7 @@
 #include "win_system.h"
 
+DEFINE_STATIC_LOGGER(WinSystem, "WinSystem")
+
 WinSystem::WinSystem()
 {
     RegisterEventCallbacks();
@@ -55,6 +57,7 @@ void WinSystem::OnMoveResponseEvent(const MoveResponseEvent* event)
     {
         auto entity             = entityManager->GetEntity(action.vehicleId);
         auto transformComponent = entity->GetComponent<TransformComponent>();
+        // TODO: REWRITE!
         if (std::find(basePositionVector.begin(), basePositionVector.end(), transformComponent->GetPosition()) !=
             basePositionVector.end())
         {
@@ -108,6 +111,7 @@ void WinSystem::UpdateCapturePoints()
     {
         return;
     }
+    LogDebug("WINSYSTEM!!!");
     if ((turnComponent->GetCurrentTurn()) % turnComponent->GetPlayersNumber() == 0 ||
         turnComponent->GetPlayersNumber() == 1)
     {
@@ -127,6 +131,10 @@ void WinSystem::UpdateCapturePoints()
                 entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->SetCapturePoints(
                     newCapturePointsOfPlayer);
             }
+            LogDebug("Player(id = %d) capture = %d kill = %d",
+                     playerId,
+                     entityManager->GetEntity(playerId)->GetComponent<CapturePointsComponent>()->GetCapturePoints(),
+                     entityManager->GetEntity(playerId)->GetComponent<KillPointsComponent>()->GetKillPoints())
         }
     }
 }

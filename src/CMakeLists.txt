@@ -17,11 +17,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE asio
         glfw
         stb_image
         freetype
-        ${CMAKE_DL_LIBS})
+        nana)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
-
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 

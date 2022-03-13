@@ -26,6 +26,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             {
                 auto model = json.get<LoginResponseModel>();
                 ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
+                ecs::ecsEngine->SendEvent<ChatRequestEvent>(ChatModel{ "GL HF!" });
                 LogInfo("Login is successful!") break;
             }
             case Action::LOGOUT:
@@ -40,15 +41,8 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::GAME_STATE:
             {
-                if (count == 0)
-                {
-                    auto model = json.get<GameStateModel>();
-                    ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
-                }
-                else
-                {
-                    std::cout << json.dump() << "\n";
-                }
+                auto model = json.get<GameStateModel>();
+                ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
                 break;
             }
             case Action::GAME_ACTIONS:
@@ -114,15 +108,11 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     }
     else if (event->result == Result::TIMEOUT)
     {
-        ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
+        ecs::ecsEngine->SendEvent<SendActionEvent>(event->action, event->sentData);
     }
     else if (event->result != Result::OKEY && event->action == Action::LOGIN)
     {
         // ecs::ecsEngine->SendEvent<GameLoginEvent>();
-    }
-    else if (event->result == Result::INAPPROPRIATE_GAME_STATE)
-    {
-        ecs::ecsEngine->SendEvent<GameStateRequestEvent>();
     }
 }
 
@@ -143,12 +133,6 @@ void AdapterSystem::OnMapRequestEvent(const MapRequestEvent* event)
 
 void AdapterSystem::OnGameStateRequestEvent(const GameStateRequestEvent* event)
 {
-    ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_STATE, std::string{}); // No special model
-}
-
-void AdapterSystem::OnGameStateEvent(const GameStateEvent* event)
-{
-    count++;
     ecs::ecsEngine->SendEvent<SendActionEvent>(Action::GAME_STATE, std::string{}); // No special model
 }
 
@@ -195,7 +179,6 @@ void AdapterSystem::RegisterEventCallbacks()
     RegisterEventCallback(&AdapterSystem::OnChatRequestEvent);
     RegisterEventCallback(&AdapterSystem::OnMoveRequestEvent);
     RegisterEventCallback(&AdapterSystem::OnShootRequestEvent);
-    RegisterEventCallback(&AdapterSystem::OnGameStateEvent);
 }
 
 void AdapterSystem::UnregisterEventCallbacks()
@@ -210,5 +193,4 @@ void AdapterSystem::UnregisterEventCallbacks()
     UnregisterEventCallback(&AdapterSystem::OnChatRequestEvent);
     UnregisterEventCallback(&AdapterSystem::OnMoveRequestEvent);
     UnregisterEventCallback(&AdapterSystem::OnShootRequestEvent);
-    UnregisterEventCallback(&AdapterSystem::OnGameStateEvent);
 }

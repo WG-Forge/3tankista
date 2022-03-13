@@ -102,36 +102,54 @@ std::string UiSystem::ChooseTextureForTankHealthBar(Tank* tank, HealthBarPositio
         {
             healthBarTextureName += this->ChooseTextureForTankType(tank);
             healthBarTextureName += "_health_bar_blue.png";
+            // spike
+            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+                tank->GetComponent<SpawnPositionComponent>()->GetSpawnPosition(), BLUE_SPAWN_COLOR);
             break;
         }
         case HealthBarPosition::TOP_RIGHT:
         {
             healthBarTextureName += this->ChooseTextureForTankType(tank);
             healthBarTextureName += "_health_bar_blue.png";
+            // spike
+            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+                tank->GetComponent<SpawnPositionComponent>()->GetSpawnPosition(), BLUE_SPAWN_COLOR);
             break;
         }
         case HealthBarPosition::MIDDLE_LEFT:
         {
             healthBarTextureName += this->ChooseTextureForTankType(tank);
             healthBarTextureName += "_health_bar_rose.png";
+            // spike
+            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+                tank->GetComponent<SpawnPositionComponent>()->GetSpawnPosition(), ROSE_SPAWN_COLOR);
             break;
         }
         case HealthBarPosition::MIDDLE_RIGHT:
         {
             healthBarTextureName += this->ChooseTextureForTankType(tank);
             healthBarTextureName += "_health_bar_rose.png";
+            // spike
+            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+                tank->GetComponent<SpawnPositionComponent>()->GetSpawnPosition(), ROSE_SPAWN_COLOR);
             break;
         }
         case HealthBarPosition::BOTTOM_LEFT:
         {
             healthBarTextureName += this->ChooseTextureForTankType(tank);
             healthBarTextureName += "_health_bar_orange.png";
+            // spike
+            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+                tank->GetComponent<SpawnPositionComponent>()->GetSpawnPosition(), ORANGE_SPAWN_COLOR);
             break;
         }
         case HealthBarPosition::BOTTOM_RIGHT:
         {
             healthBarTextureName += this->ChooseTextureForTankType(tank);
             healthBarTextureName += "_health_bar_orange.png";
+            // spike
+            ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(
+                tank->GetComponent<SpawnPositionComponent>()->GetSpawnPosition(), ORANGE_SPAWN_COLOR);
             break;
         }
         default:
