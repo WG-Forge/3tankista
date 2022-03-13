@@ -270,3 +270,35 @@ bool AbstractState::IsUnderEnemyShootArea(GameplaySystem::Context& context, cons
     }
     return false;
 }
+bool AbstractState::FarFreeReachableBasePosition(GameplaySystem::Context& context, Tank* tank, Vector3i& position)
+{
+    auto       entityManager     = ecs::ecsEngine->GetEntityManager();
+    auto       componentManager  = ecs::ecsEngine->GetComponentManager();
+    auto       tankPosition      = tank->GetComponent<TransformComponent>()->GetPosition();
+    auto       tankSpawnPosition = tank->GetComponent<SpawnPositionComponent>()->GetSpawnPosition();
+    auto       tankSpeed         = tank->GetComponent<TtcComponent>()->GetSpeed();
+    PathFinder pathFinder;
+    pathFinder.SetHexMapComponent(context.hexMap);
+
+    auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
+    auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
+    auto baseIdVector = content->GetVectorBaseId();
+
+    bool find = false;
+    for (auto baseId : baseIdVector)
+    {
+        auto base         = entityManager->GetEntity(baseId);
+        auto basePosition = base->GetComponent<TransformComponent>()->GetPosition();
+        if (pathFinder.Find(tankPosition, basePosition))
+        {
+            if (pathFinder.GetDistance() > tankSpeed)
+                continue;
+            if (!find || MapUtility::GetDistance(basePosition, tankSpawnPosition) >
+                             MapUtility::GetDistance(position, tankSpawnPosition))
+            {
+                position = tankSpawnPosition;
+            }
+        }
+    }
+    return find;
+}

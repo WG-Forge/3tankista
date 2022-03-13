@@ -34,6 +34,7 @@ protected:
     static bool     IsPathToBaseExists(GameplaySystem::Context& context, Tank* tank);
     static std::vector<Vector3i> GetPathToBase(GameplaySystem::Context& context, Tank* tank);
     static bool RepairInMoveArea(GameplaySystem::Context& context, Tank* tank, Vector3i& position, const Repair type);
+    static bool FarFreeReachableBasePosition(GameplaySystem::Context& context, Tank* tank, Vector3i& position);
 
 private:
     StateComponent* stateComponent;

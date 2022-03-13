@@ -108,7 +108,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     }
     else if (event->result == Result::TIMEOUT)
     {
-        ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
+        ecs::ecsEngine->SendEvent<SendActionEvent>(event->action, event->sentData);
     }
     else if (event->result != Result::OKEY && event->action == Action::LOGIN)
     {

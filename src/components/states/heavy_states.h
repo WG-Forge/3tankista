@@ -57,7 +57,7 @@ public:
             ChangeState<HeavyTankShootState>();
             return;
         }
-        if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
+        if (!IsOnTheBase(context, tank) && needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
         {
             ChangeState<HeavyTankHealState>();
             return;
