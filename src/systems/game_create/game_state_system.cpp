@@ -80,7 +80,7 @@ void GameStateSystem::OnGameStateResponseEvent(const GameStateResponseEvent* eve
             playerPosition[tank.second.playerId] = tank.second.spawnPosition;
         }
         // create spawn circle
-        ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(tank.second.spawnPosition, BLUE_SPAWN_COLOR);
+        //        ecs::ecsEngine->GetEntityManager()->CreateEntity<Spawn>(tank.second.spawnPosition, BLUE_SPAWN_COLOR);
         // problem with choosing spawn color
         // send event about tank creation
         ecs::ecsEngine->SendEvent<NewTankCreated>(entity);
