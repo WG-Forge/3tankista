@@ -4,15 +4,15 @@
 #include "systems/gameplay_system.h"
 #include "utility/path_finder.h"
 
-class LightSpgTankInitState;
-class LightSpgTankStayState;
-class LightSpgTankMoveState;
-class LightSpgTankShootState;
+class LightTankInitState;
+class LightTankStayState;
+class LightTankMoveState;
+class LightTankShootState;
 
-class LightSpgTankInitState : public AbstractState
+class LightTankInitState : public AbstractState
 {
 public:
-    explicit LightSpgTankInitState(StateComponent* component)
+    explicit LightTankInitState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -21,27 +21,27 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<LightSpgTankShootState>();
+            ChangeState<LightTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<LightSpgTankMoveState>();
+            ChangeState<LightTankMoveState>();
             return;
         }
         else
         {
-            ChangeState<LightSpgTankStayState>();
+            ChangeState<LightTankStayState>();
             return;
         }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-class LightSpgTankStayState : public AbstractState
+class LightTankStayState : public AbstractState
 {
 public:
-    explicit LightSpgTankStayState(StateComponent* component)
+    explicit LightTankStayState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -50,22 +50,22 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<LightSpgTankShootState>();
+            ChangeState<LightTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<LightSpgTankMoveState>();
+            ChangeState<LightTankMoveState>();
             return;
         }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-class LightSpgTankMoveState : public AbstractState
+class LightTankMoveState : public AbstractState
 {
 public:
-    explicit LightSpgTankMoveState(StateComponent* component)
+    explicit LightTankMoveState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -74,12 +74,12 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<LightSpgTankShootState>();
+            ChangeState<LightTankShootState>();
             return;
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
         {
-            ChangeState<LightSpgTankStayState>();
+            ChangeState<LightTankStayState>();
             return;
         }
     }
@@ -100,10 +100,10 @@ public:
     }
 };
 
-class LightSpgTankShootState : public AbstractState
+class LightTankShootState : public AbstractState
 {
 public:
-    explicit LightSpgTankShootState(StateComponent* component)
+    explicit LightTankShootState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -115,12 +115,12 @@ public:
         {
             if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
             {
-                ChangeState<LightSpgTankMoveState>();
+                ChangeState<LightTankMoveState>();
                 return;
             }
             else
             {
-                ChangeState<LightSpgTankStayState>();
+                ChangeState<LightTankStayState>();
                 return;
             }
         }
@@ -128,8 +128,9 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
-        auto tank   = GetCurrentTank();
-        auto a=ecs::ecsEngine->GetComponentManager()->GetComponent<TransformComponent>(tank->GetEntityID())->GetPosition();
+        auto tank = GetCurrentTank();
+        auto a =
+            ecs::ecsEngine->GetComponentManager()->GetComponent<TransformComponent>(tank->GetEntityID())->GetPosition();
         auto target = GetEnemyInShootArea(context, tank);
         ecs::ecsEngine->SendEvent<ShootRequestEvent>(
             ShootModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });

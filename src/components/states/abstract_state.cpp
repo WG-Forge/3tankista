@@ -23,16 +23,14 @@ bool AbstractState::CheckNeutrality(AttackMatrixComponent* attackMatrixComponent
     return true;
 }
 
-bool AbstractState::CanShoot(Tank* playerTank, Tank* enemyTank)
+bool AbstractState::CanShoot(Tank* tank, const Vector3i& position)
 {
-    bool shoot            = false;
-    auto distance         = MapUtility::GetDistance(playerTank->GetComponent<TransformComponent>()->GetPosition(),
-                                            enemyTank->GetComponent<TransformComponent>()->GetPosition());
-    auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto standartRange    = componentManager->GetComponent<TtcComponent>(playerTank->GetEntityID())->GetStandartRange();
-    auto shootRangeBonus =
-        componentManager->GetComponent<ShootRangeBonusComponent>(playerTank->GetEntityID())->GetShootRangeBonus();
-    switch (playerTank->GetComponent<TankTypeComponent>()->GetTankType())
+    bool shoot           = false;
+    auto tankPosition    = tank->GetComponent<TransformComponent>()->GetPosition();
+    auto distance        = MapUtility::GetDistance(tankPosition, position);
+    auto standartRange   = tank->GetComponent<TtcComponent>()->GetStandartRange();
+    auto shootRangeBonus = tank->GetComponent<ShootRangeBonusComponent>()->GetShootRangeBonus();
+    switch (tank->GetComponent<TankTypeComponent>()->GetTankType())
     {
         case TankType::MEDIUM:
         {
@@ -41,10 +39,9 @@ bool AbstractState::CanShoot(Tank* playerTank, Tank* enemyTank)
         }
         case TankType::AT_SPG:
         {
-            auto tankPosition = playerTank->GetComponent<TransformComponent>()->GetPosition();
-            auto point        = enemyTank->GetComponent<TransformComponent>()->GetPosition();
-            shoot             = distance <= standartRange + shootRangeBonus &&
-                    (point.x() == tankPosition.x() || point.y() == tankPosition.y() || point.z() == tankPosition.z());
+            shoot = distance <= standartRange + shootRangeBonus &&
+                    (position.x() == tankPosition.x() || position.y() == tankPosition.y() ||
+                     position.z() == tankPosition.z());
             break;
         }
         case TankType::HEAVY:
@@ -140,7 +137,7 @@ Tank* AbstractState::GetEnemyInShootArea(GameplaySystem::Context& context, Tank*
     for (auto& enemy : context.enemies)
     {
         auto elem = enemy->GetComponent<TransformComponent>()->GetPosition();
-        if (CanShoot(tank, enemy))
+        if (CanShoot(tank, enemy->GetComponent<TransformComponent>()->GetPosition()))
         {
             if (IsCorrectShootPosition(context.hexMap, tank, enemy))
             {

@@ -4,7 +4,7 @@
 const std::vector<Vector2i> PathFinder::HEX_DIRECTIONS = { { 1, 0 },  { 1, -1 }, { 0, -1 },
                                                            { -1, 0 }, { -1, 1 }, { 0, 1 } };
 
-void PathFinder::AStar()
+void PathFinder::AStar(const int threshold)
 {
     this->lastDirections.assign((area->GetSize() << 1) | 1, std::vector<signed char>((area->GetSize() << 1) | 1, -1));
     this->distance.assign((area->GetSize() << 1) | 1, std::vector<int>((area->GetSize() << 1) | 1, NO_PATH));
@@ -19,7 +19,7 @@ void PathFinder::AStar()
     {
         auto position = queue.top().first;
         queue.pop();
-        if (position == to)
+        if (MapUtility::GetDistance(position, to) <= threshold)
         {
             break;
         }
@@ -62,8 +62,14 @@ std::vector<Vector3i> PathFinder::GetShortestPath()
 
 bool PathFinder::Find(const Vector3i& from, const Vector3i& to)
 {
+    return Find(from, to, 0);
+}
+
+bool PathFinder::Find(const Vector3i& from, const Vector3i& to, const int threshold)
+{
+
     this->from = MapUtility::Shift(MapUtility::Cube2Hex(from), area->GetSize());
     this->to   = MapUtility::Shift(MapUtility::Cube2Hex(to), area->GetSize());
-    AStar();
+    AStar(threshold);
     return this->distance[this->to.x()][this->to.y()] != NO_PATH;
 }

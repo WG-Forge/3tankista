@@ -2,6 +2,7 @@
 
 #include "components/state_component.h"
 #include "ecs.h"
+#include "entities/player.h"
 #include "enums/repair.h"
 #include "game/models/models.h"
 #include "systems/gameplay_system.h"
@@ -24,7 +25,7 @@ protected:
     Tank* GetCurrentTank() { return (Tank*)ecs::ecsEngine->GetEntityManager()->GetEntity(stateComponent->GetOwner()); }
 
     static bool     CheckNeutrality(AttackMatrixComponent* attackMatrixComponent, Tank* playerTank, Tank* enemyTank);
-    static bool     CanShoot(Tank* playerTank, Tank* enemyTank);
+    static bool     CanShoot(Tank* tank, const Vector3i& position);
     static bool     IsCorrectShootPosition(HexMapComponent* map, Tank* tank, Tank* enemy);
     static Vector3i GetShootPosition(Tank* tank, Tank* enemyTank);
     static Tank*    GetEnemyInShootArea(GameplaySystem::Context& context, Tank* tank);

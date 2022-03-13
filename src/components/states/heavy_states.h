@@ -4,16 +4,16 @@
 #include "systems/gameplay_system.h"
 #include "utility/path_finder.h"
 
-class HeavyAtSpgTankInitState;
-class HeavyAtSpgTankStayState;
-class HeavyAtSpgTankMoveState;
-class HeavyAtSpgTankShootState;
-class HeavyAtSpgTankHealState;
+class HeavyTankInitState;
+class HeavyTankStayState;
+class HeavyTankMoveState;
+class HeavyTankShootState;
+class HeavyTankHealState;
 
-class HeavyAtSpgTankInitState : public AbstractState
+class HeavyTankInitState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankInitState(StateComponent* component)
+    explicit HeavyTankInitState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -22,27 +22,27 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankMoveState>();
+            ChangeState<HeavyTankMoveState>();
             return;
         }
         else
         {
-            ChangeState<HeavyAtSpgTankStayState>();
+            ChangeState<HeavyTankStayState>();
             return;
         }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-class HeavyAtSpgTankStayState : public AbstractState
+class HeavyTankStayState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankStayState(StateComponent* component)
+    explicit HeavyTankStayState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -54,27 +54,27 @@ public:
         Vector3i position{};
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
             return;
         }
         if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
         {
-            ChangeState<HeavyAtSpgTankHealState>();
+            ChangeState<HeavyTankHealState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankMoveState>();
+            ChangeState<HeavyTankMoveState>();
             return;
         }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-class HeavyAtSpgTankMoveState : public AbstractState
+class HeavyTankMoveState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankMoveState(StateComponent* component)
+    explicit HeavyTankMoveState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -86,17 +86,17 @@ public:
         Vector3i position{};
         if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
         {
-            ChangeState<HeavyAtSpgTankHealState>();
+            ChangeState<HeavyTankHealState>();
             return;
         }
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
             return;
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankStayState>();
+            ChangeState<HeavyTankStayState>();
             return;
         }
     }
@@ -117,10 +117,10 @@ public:
     }
 };
 
-class HeavyAtSpgTankShootState : public AbstractState
+class HeavyTankShootState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankShootState(StateComponent* component)
+    explicit HeavyTankShootState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -135,17 +135,17 @@ public:
             Vector3i position{};
             if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
             {
-                ChangeState<HeavyAtSpgTankHealState>();
+                ChangeState<HeavyTankHealState>();
                 return;
             }
             if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
             {
-                ChangeState<HeavyAtSpgTankMoveState>();
+                ChangeState<HeavyTankMoveState>();
                 return;
             }
             else
             {
-                ChangeState<HeavyAtSpgTankStayState>();
+                ChangeState<HeavyTankStayState>();
                 return;
             }
         }
@@ -160,10 +160,10 @@ public:
     }
 };
 
-class HeavyAtSpgTankHealState : public AbstractState
+class HeavyTankHealState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankHealState(StateComponent* component)
+    explicit HeavyTankHealState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -172,17 +172,17 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankMoveState>();
+            ChangeState<HeavyTankMoveState>();
             return;
         }
         else
         {
-            ChangeState<HeavyAtSpgTankStayState>();
+            ChangeState<HeavyTankStayState>();
             return;
         }
     }

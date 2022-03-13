@@ -17,12 +17,12 @@ public:
     std::vector<Vector3i> GetShortestPath();
 
     bool Find(const Vector3i& from, const Vector3i& to);
-
+    bool Find(const Vector3i& from, const Vector3i& to, const int threshold);
     void SetHexMapComponent(HexMapComponent* component) { area = component; }
     auto GetHexMapComponent() { return area; }
 
 protected:
-    void AStar();
+    void AStar(const int threshold);
 
 private:
     Vector2i                              from, to;
