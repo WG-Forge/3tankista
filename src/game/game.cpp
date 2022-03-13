@@ -11,13 +11,9 @@ Game::Game(std::string title)
     , windowPosX(-1)
     , windowPosY(-1)
     , windowWidth(-1)
-    , windowHeight(-1)
-{
-    DEFINE_LOGGER("GAME")
-    this->RegisterEventCallbacks();
-}
+    , windowHeight(-1){ DEFINE_LOGGER("GAME") }
 
-Game::~Game()
+    Game::~Game()
 {
     this->UnregisterEventCallbacks();
 }
@@ -92,6 +88,18 @@ void Game::InitializeGLFW()
     glfwSetFramebufferSizeCallback(this->window,
                                    [](GLFWwindow* window, int width, int height)
                                    { ecs::ecsEngine->SendEvent<WindowResizedEvent>(width, height); });
+
+    this->HideWindow();
+}
+
+void Game::HideWindow()
+{
+    glfwHideWindow(this->window);
+}
+
+void Game::ShowWindow()
+{
+    glfwShowWindow(this->window);
 }
 
 void Game::OnStartGame(const StartGameEvent* event)
@@ -125,9 +133,15 @@ void Game::ProcessWindowEvent()
     glfwPollEvents();
 }
 
-void Game::RegisterEventCallbacks() {}
+void Game::RegisterEventCallbacks()
+{
+    RegisterEventCallback(&Game::OnQuitGame);
+}
 
-void Game::UnregisterEventCallbacks() {}
+void Game::UnregisterEventCallbacks()
+{
+    UnregisterEventCallback(&Game::OnQuitGame);
+}
 
 void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {

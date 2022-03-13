@@ -4,7 +4,7 @@ Content::Content(const ecs::EntityId& entityId, ecs::ComponentManager* component
     : GameObject<Content>(entityId, componentManager)
 {
 }
-std::vector<Vector3i> Content::GetVectorV3i(std::vector<GameObjectId> vectorId)
+std::vector<Vector3i> Content::GetVectorV3i(std::vector<uint64_t> vectorId)
 {
     auto                  entityManager = ecs::ecsEngine->GetEntityManager();
     std::vector<Vector3i> positionVector;

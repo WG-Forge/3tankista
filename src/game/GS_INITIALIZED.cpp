@@ -3,6 +3,7 @@
 #include "systems/action_system.h"
 #include "systems/adapter_system.h"
 #include "systems/attack_matrix_system.h"
+#include "systems/catapult_system.h"
 #include "systems/game_create/game_state_system.h"
 #include "systems/game_create/map_system.h"
 #include "systems/gameplay_system.h"
@@ -25,6 +26,7 @@ void Game::GS_INITIALIZED()
     auto* SeS           = systemManager->AddSystem<ServerSystem>("wgforge-srv.wargaming.net", "443");
     auto* MaS           = systemManager->AddSystem<MapSystem>();
     auto* HeS           = systemManager->AddSystem<HealthSystem>();
+    auto* CaS           = systemManager->AddSystem<CatapultSystem>();
     auto* MoS           = systemManager->AddSystem<MoveSystem>();
     auto* GpS           = systemManager->AddSystem<GameplaySystem>();
     auto* GsS           = systemManager->AddSystem<GameStateSystem>();

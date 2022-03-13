@@ -8,4 +8,4 @@ void Game::GS_TERMINATED()
 
 void Game::GS_TERMINATED_ENTER() {}
 
-void Game::GS_GAMEOVER_LEAVE() {}
+void Game::GS_GAMEFINISHED_LEAVE() {}

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "components/adapter_player_id_component.h"
+#include "components/adapter_vehicle_id_component.h"
+#include "components/turn_component.h"
 #include "ecs.h"
 #include "game/game_events.h"
 
@@ -20,8 +23,10 @@ public:
     void OnChatRequestEvent(const ChatRequestEvent* event);
     void OnMoveRequestEvent(const MoveRequestEvent* event);
     void OnShootRequestEvent(const ShootRequestEvent* event);
+    void OnGameStateEvent(const GameStateEvent* event);
 
 private:
+    int  count;
     void RegisterEventCallbacks();
     void UnregisterEventCallbacks();
 };

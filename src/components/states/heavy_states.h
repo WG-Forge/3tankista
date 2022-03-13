@@ -4,16 +4,16 @@
 #include "systems/gameplay_system.h"
 #include "utility/path_finder.h"
 
-class HeavyAtSpgTankInitState;
-class HeavyAtSpgTankStayState;
-class HeavyAtSpgTankMoveState;
-class HeavyAtSpgTankShootState;
-class HeavyAtSpgTankHealState;
+class HeavyTankInitState;
+class HeavyTankStayState;
+class HeavyTankMoveState;
+class HeavyTankShootState;
+class HeavyTankHealState;
 
-class HeavyAtSpgTankInitState : public AbstractState
+class HeavyTankInitState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankInitState(StateComponent* component)
+    explicit HeavyTankInitState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -22,27 +22,27 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankMoveState>();
+            ChangeState<HeavyTankMoveState>();
             return;
         }
         else
         {
-            ChangeState<HeavyAtSpgTankStayState>();
+            ChangeState<HeavyTankStayState>();
             return;
         }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-class HeavyAtSpgTankStayState : public AbstractState
+class HeavyTankStayState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankStayState(StateComponent* component)
+    explicit HeavyTankStayState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -54,55 +54,56 @@ public:
         Vector3i position{};
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
             return;
         }
-        if (needHeal && HardRepairInMoveArea(context, tank, position))
+        if (!IsOnTheBase(context, tank) && needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
         {
-            ChangeState<HeavyAtSpgTankHealState>();
+            ChangeState<HeavyTankHealState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankMoveState>();
+            ChangeState<HeavyTankMoveState>();
             return;
         }
     }
     void Play(GameplaySystem::Context& context) override {}
 };
 
-class HeavyAtSpgTankMoveState : public AbstractState
+class HeavyTankMoveState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankMoveState(StateComponent* component)
+    explicit HeavyTankMoveState(StateComponent* component)
         : AbstractState(component)
     {
     }
     void UpdateState(GameplaySystem::Context& context) override
     {
-        auto     tank     = GetCurrentTank();
-        bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
+        auto tank     = GetCurrentTank();
+        bool needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                          tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
-        Vector3i position{};
-        if (needHeal && HardRepairInMoveArea(context, tank, position))
-        {
-            ChangeState<HeavyAtSpgTankHealState>();
-            return;
-        }
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
+            return;
+        }
+        Vector3i position{};
+        if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
+        {
+            ChangeState<HeavyTankHealState>();
             return;
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankStayState>();
+            ChangeState<HeavyTankStayState>();
             return;
         }
     }
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank = GetCurrentTank();
         auto path = GetPathToBase(context, tank);
         MapUtility::RemoveHexMapComponentCell(
@@ -117,10 +118,10 @@ public:
     }
 };
 
-class HeavyAtSpgTankShootState : public AbstractState
+class HeavyTankShootState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankShootState(StateComponent* component)
+    explicit HeavyTankShootState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -133,19 +134,19 @@ public:
             bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
                              tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
             Vector3i position{};
-            if (needHeal && HardRepairInMoveArea(context, tank, position))
+            if (needHeal && RepairInMoveArea(context, tank, position, Repair::HARD))
             {
-                ChangeState<HeavyAtSpgTankHealState>();
+                ChangeState<HeavyTankHealState>();
                 return;
             }
             if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
             {
-                ChangeState<HeavyAtSpgTankMoveState>();
+                ChangeState<HeavyTankMoveState>();
                 return;
             }
             else
             {
-                ChangeState<HeavyAtSpgTankStayState>();
+                ChangeState<HeavyTankStayState>();
                 return;
             }
         }
@@ -153,6 +154,7 @@ public:
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto tank   = GetCurrentTank();
         auto target = GetEnemyInShootArea(context, tank);
         ecs::ecsEngine->SendEvent<ShootRequestEvent>(
@@ -160,10 +162,10 @@ public:
     }
 };
 
-class HeavyAtSpgTankHealState : public AbstractState
+class HeavyTankHealState : public AbstractState
 {
 public:
-    explicit HeavyAtSpgTankHealState(StateComponent* component)
+    explicit HeavyTankHealState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -172,26 +174,27 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<HeavyAtSpgTankShootState>();
+            ChangeState<HeavyTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<HeavyAtSpgTankMoveState>();
+            ChangeState<HeavyTankMoveState>();
             return;
         }
         else
         {
-            ChangeState<HeavyAtSpgTankStayState>();
+            ChangeState<HeavyTankStayState>();
             return;
         }
     }
 
     void Play(GameplaySystem::Context& context) override
     {
+        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto     tank = GetCurrentTank();
         Vector3i position{};
-        HardRepairInMoveArea(context, tank, position);
+        RepairInMoveArea(context, tank, position, Repair::HARD);
 
         MapUtility::RemoveHexMapComponentCell(
             context.hexMap, tank->GetComponent<TransformComponent>()->GetPosition(), CellState::FRIEND);

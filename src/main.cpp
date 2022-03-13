@@ -1,19 +1,38 @@
 #include "entities/map/obstacle.h"
 #include "game/game.h"
 
-// todo for Vlad                                                                             Done
-// TODO: 1) add matrix multiplication;                                                         +
-//       2) add projection matrix in shaders to work in code only with pixels and hexes:       +
-//          a) check ortho() in glm.                                                           +
-//       3) rework Matrix::det and Matrix::getInversed();                                      -
-//       4) add global variables from render in separate file;                                 +
-//       5) rework HealthBar;                                                                  -
-//       6) add repaires and catapults;                                                        -
-//       7) rework ShapeBufferIndex;                                                           -
-//       8) rework Shapes and ShapeGenerator;                                                  -
+/*
+
+                                                     _..----.._
+                                                    ]_.--._____[
+                                                  ___|'--'__..|--._
+                              __               """    ;            :
+                            ()_ """"---...__.'""!":  /    ___       :
+                               """---...__\]..__] | /    [ 0 ]      :
+                                          """!--./ /      """        :
+                                   __  ...._____;""'.__________..--..:_
+                                  /  !"''''''!''''''''''|''''/' ' ' ' \"--..__  __..
+                                 /  /.--.    |          |  .'          \' ' '.""--.{'.
+             _...__            >=7 //.-.:    |          |.'             \ ._.__  ' '""'.
+          .-' /    """"----..../ "">==7-.....:______    |                \| |  "";.;-"> \
+          """";           __.."   .--"/"""""----...."""""----.....H_______\_!....'----""""]
+        _..---|._ __..--""       _!.-=_.            """""""""""""""                   ;"""
+       /   .-";-.'--...___     ." .-""; ';""-""-...^..__...-v.^___,  ,__v.__..--^"--""-v.^v,
+      ;   ;   |'.         """-/ ./;  ;   ;\P.        ;   ;        """"____;  ;.--""""// '""<,
+      ;   ;   | 1            ;  ;  '.: .'  ;<   ___.-'._.'------""""""____'..'.--""";;'  o ';
+      '.   \__:/__           ;  ;--""()_   ;'  /___ .-" ____---""""""" __.._ __._   '>.,  ,/;
+        \   \    /"""<--...__;  '_.-'/; ""; ;.'.'  "-..'    "-.      /"/    `__. '.   "---";
+         '.  'v ; ;     ;;    \  \ .'  \ ; ////    _.-" "-._   ;    : ;   .-'__ '. ;   .^".'
+           '.  '; '.   .'/     '. `-.__.' /;;;   .o__.---.__o. ;    : ;   '"";;""' ;v^" .^
+             '-. '-.___.'<__v.^,v'.  '-.-' ;|:   '    :      ` ;v^v^'.'.    .;'.__/_..-'
+                '-...__.___...---""'-.   '-'.;\     'WW\     .'_____..>."^"-""""""""    fsc
+                                      '--..__ '"._..'  '"-;;"""
+                                             """---'""""""
+ */
+
 int main(int argc, char** argv)
 {
-    Game* gameInstance = new Game("Obstacle Demo");
+    Game* gameInstance = new Game("WOT:Strategy");
 
     gameInstance->Initialize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, GAME_WINDOW_FULLSCREEN);
 

@@ -32,11 +32,7 @@ struct RenderableGroup
 
     ~RenderableGroup() = default;
 
-    void Delete() const
-    {
-        // delete VertexArray
-        delete this->vertexArray;
-    }
+    void Delete() const { delete this->vertexArray; }
 
     bool operator==(const RenderableGroup& other) const { return this->groupID == other.groupID; }
 };

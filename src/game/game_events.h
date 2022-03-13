@@ -11,8 +11,6 @@
 
 #include "nlohmann/json.hpp"
 
-// ServerSystem events
-
 struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 {
     Action      action;
@@ -311,5 +309,8 @@ struct StartGameEvent : public ecs::event::Event<StartGameEvent>
 };
 
 struct BadRestartEvent : public ecs::event::Event<BadRestartEvent>
+{
+};
+struct GameStateEvent : public ecs::event::Event<GameStateEvent>
 {
 };

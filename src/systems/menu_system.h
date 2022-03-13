@@ -11,8 +11,6 @@ public:
     MenuSystem();
     ~MenuSystem();
 
-    const LoginRequestModel RequestLoginCredentials();
-
     void OnLoginRequest(const GameLoginEvent* event);
     void OnGameOver(const GameOverEvent* event);
 

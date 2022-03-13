@@ -4,17 +4,16 @@
 #include "systems/gameplay_system.h"
 #include "utility/path_finder.h"
 
-class MediumTankInitState;
-class MediumTankStayState;
-class MediumTankMoveState;
-class MediumTankShootState;
-class MediumTankHealState;
-class MediumTankAwayState;
+class LightTankInitState;
+class LightTankStayState;
+class LightTankMoveState;
+class LightTankShootState;
+class LightTankAwayState;
 
-class MediumTankInitState : public AbstractState
+class LightTankInitState : public AbstractState
 {
 public:
-    explicit MediumTankInitState(StateComponent* component)
+    explicit LightTankInitState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -23,17 +22,17 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<MediumTankShootState>();
+            ChangeState<LightTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<MediumTankMoveState>();
+            ChangeState<LightTankMoveState>();
             return;
         }
         else
         {
-            ChangeState<MediumTankStayState>();
+            ChangeState<LightTankStayState>();
             return;
         }
     }
@@ -43,40 +42,33 @@ public:
     }
 };
 
-class MediumTankStayState : public AbstractState
+class LightTankStayState : public AbstractState
 {
 public:
-    explicit MediumTankStayState(StateComponent* component)
+    explicit LightTankStayState(StateComponent* component)
         : AbstractState(component)
     {
     }
     void UpdateState(GameplaySystem::Context& context) override
     {
-        auto     tank     = GetCurrentTank();
-        bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
-                         tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
-        Vector3i position{};
+        auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<MediumTankShootState>();
-            return;
-        }
-        if (!IsOnTheBase(context, tank) && needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
-        {
-            ChangeState<MediumTankHealState>();
+            ChangeState<LightTankShootState>();
             return;
         }
         if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
         {
-            ChangeState<MediumTankMoveState>();
+            ChangeState<LightTankMoveState>();
             return;
         }
+        Vector3i position{};
         if (IsOnTheBase(context, tank) && FarFreeReachableBasePosition(context, tank, position))
         {
             if ((!IsUnderEnemyShootArea(context, position) &&
                  !(tank->GetComponent<TransformComponent>()->GetPosition() == position)))
             {
-                this->ChangeState<MediumTankAwayState>();
+                this->ChangeState<LightTankAwayState>();
                 return;
             }
         }
@@ -87,49 +79,39 @@ public:
     }
 };
 
-class MediumTankMoveState : public AbstractState
+class LightTankMoveState : public AbstractState
 {
 public:
-    explicit MediumTankMoveState(StateComponent* component)
+    explicit LightTankMoveState(StateComponent* component)
         : AbstractState(component)
     {
     }
     void UpdateState(GameplaySystem::Context& context) override
     {
-        auto tank     = GetCurrentTank();
-        bool needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
-                         tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
+        auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<MediumTankShootState>();
+            ChangeState<LightTankShootState>();
             return;
         }
         Vector3i position{};
-        if (needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
+        if (IsOnTheBase(context, tank) && FarFreeReachableBasePosition(context, tank, position))
         {
-            ChangeState<MediumTankHealState>();
-            return;
-        }
-        if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
-        {
-            if (IsOnTheBase(context, tank) && FarFreeReachableBasePosition(context, tank, position))
+            if (IsUnderEnemyShootArea(context, position) ||
+                tank->GetComponent<TransformComponent>()->GetPosition() == position)
             {
-                if (IsUnderEnemyShootArea(context, position) ||
-                    tank->GetComponent<TransformComponent>()->GetPosition() == position)
-                {
-                    this->ChangeState<MediumTankStayState>();
-                    return;
-                }
-                else
-                {
-                    this->ChangeState<MediumTankAwayState>();
-                    return;
-                }
+                this->ChangeState<LightTankStayState>();
+                return;
+            }
+            else
+            {
+                this->ChangeState<LightTankAwayState>();
+                return;
             }
         }
         if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
         {
-            ChangeState<MediumTankStayState>();
+            ChangeState<LightTankStayState>();
             return;
         }
     }
@@ -151,10 +133,10 @@ public:
     }
 };
 
-class MediumTankShootState : public AbstractState
+class LightTankShootState : public AbstractState
 {
 public:
-    explicit MediumTankShootState(StateComponent* component)
+    explicit LightTankShootState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -164,117 +146,51 @@ public:
         auto tank = GetCurrentTank();
         if (GetEnemyInShootArea(context, tank) == nullptr)
         {
-            bool     needHeal = (tank->GetComponent<TtcComponent>()->GetMaxHealth() -
-                             tank->GetComponent<HealthComponent>()->GetHealth()) > 0;
-            Vector3i position{};
-            if (needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
-            {
-                ChangeState<MediumTankHealState>();
-                return;
-            }
             if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
             {
-                ChangeState<MediumTankMoveState>();
+                ChangeState<LightTankMoveState>();
                 return;
             }
             else
             {
+                Vector3i position{};
                 if (IsOnTheBase(context, tank) && FarFreeReachableBasePosition(context, tank, position))
                 {
                     if (IsUnderEnemyShootArea(context, position) ||
                         tank->GetComponent<TransformComponent>()->GetPosition() == position)
                     {
-                        this->ChangeState<MediumTankStayState>();
+                        this->ChangeState<LightTankStayState>();
                         return;
                     }
                     else
                     {
-                        this->ChangeState<MediumTankAwayState>();
+                        this->ChangeState<LightTankAwayState>();
                         return;
                     }
                 }
-                if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
-                {
-                    ChangeState<MediumTankStayState>();
-                    return;
-                }
+                ChangeState<LightTankStayState>();
+                return;
             }
         }
     }
 
     void Play(GameplaySystem::Context& context) override
     {
+
         LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
-        auto tank   = GetCurrentTank();
+        auto tank = GetCurrentTank();
+        auto a =
+            ecs::ecsEngine->GetComponentManager()->GetComponent<TransformComponent>(tank->GetEntityID())->GetPosition();
         auto target = GetEnemyInShootArea(context, tank);
         ecs::ecsEngine->SendEvent<ShootRequestEvent>(
             ShootModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), GetShootPosition(tank, target) });
     }
 };
 
-class MediumTankHealState : public AbstractState
+class LightTankAwayState : public AbstractState
 {
 public:
-    explicit MediumTankHealState(StateComponent* component)
-        : AbstractState(component)
-    {
-    }
-    void UpdateState(GameplaySystem::Context& context) override
-    {
-        auto     tank = GetCurrentTank();
-        Vector3i position{};
-        if (GetEnemyInShootArea(context, tank) != nullptr)
-        {
-            ChangeState<MediumTankShootState>();
-            return;
-        }
-        if (!IsOnTheBase(context, tank) && IsPathToBaseExists(context, tank))
-        {
-            ChangeState<MediumTankMoveState>();
-            return;
-        }
-        else
-        {
-            if (IsOnTheBase(context, tank) && FarFreeReachableBasePosition(context, tank, position))
-            {
-                if (IsUnderEnemyShootArea(context, position) ||
-                    tank->GetComponent<TransformComponent>()->GetPosition() == position)
-                {
-                    this->ChangeState<MediumTankStayState>();
-                    return;
-                }
-                else
-                {
-                    this->ChangeState<MediumTankAwayState>();
-                    return;
-                }
-                if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
-                {
-                    ChangeState<MediumTankStayState>();
-                    return;
-                }
-            }
-        }
-    }
-
-    void Play(GameplaySystem::Context& context) override
-    {
-        LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
-        auto     tank = GetCurrentTank();
-        Vector3i position{};
-        RepairInMoveArea(context, tank, position, Repair::LIGHT);
-        MapUtility::RemoveHexMapComponentCell(
-            context.hexMap, tank->GetComponent<TransformComponent>()->GetPosition(), CellState::FRIEND);
-        MapUtility::AddHexMapComponentCell(context.hexMap, position, CellState::FRIEND);
-        ecs::ecsEngine->SendEvent<MoveRequestEvent>(
-            MoveModel{ tank->GetComponent<VehicleIdComponent>()->GetVehicleId(), position });
-    }
-};
-
-class MediumTankAwayState : public AbstractState
-{
-public:
-    explicit MediumTankAwayState(StateComponent* component)
+    explicit LightTankAwayState(StateComponent* component)
         : AbstractState(component)
     {
     }
@@ -286,12 +202,7 @@ public:
         Vector3i position{};
         if (GetEnemyInShootArea(context, tank) != nullptr)
         {
-            ChangeState<MediumTankShootState>();
-            return;
-        }
-        if (!IsOnTheBase(context, tank) && needHeal && RepairInMoveArea(context, tank, position, Repair::LIGHT))
-        {
-            ChangeState<MediumTankHealState>();
+            ChangeState<LightTankShootState>();
             return;
         }
         if (IsOnTheBase(context, tank) && FarFreeReachableBasePosition(context, tank, position))
@@ -299,18 +210,14 @@ public:
             if (IsUnderEnemyShootArea(context, position) ||
                 tank->GetComponent<TransformComponent>()->GetPosition() == position)
             {
-                this->ChangeState<MediumTankStayState>();
-                return;
-            }
-            if (IsOnTheBase(context, tank) || !IsPathToBaseExists(context, tank))
-            {
-                ChangeState<MediumTankStayState>();
+                this->ChangeState<LightTankStayState>();
                 return;
             }
         }
     }
     void Play(GameplaySystem::Context& context) override
     {
+
         LogDebug("Tank(id = %d) state is %s", GetCurrentTank()->GetEntityID(), typeid(this).name());
         auto     tank = GetCurrentTank();
         Vector3i position{};

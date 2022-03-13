@@ -1,7 +1,4 @@
 #include "adapter_system.h"
-#include "components/adapter_player_id_component.h"
-#include "components/adapter_vehicle_id_component.h"
-#include "components/turn_component.h"
 
 AdapterSystem::AdapterSystem()
 {
@@ -29,7 +26,8 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             {
                 auto model = json.get<LoginResponseModel>();
                 ecs::ecsEngine->SendEvent<LoginResponseEvent>(model);
-                break;
+                ecs::ecsEngine->SendEvent<ChatRequestEvent>(ChatModel{ "GL HF!" });
+                LogInfo("Login is successful!") break;
             }
             case Action::LOGOUT:
             {
@@ -45,7 +43,6 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             {
                 auto model = json.get<GameStateModel>();
                 ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
-
                 break;
             }
             case Action::GAME_ACTIONS:
@@ -84,7 +81,6 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             }
             case Action::CHAT:
             {
-                // No model for chat
                 break;
             }
             case Action::MOVE:
@@ -111,11 +107,11 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     }
     else if (event->result == Result::TIMEOUT)
     {
-        ecs::ecsEngine->SendEvent<SendActionEvent>(Action::TURN, std::string{});
+        ecs::ecsEngine->SendEvent<SendActionEvent>(event->action, event->sentData);
     }
     else if (event->result != Result::OKEY && event->action == Action::LOGIN)
     {
-        // ecs::ecsEngine->SendEvent<GameLoginEvent>();
+        ecs::ecsEngine->SendEvent<GameLoginEvent>();
     }
 }
 

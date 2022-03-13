@@ -4,52 +4,72 @@
 const std::vector<Vector2i> PathFinder::HEX_DIRECTIONS = { { 1, 0 },  { 1, -1 }, { 0, -1 },
                                                            { -1, 0 }, { -1, 1 }, { 0, 1 } };
 
-void PathFinder::Bfs(const Vector2i& from)
+void PathFinder::AStar(const int threshold)
 {
-    this->used.assign((area->GetSize() << 1) | 1, std::vector<bool>((area->GetSize() << 1) | 1, false));
     this->lastDirections.assign((area->GetSize() << 1) | 1, std::vector<signed char>((area->GetSize() << 1) | 1, -1));
     this->distance.assign((area->GetSize() << 1) | 1, std::vector<int>((area->GetSize() << 1) | 1, NO_PATH));
-    std::queue<Vector2i> q;
-    q.push(from);
-    this->used[from.x()][from.y()]     = true;
+
+    std::priority_queue<std::pair<Vector2i, int>,
+                        std::vector<std::pair<Vector2i, int>>,
+                        std::function<bool(std::pair<Vector2i, int>&, std::pair<Vector2i, int>&)>>
+        queue([](std::pair<Vector2i, int>& lhs, std::pair<Vector2i, int>& rhs) { return lhs.second > rhs.second; });
+    queue.push(std::make_pair(from, 0));
     this->distance[from.x()][from.y()] = 0;
-    while (!q.empty())
+    while (!queue.empty())
     {
-        auto now = q.front();
-        q.pop();
+        auto position = queue.top().first;
+        queue.pop();
+        if (MapUtility::GetDistance(position, to) <= threshold)
+        {
+            break;
+        }
         for (int i = 0; i < HEX_DIRECTIONS.size(); i++)
         {
-            auto destination = now + HEX_DIRECTIONS[i];
+            auto destination = position + HEX_DIRECTIONS[i];
             if (!MapUtility::IsValid(destination, area->GetSize()) || !IS_REACHABLE(area->GetCell(destination)))
                 continue;
-            if (!this->used[destination.x()][destination.y()])
+            auto newDistance = distance[position.x()][position.y()] + 1;
+            if (this->distance[destination.x()][destination.y()] == NO_PATH ||
+                newDistance < this->distance[destination.x()][destination.y()])
             {
-                this->used[destination.x()][destination.y()]           = true;
+                this->distance[destination.x()][destination.y()] = newDistance;
+                auto priority = newDistance + MapUtility::GetDistance(destination, to);
+                queue.push(std::make_pair(destination, priority));
                 this->lastDirections[destination.x()][destination.y()] = i;
-                this->distance[destination.x()][destination.y()]       = distance[now.x()][now.y()] + 1;
-                q.push(destination);
             }
         }
     }
 }
-
-int PathFinder::GetDistance(const Vector3i& point)
+int PathFinder::GetDistance()
 {
-    auto newPoint = MapUtility::Shift(MapUtility::Cube2Hex(point), area->GetSize());
-    return distance[newPoint.x()][newPoint.y()];
+    return distance[to.x()][to.y()];
 }
 
-std::vector<Vector3i> PathFinder::GetShortestPath(const Vector3i& point)
+std::vector<Vector3i> PathFinder::GetShortestPath()
 {
-    Vector2i              now = MapUtility::Shift(MapUtility::Cube2Hex(point), area->GetSize());
+    Vector2i              now = to;
     std::vector<Vector3i> result;
     if (distance[now.x()][now.y()] == NO_PATH)
         return result;
-    while (!(now == startPoint))
+    while (!(now == from))
     {
         result.push_back(MapUtility::Hex2Cube(MapUtility::Shift(now, -(area->GetSize()))));
         now -= HEX_DIRECTIONS[lastDirections[now.x()][now.y()]];
     }
     std::reverse(result.begin(), result.end());
     return result;
+}
+
+bool PathFinder::Find(const Vector3i& from, const Vector3i& to)
+{
+    return Find(from, to, 0);
+}
+
+bool PathFinder::Find(const Vector3i& from, const Vector3i& to, const int threshold)
+{
+
+    this->from = MapUtility::Shift(MapUtility::Cube2Hex(from), area->GetSize());
+    this->to   = MapUtility::Shift(MapUtility::Cube2Hex(to), area->GetSize());
+    AStar(threshold);
+    return this->distance[this->to.x()][this->to.y()] != NO_PATH;
 }

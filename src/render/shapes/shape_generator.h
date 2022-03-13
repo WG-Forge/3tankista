@@ -10,13 +10,11 @@
 
 class ShapeGenerator
 {
-    // NOTE: think about it
     using ShapeRegistry = std::vector<std::pair<IShape*, std::size_t>>;
 
 public:
     ~ShapeGenerator();
 
-    // TODO: refactor this shit
     template <typename S>
     static Shape CreateShape(const std::size_t size = 0, const RenderingMode renderingMode = GL_TRIANGLES)
     {

@@ -13,9 +13,6 @@
 
 #include "nlohmann/json.hpp"
 
-// TODO: add operators for double_matrix;
-//       add matrix multiplication
-
 template <std::size_t rows, std::size_t columns, typename Type>
 class Matrix
 {

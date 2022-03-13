@@ -30,8 +30,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     hexMapComponent->SetSize(map->GetComponent<SizeComponent>()->GetSize());
 
     // creating base entities
-    auto                      baseVectorV3i = event->mapModel.base;
-    std::vector<GameObjectId> baseVectorId;
+    auto                  baseVectorV3i = event->mapModel.base;
+    std::vector<uint64_t> baseVectorId;
     for (auto& base : baseVectorV3i)
     {
         auto tempBaseId = entityManager->CreateEntity<Base>(base);
@@ -41,8 +41,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     content->SetBase(baseVectorId);
 
     // creating obstacle entities
-    auto                      obstacleVectorV3i = event->mapModel.obstacle;
-    std::vector<GameObjectId> obstacleVectorId;
+    auto                  obstacleVectorV3i = event->mapModel.obstacle;
+    std::vector<uint64_t> obstacleVectorId;
     for (auto& obstacle : obstacleVectorV3i)
     {
         auto tempObstacleId = entityManager->CreateEntity<Obstacle>(obstacle);
@@ -52,8 +52,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     content->SetObstacle(obstacleVectorId);
 
     // creating lightRepair entities
-    auto                      lightRepairVectorV3i = event->mapModel.lightRepair;
-    std::vector<GameObjectId> lightRepairVectorId;
+    auto                  lightRepairVectorV3i = event->mapModel.lightRepair;
+    std::vector<uint64_t> lightRepairVectorId;
     for (auto& lightRepair : lightRepairVectorV3i)
     {
         auto tempLightRepair = entityManager->CreateEntity<LightRepair>(lightRepair);
@@ -63,8 +63,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     content->SetLightRepair(lightRepairVectorId);
 
     // creating hardRepair entities
-    auto                      hardRepairVectorV3i = event->mapModel.hardRepair;
-    std::vector<GameObjectId> hardRepairVectorId;
+    auto                  hardRepairVectorV3i = event->mapModel.hardRepair;
+    std::vector<uint64_t> hardRepairVectorId;
     for (auto& hardRepair : hardRepairVectorV3i)
     {
         // purple color
@@ -75,8 +75,8 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     content->SetHardRepair(hardRepairVectorId);
 
     // creating catapult entities
-    auto                      catapultVectorV3i = event->mapModel.catapult;
-    std::vector<GameObjectId> catapultVectorId;
+    auto                  catapultVectorV3i = event->mapModel.catapult;
+    std::vector<uint64_t> catapultVectorId;
     for (auto& catapult : catapultVectorV3i)
     {
         // orange color
@@ -87,7 +87,7 @@ void MapSystem::OnMapResponse(const MapResponseEvent* event)
     content->SetCatapult(catapultVectorId);
 
     // creating spawnPoints entities
-    std::vector<GameObjectId> spawnPoints;
+    std::vector<uint64_t> spawnPoints;
     for (const auto& mapSpawnPoint : event->mapModel.mapSpawnPoints)
     {
         auto spawnPointsId = entityManager->CreateEntity<SpawnPoints>();
