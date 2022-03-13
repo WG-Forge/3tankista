@@ -70,14 +70,8 @@ bool AbstractState::CanShoot(Tank* playerTank, Tank* enemyTank)
 
 bool AbstractState::IsCorrectShootPosition(HexMapComponent* map, Tank* tank, Tank* enemy)
 {
-    PathFinder pathFinder;
-    pathFinder.SetHexMapComponent(map);
-    pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
-
     auto componentManager = ecs::ecsEngine->GetComponentManager();
-    auto entityManager    = ecs::ecsEngine->GetEntityManager();
-
-    auto mapComponent = componentManager->begin<HexMapComponent>().operator->();
+    auto mapComponent     = componentManager->begin<HexMapComponent>().operator->();
 
     bool result   = false;
     auto position = enemy->GetComponent<TransformComponent>()->GetPosition();
@@ -184,24 +178,28 @@ std::vector<Vector3i> AbstractState::GetPathToBase(GameplaySystem::Context& cont
 
     PathFinder pathFinder;
     pathFinder.SetHexMapComponent(context.hexMap);
-    pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
     auto     baseVectorId = content->GetVectorBaseId();
+    auto     tankPosition = tank->GetComponent<TransformComponent>()->GetPosition();
     Vector3i nearestBasePos =
         entityManager->GetEntity(baseVectorId[0])->GetComponent<TransformComponent>()->GetPosition();
+    pathFinder.Find(tankPosition, nearestBasePos);
+    auto minDistance = pathFinder.GetDistance();
     for (int i = 1; i < baseVectorId.size(); i++)
     {
         auto basePosition =
             entityManager->GetEntity(baseVectorId[i])->GetComponent<TransformComponent>()->GetPosition();
-        if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH ||
-            (pathFinder.GetDistance(nearestBasePos) > pathFinder.GetDistance(basePosition) &&
-             pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH))
+        pathFinder.Find(tankPosition, basePosition);
+        if (minDistance == PathFinder::NO_PATH ||
+            (minDistance > pathFinder.GetDistance() && pathFinder.GetDistance() != PathFinder::NO_PATH))
         {
             nearestBasePos = basePosition;
+            minDistance    = pathFinder.GetDistance();
         }
     }
-    if (pathFinder.GetDistance(nearestBasePos) == PathFinder::NO_PATH)
+    if (minDistance == PathFinder::NO_PATH)
         return {};
-    auto path = pathFinder.GetShortestPath(nearestBasePos);
+    pathFinder.Find(tankPosition, nearestBasePos);
+    auto path = pathFinder.GetShortestPath();
     return path;
 }
 
@@ -212,16 +210,17 @@ bool AbstractState::IsPathToBaseExists(GameplaySystem::Context& context, Tank* t
 
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
+    auto tankPosition = tank->GetComponent<TransformComponent>()->GetPosition();
 
     PathFinder pathFinder;
     pathFinder.SetHexMapComponent(context.hexMap);
-    pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
 
     auto baseVectorId = content->GetVectorBaseId();
     for (auto& baseId : baseVectorId)
     {
         auto basePosition = entityManager->GetEntity(baseId)->GetComponent<TransformComponent>()->GetPosition();
-        if (pathFinder.GetDistance(basePosition) != PathFinder::NO_PATH)
+        pathFinder.Find(tankPosition, basePosition);
+        if (pathFinder.GetDistance() != PathFinder::NO_PATH)
             return true;
     }
     return false;
@@ -237,10 +236,10 @@ bool AbstractState::RepairInMoveArea(GameplaySystem::Context& context,
 
     auto map     = dynamic_cast<Map*>(entityManager->GetEntity(componentManager->begin<SizeComponent>()->GetOwner()));
     auto content = dynamic_cast<Content*>(entityManager->GetEntity(map->GetContent()));
+    auto tankPosition = tank->GetComponent<TransformComponent>()->GetPosition();
 
     PathFinder pathFinder;
     pathFinder.SetHexMapComponent(context.hexMap);
-    pathFinder.SetStartPoint(tank->GetComponent<TransformComponent>()->GetPosition());
 
     auto                  tankSpeed = tank->GetComponent<TtcComponent>()->GetSpeed();
     std::vector<uint64_t> repairVector;
@@ -255,8 +254,8 @@ bool AbstractState::RepairInMoveArea(GameplaySystem::Context& context,
     for (auto& repairId : repairVector)
     {
         auto repairPosition = entityManager->GetEntity(repairId)->GetComponent<TransformComponent>()->GetPosition();
-        if (pathFinder.GetDistance(repairPosition) <= tankSpeed &&
-            pathFinder.GetDistance(repairPosition) != PathFinder::NO_PATH)
+        pathFinder.Find(tankPosition, repairPosition);
+        if (pathFinder.GetDistance() <= tankSpeed && pathFinder.GetDistance() != PathFinder::NO_PATH)
         {
             position = repairPosition;
             return true;

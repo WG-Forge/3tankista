@@ -13,26 +13,20 @@ public:
     PathFinder()          = default;
     virtual ~PathFinder() = default;
 
-    int                   GetDistance(const Vector3i& point);
-    std::vector<Vector3i> GetShortestPath(const Vector3i& point);
+    int                   GetDistance();
+    std::vector<Vector3i> GetShortestPath();
 
-    auto& GetGameArea() { return this->area; }
-    void  Bfs(const Vector2i& from);
+    bool Find(const Vector3i& from, const Vector3i& to);
 
-public:
     void SetHexMapComponent(HexMapComponent* component) { area = component; }
     auto GetHexMapComponent() { return area; }
 
-    void SetStartPoint(const Vector3i& point)
-    {
-        startPoint = MapUtility::Shift(MapUtility::Cube2Hex(point), area->GetSize());
-        Bfs(startPoint);
-    }
-    auto GetStartPoint() { return MapUtility::Hex2Cube(MapUtility::Shift(startPoint, -area->GetSize())); }
+protected:
+    void AStar();
 
 private:
+    Vector2i                              from, to;
     HexMapComponent*                      area = nullptr;
-    Vector2i                              startPoint;
     std::vector<std::vector<bool>>        used;
     std::vector<std::vector<signed char>> lastDirections;
     std::vector<std::vector<int>>         distance;
