@@ -6,6 +6,7 @@
 #include "components/capture_points_component.h"
 #include "components/kill_points_component.h"
 #include "components/name_component.h"
+#include "components/observer_component.h"
 #include "components/player_id_component.h"
 #include "components/turn_component.h"
 #include "game/game_events.h"
@@ -140,7 +141,21 @@ void MenuSystem::OnGameOver(const GameOverEvent* event)
             }
         }
 
-        if (!isPLayerWinner)
+        if (player->GetComponent<ObserverComponent>()->GetIsObserver())
+        {
+            std::pair<int, int> winPoints{ player->GetComponent<CapturePointsComponent>()->GetCapturePoints(),
+                                           it->GetKillPoints() };
+            labels.emplace_back(new nana::label{ fm });
+            labels.back()->format(true);
+            labels.back()->caption(
+                ("<bold=true color=0x1400C6>" + player->GetComponent<NameComponent>()->GetName() + "</>"));
+            plc.field("information") << labels.back()->handle();
+            labels.emplace_back(new nana::label{ fm, std::to_string(winPoints.first) });
+            plc.field("information") << labels.back()->handle();
+            labels.emplace_back(new nana::label{ fm, std::to_string(winPoints.second) });
+            plc.field("information") << labels.back()->handle();
+        }
+        else if (!isPLayerWinner)
         {
             std::pair<int, int> winPoints{ player->GetComponent<CapturePointsComponent>()->GetCapturePoints(),
                                            it->GetKillPoints() };
