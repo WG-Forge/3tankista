@@ -15,6 +15,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
 {
     if (event->result == Result::OKEY)
     {
+        auto entityManager    = ecs::ecsEngine->GetEntityManager();
         auto componentManager = ecs::ecsEngine->GetComponentManager();
         auto playerAdapter    = componentManager->begin<AdapterPlayerIdComponent>();
         auto vehicleAdapter   = componentManager->begin<AdapterVehicleIdComponent>();
@@ -42,7 +43,6 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
             {
                 auto model = json.get<GameStateModel>();
                 ecs::ecsEngine->SendEvent<GameStateResponseEvent>(model);
-
                 break;
             }
             case Action::GAME_ACTIONS:
@@ -112,7 +112,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     }
     else if (event->result != Result::OKEY && event->action == Action::LOGIN)
     {
-        ecs::ecsEngine->SendEvent<GameLoginEvent>();
+        // ecs::ecsEngine->SendEvent<GameLoginEvent>();
     }
 }
 
