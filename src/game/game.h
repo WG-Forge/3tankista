@@ -101,10 +101,10 @@ public:
 
     // Transitions to 'RESTARTED'
     TRANSITION_ENTRY(Game::GS_GAMEFINISHED,
-                     Game::GS_RESTARTED,
-                     Game::GS_RESTARTED_ENTER,
+                     Game::GS_TERMINATED,
+                     Game::GS_TERMINATED_ENTER,
                      Game::GS_GAMEFINISHED_LEAVE,
-                     GameState::RESTARTED)
+                     GameState::TERMINATED)
 
     END_TRANSITION_TABLE
 

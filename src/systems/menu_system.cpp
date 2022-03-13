@@ -131,15 +131,10 @@ void MenuSystem::OnGameOver(const GameOverEvent* event)
 
     plc.field("title") << playerTitle->handle() << capturePointsTitle->handle() << killPointsTitle->handle();
 
-    std::cout << "It is draw for players:\n";
     std::vector<std::shared_ptr<nana::label>> labels;
     for (auto& winner : event->winners)
     {
         auto entity = ecs::ecsEngine->GetEntityManager()->GetEntity(winner.first);
-        std::cout << "Player: " << entity->GetComponent<NameComponent>()->GetName() << "\n"
-                  << "Capture points: " << winner.second.first << "\n"
-                  << "Kill points: " << winner.second.second << "\n";
-
         labels.emplace_back(new nana::label{ fm });
         labels.back()->format(true);
         labels.back()->caption(
