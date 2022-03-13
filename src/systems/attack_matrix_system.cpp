@@ -73,19 +73,10 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
         {
             possiblePositions.push_back(action.target);
         }
-        std::vector<Vector3i> v;
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
              ++it)
         {
             auto currentEntity = entityManager->GetEntity(it->GetOwner());
-            auto pos           = currentEntity->GetComponent<TransformComponent>()->GetPosition();
-            v.push_back(pos);
-        }
-        for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
-             ++it)
-        {
-            auto currentEntity = entityManager->GetEntity(it->GetOwner());
-            auto pos           = currentEntity->GetComponent<TransformComponent>()->GetPosition();
             auto it_f          = std::find(possiblePositions.begin(),
                                   possiblePositions.end(),
                                   currentEntity->GetComponent<TransformComponent>()->GetPosition());
