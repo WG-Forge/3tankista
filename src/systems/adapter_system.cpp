@@ -112,7 +112,7 @@ void AdapterSystem::OnReceiveActionEvent(const ReceiveActionEvent* event)
     }
     else if (event->result != Result::OKEY && event->action == Action::LOGIN)
     {
-        // ecs::ecsEngine->SendEvent<GameLoginEvent>();
+        ecs::ecsEngine->SendEvent<GameLoginEvent>();
     }
 }
 
