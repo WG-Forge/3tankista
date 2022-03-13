@@ -6,6 +6,7 @@
 #include "components/tank_type_component.h"
 #include "components/transform_component.h"
 #include "components/ttc_component.h"
+#include "components/turn_component.h"
 #include "components/vehicle_id_component.h"
 #include "utility/map_utility.h"
 
@@ -35,7 +36,14 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
     auto componentManager      = ecs::ecsEngine->GetComponentManager();
     auto attackMatrixComponent = componentManager->begin<AttackMatrixComponent>().operator->();
     auto mapComponent          = componentManager->begin<HexMapComponent>().operator->();
-
+    auto turn                  = componentManager->begin<TurnComponent>()->GetCurrentTurn();
+    std::cout << "fs " << componentManager->begin<TurnComponent>()->GetCurrentTurn() << "\n";
+    std::cout << "num " << event->actions.size() << "\n";
+    int b;
+    if (turn == 23)
+    {
+        b = 123;
+    }
     std::set<uint64_t> attackedUsers;
     for (auto& action : event->actions)
     {
@@ -65,19 +73,26 @@ void AttackMatrixSystem::OnShootResponseEvent(const ShootResponseEvent* event)
         {
             possiblePositions.push_back(action.target);
         }
+        std::vector<Vector3i> v;
         for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
              ++it)
         {
             auto currentEntity = entityManager->GetEntity(it->GetOwner());
+            auto pos           = currentEntity->GetComponent<TransformComponent>()->GetPosition();
+            v.push_back(pos);
+        }
+        for (auto it = componentManager->begin<VehicleIdComponent>(); componentManager->end<VehicleIdComponent>() != it;
+             ++it)
+        {
+            auto currentEntity = entityManager->GetEntity(it->GetOwner());
+            auto pos           = currentEntity->GetComponent<TransformComponent>()->GetPosition();
             auto it_f          = std::find(possiblePositions.begin(),
                                   possiblePositions.end(),
                                   currentEntity->GetComponent<TransformComponent>()->GetPosition());
-            if (it_f != possiblePositions.end())
+            if (it_f != possiblePositions.end() &&
+                currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId() != event->playerId)
             {
-                if (currentEntity->GetComponent<TransformComponent>()->GetPosition() == action.target)
-                {
-                    attackedUsers.insert(currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId());
-                }
+                attackedUsers.insert(currentEntity->GetComponent<PlayerIdComponent>()->GetPlayerId());
             }
         }
     }
