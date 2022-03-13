@@ -26,8 +26,7 @@ public:
     void OnGameStateEvent(const GameStateEvent* event);
 
 private:
-    int count;
+    int  count;
     void RegisterEventCallbacks();
     void UnregisterEventCallbacks();
-
 };
