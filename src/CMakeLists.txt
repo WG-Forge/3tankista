@@ -26,10 +26,10 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 add_definitions(-DLOG=1)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ ${CMAKE_BINARY_DIR}/src/shaders/)
+        ${CMAKE_CURRENT_SOURCE_DIR}/../resources/shaders/ ${CMAKE_BINARY_DIR}/src/shaders/)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/textures/ ${CMAKE_BINARY_DIR}/src/textures/)
+        ${CMAKE_CURRENT_SOURCE_DIR}/../resources/textures/ ${CMAKE_BINARY_DIR}/src/textures/)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/render/fonts/ ${CMAKE_BINARY_DIR}/src/fonts/)
+        ${CMAKE_CURRENT_SOURCE_DIR}/../resources/fonts/ ${CMAKE_BINARY_DIR}/src/fonts/)

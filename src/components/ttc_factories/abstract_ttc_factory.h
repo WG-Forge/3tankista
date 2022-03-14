@@ -5,11 +5,11 @@
 #include "game/game_events.h"
 #include "ttc.h"
 
-class AbstractFactory
+class AbstractTtcFactory
 {
 public:
-    AbstractFactory()          = default;
-    virtual ~AbstractFactory() = default;
+    AbstractTtcFactory()          = default;
+    virtual ~AbstractTtcFactory() = default;
 
     virtual TtcComponent* CreateMediumTankTtc(GameObjectId id) const = 0;
     virtual TtcComponent* CreateAtSpgTankTtc(GameObjectId id) const  = 0;

@@ -5,6 +5,12 @@ MaterialGenerator::MaterialGenerator()
 {
 }
 
+MaterialGenerator &MaterialGenerator::GetInstance()
+{
+    static MaterialGenerator instance;
+    return instance;
+}
+
 MaterialGenerator::~MaterialGenerator()
 {
     for (int i = 0; i < this->materialRegistry.size(); ++i)

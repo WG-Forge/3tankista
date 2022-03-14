@@ -11,6 +11,8 @@
 
 #include "nlohmann/json.hpp"
 
+#include "game/models/models.h"
+
 struct SendActionEvent : public ecs::event::Event<SendActionEvent>
 {
     Action      action;
@@ -39,7 +41,7 @@ struct ReceiveActionEvent : public ecs::event::Event<ReceiveActionEvent>
     }
 };
 
-#include "game/models/models.h"
+//#include "game/models/models.h"
 // AdapterSystem events
 
 struct LoginRequestEvent : public ecs::event::Event<LoginRequestEvent>

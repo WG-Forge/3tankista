@@ -33,7 +33,6 @@ void MenuSystem::OnLoginRequest(const GameLoginEvent* event)
     using namespace nana;
 
     internationalization i18n;
-    // Translate these 2 words into Chinese.
     i18n.set("NANA_BUTTON_OK", "\u2714 OK");
     i18n.set("NANA_BUTTON_CANCEL", "\u2718 CANCEL");
 

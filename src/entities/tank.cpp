@@ -16,7 +16,7 @@
 Tank::Tank(const ecs::EntityId&   entityId,
            ecs::ComponentManager* componentManager,
            const Vector3i&        position,
-           const AbstractFactory& factory,
+           const AbstractTtcFactory& factory,
            TankType               type)
     : GameObject<Tank>(entityId, componentManager)
 {

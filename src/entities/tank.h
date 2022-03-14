@@ -11,18 +11,18 @@
 #include "components/texture_component.h"
 #include "components/transform_component.h"
 #include "components/ttc_component.h"
-#include "components/ttc_factories/abstract_factory.h"
+#include "components/ttc_factories/abstract_ttc_factory.h"
 #include "components/vehicle_id_component.h"
 #include "game/game_object.h"
 
 class Tank : public GameObject<Tank>
 {
 public:
-    Tank(const ecs::EntityId&   entityId,
-         ecs::ComponentManager* componentManager,
-         const Vector3i&        position,
-         const AbstractFactory& factory,
-         TankType               type);
+    Tank(const ecs::EntityId&      entityId,
+         ecs::ComponentManager*    componentManager,
+         const Vector3i&           position,
+         const AbstractTtcFactory& factory,
+         TankType                  type);
     ~Tank() override = default;
 
 private:
