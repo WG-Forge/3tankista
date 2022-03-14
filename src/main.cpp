@@ -1,5 +1,6 @@
-#include "entities/map/obstacle.h"
 #include "game/game.h"
+
+#include "entities/map/obstacle.h"
 
 /*
 

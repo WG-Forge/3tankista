@@ -1,9 +1,9 @@
 #pragma once
 
-#include "abstract_factory.h"
+#include "abstract_ttc_factory.h"
 #include "game/game_configuration.h"
 
-class TtcComponentFactory : public AbstractFactory
+class TtcComponentFactory : public AbstractTtcFactory
 {
 public:
     TtcComponentFactory()           = default;

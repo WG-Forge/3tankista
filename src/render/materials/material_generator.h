@@ -40,11 +40,7 @@ private:
     MaterialGenerator(const MaterialGenerator&) = delete;
     MaterialGenerator& operator=(const MaterialGenerator&) = delete;
 
-    static MaterialGenerator& GetInstance()
-    {
-        static MaterialGenerator instance;
-        return instance;
-    }
+    static MaterialGenerator& GetInstance();
 
 private:
     MaterialRegistry materialRegistry;
