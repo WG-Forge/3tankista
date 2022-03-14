@@ -5,7 +5,7 @@ MaterialGenerator::MaterialGenerator()
 {
 }
 
-MaterialGenerator &MaterialGenerator::GetInstance()
+MaterialGenerator& MaterialGenerator::GetInstance()
 {
     static MaterialGenerator instance;
     return instance;
